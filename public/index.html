@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ProgrTotal — Roadmap de Programação</title>
+  <meta name="description" content="Roadmap de programação do básico ao avançado: HTML, CSS, Python, JavaScript, React, Go, C#, Java, SQL e MySQL.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="loading" class="loading"><div class="spinner"></div><p>Carregando…</p></div>
+
+  <!-- ===== Tela de login / cadastro ===== -->
+  <section id="auth-screen" class="auth" hidden>
+    <div class="auth-card">
+      <div class="brand big">🚀 <span>Progr<b>Total</b></span></div>
+      <p class="muted center">Seu roadmap de programação: do zero ao avançado, com exemplos reais de trabalho e de entrevistas.</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button type="button" data-auth-tab="login" class="active">Entrar</button>
+        <button type="button" data-auth-tab="register">Criar conta</button>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <label>E-mail<input type="email" name="email" autocomplete="email" required></label>
+        <label>Senha<input type="password" name="password" autocomplete="current-password" required></label>
+        <button class="btn primary block" type="submit">Entrar</button>
+        <button class="link" type="button" data-auth-tab="reset">Esqueci minha senha</button>
+      </form>
+
+      <form id="register-form" class="auth-form" hidden>
+        <label>Nome<input type="text" name="name" autocomplete="name" required maxlength="80"></label>
+        <label>E-mail pessoal<input type="email" name="email" autocomplete="email" required></label>
+        <label>Senha <small>(mínimo 6 caracteres)</small><input type="password" name="password" autocomplete="new-password" minlength="6" required></label>
+        <label>Confirme a senha<input type="password" name="password2" autocomplete="new-password" minlength="6" required></label>
+        <button class="btn primary block" type="submit">Criar conta</button>
+      </form>
+
+      <form id="reset-form" class="auth-form" hidden>
+        <p class="muted">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+        <label>E-mail<input type="email" name="email" autocomplete="email" required></label>
+        <button class="btn primary block" type="submit">Enviar link</button>
+        <button class="link" type="button" data-auth-tab="login">Voltar para o login</button>
+      </form>
+
+      <p id="auth-msg" class="msg" role="alert" hidden></p>
+    </div>
+  </section>
+
+  <!-- ===== Aplicação ===== -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <button id="menu-btn" class="icon-btn" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <a href="#/inicio" class="brand">🚀 <span>Progr<b>Total</b></span></a>
+      <div class="timer" id="timer" title="O cronômetro pausa quando a aba fica em segundo plano">
+        <div><small>Sessão</small><strong id="t-session">00:00:00</strong></div>
+        <div><small>Total estudado</small><strong id="t-total">0s</strong></div>
+      </div>
+    </header>
+
+    <nav id="sidebar" class="sidebar" aria-label="Menu principal">
+      <div class="user-box">
+        <div class="avatar" id="u-avatar">?</div>
+        <div>
+          <strong id="u-name">—</strong>
+          <small id="u-email">—</small>
+        </div>
+      </div>
+      <a href="#/inicio" data-nav="inicio">🗺️ Roadmap</a>
+      <a href="#/linguagens" data-nav="linguagens">💻 Linguagens</a>
+      <a href="#/bancos" data-nav="bancos">🗄️ Bancos de Dados</a>
+      <a href="#/pesquisar" data-nav="pesquisar">🔎 Como pesquisar</a>
+      <a href="#/progresso" data-nav="progresso">📈 Meu progresso</a>
+      <a href="#/admin" data-nav="admin" id="nav-admin" hidden>🛡️ Admin / TI</a>
+      <button id="logout-btn" class="btn ghost block">Sair</button>
+    </nav>
+    <div id="backdrop" class="backdrop" hidden></div>
+
+    <main id="view" tabindex="-1"></main>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

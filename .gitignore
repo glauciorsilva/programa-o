@@ -1,0 +1,8 @@
+# NUNCA versionar chaves de service account / admin SDK
+*service-account*.json
+*firebase-adminsdk*.json
+sistema_de_programa*.json
+.firebase/
+node_modules/
+.DS_Store
+*.log
