@@ -33,6 +33,13 @@ service cloud.firestore {
         allow create, update: if isOwner(uid);
         allow delete: if isAdmin();
       }
+
+      // Códigos do sandbox e dos exercícios (o admin pode ler para acompanhar)
+      match /codigos/{codigoId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow create, update: if isOwner(uid);
+        allow delete: if isOwner(uid) || isAdmin();
+      }
     }
   }
 }

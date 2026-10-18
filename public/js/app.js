@@ -10,9 +10,13 @@ import { LINGUAGENS, BANCOS, TRILHAS, NIVEIS } from "./content/index.js";
 import { GUIA_PESQUISA } from "./content/guia.js";
 import { StudyTimer } from "./timer.js";
 import { renderAdmin } from "./admin.js";
+import { EXERCICIOS } from "./content/exercicios.js";
+import { sandboxDoTopico } from "./content/sandbox-topicos.js";
+import { LANGS, EXEMPLOS } from "./sandbox/langs.js";
+import { renderSandbox } from "./sandbox/view.js";
 import {
   $, $$, esc, clock, human, stars, topicosDa, progressoPorTrilha, progressoGeral,
-  serieDiaria, barChart, progressBar
+  serieDiaria, barChart, progressBar, progressoExercicios
 } from "./util.js";
 
 const state = { user: null, profile: null, timer: null, isAdmin: false, pendingName: null };
@@ -183,10 +187,18 @@ window.addEventListener("hashchange", () => {
   render();
 });
 
+let limparTela = null;
+
 function render() {
   if (!state.user) return;
   const [rota = "inicio", a, b] = location.hash.replace(/^#\/?/, "").split("/");
-  $$("[data-nav]").forEach((l) => l.classList.toggle("active", l.dataset.nav === rota || (rota === "trilha" && l.dataset.nav === trilhaCategoria(a))));
+  $$("[data-nav]").forEach((l) => l.classList.toggle("active", l.dataset.nav === rota
+    || (rota === "trilha" && l.dataset.nav === trilhaCategoria(a))
+    || (rota === "exercicio" && l.dataset.nav === "sandbox")));
+  if (limparTela) {
+    limparTela();
+    limparTela = null;
+  }
   const view = $("#view");
   const telas = {
     inicio: viewInicio,
@@ -195,6 +207,8 @@ function render() {
     trilha: () => viewTrilha(a, b),
     pesquisar: viewPesquisar,
     progresso: viewProgresso,
+    sandbox: () => viewSandbox(view, a, b),
+    exercicio: () => viewExercicio(view, a),
     admin: () => viewAdmin(a)
   };
   (telas[rota] || viewInicio)(view);
@@ -237,6 +251,7 @@ function viewInicio(view) {
       <div class="stat-row">
         <div class="stat"><small>Progresso geral</small><strong>${g.pct}%</strong>${progressBar(g.pct, true)}</div>
         <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
+        <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(state.profile.progress).feitos}/${progressoExercicios(state.profile.progress).total}</strong></div>
         <div class="stat"><small>Tempo total</small><strong id="home-total">${human(state.profile.totalSeconds)}</strong></div>
       </div>
     </section>
@@ -252,7 +267,8 @@ function viewInicio(view) {
       <h2>🧭 Como usar este roadmap</h2>
       <ul>
         <li><b>Não precisa decorar tudo.</b> A meta é você saber fazer as tarefas mais comuns e saber <a href="#/pesquisar">procurar</a> o resto.</li>
-        <li>Em cada tópico: leia a explicação simples, copie e rode o código, leia o caso real e treine a pergunta de entrevista.</li>
+        <li>Em cada tópico: leia a explicação simples, clique em <b>▶ Testar no sandbox</b> para mexer no código, leia o caso real e treine a pergunta de entrevista.</li>
+        <li>No fim de cada nível há um <b>🏋️ exercício prático</b> com correção automática. Use o <a href="#/sandbox">🧪 Sandbox</a> para testar suas próprias ideias.</li>
         <li>Marque <b>“Concluí”</b> para acompanhar sua evolução. O cronômetro no topo soma seu tempo de estudo.</li>
         <li>Sugestão de caminho: <b>HTML → CSS → JavaScript → React</b> (front-end) ou <b>Python → SQL → MySQL</b> (dados/back-end).</li>
       </ul>
@@ -325,6 +341,8 @@ function viewTrilha(id, nivelId = "basico") {
       ${bloco.topicos.map((tp, i) => topicoHTML(tp, i + 1, !!prog[tp.id])).join("")}
     </div>
 
+    ${cardExercicio(t, nivel, prog)}
+
     <section class="docs">
       <h2>📚 Onde procurar quando não souber (${esc(t.nome)})</h2>
       <ul>${t.docs.map((d) => `<li><a href="${d.url}" target="_blank" rel="noopener">${esc(d.nome)}</a>${d.desc ? ` — <span class="muted">${d.desc}</span>` : ""}</li>`).join("")}</ul>
@@ -363,6 +381,7 @@ function nivelVizinho(t, nivel, dir) {
 }
 
 function topicoHTML(tp, num, feito) {
+  const sbx = sandboxDoTopico(tp.id);
   const busca = tp.busca.map((q) =>
     `<a class="chip" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(q)}">${esc(q)}</a>`).join("");
   return `<details class="topic${feito ? " done" : ""}" data-id="${tp.id}" ${num === 1 && !feito ? "open" : ""}>
@@ -374,9 +393,15 @@ function topicoHTML(tp, num, feito) {
       <div class="box kid"><h4>🧒 Explicando para uma criança de 5 anos</h4><p>${tp.crianca}</p></div>
 
       <div class="box code">
-        <div class="code-head"><h4>💻 Na prática</h4><button class="copy-btn btn tiny">Copiar</button></div>
+        <div class="code-head"><h4>💻 Na prática</h4>
+          <div class="code-actions">
+            <button class="copy-btn btn tiny">Copiar</button>
+            ${sbx && !sbx.indisponivel ? `<a class="btn tiny primary" href="#/sandbox/topico/${tp.id}">▶ Testar no sandbox</a>` : ""}
+          </div>
+        </div>
         <pre><code>${esc(tp.codigo.trim())}</code></pre>
         ${tp.nota ? `<p class="muted small">${tp.nota}</p>` : ""}
+        ${sbx?.indisponivel ? `<p class="muted small">⚠️ ${sbx.indisponivel}</p>` : ""}
       </div>
 
       <div class="box work"><h4>💼 Caso real no trabalho</h4><p>${tp.trabalho}</p></div>
@@ -444,6 +469,7 @@ function viewProgresso(view) {
       <div class="stat"><small>Progresso geral</small><strong>${g.pct}%</strong>${progressBar(g.pct, true)}</div>
       <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
       <div class="stat"><small>Tempo total de estudo</small><strong>${human(total)}</strong></div>
+      <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(prog).feitos}/${progressoExercicios(prog).total}</strong></div>
       <div class="stat"><small>Sessões</small><strong>${(state.profile.sessionsCount || 0) + 1}</strong></div>
     </div>
     <section class="box">
@@ -462,6 +488,107 @@ function viewProgresso(view) {
           </a>`).join("")}
       </div>
     </section>`;
+}
+
+/* =================== Sandbox e exercícios =================== */
+
+const chaveExercicio = (exId) => "ex_" + exId;
+
+function cardExercicio(t, nivel, prog) {
+  const exId = `${t.id}_${nivel.id}`;
+  const ex = EXERCICIOS[exId];
+  if (!ex) return "";
+  const feito = !!prog[chaveExercicio(exId)];
+  return `<section class="exercise-card${feito ? " done" : ""}" style="--accent:${t.cor}">
+    <div class="grow">
+      <small class="muted">🏋️ Exercício prático — ${nivel.nome}</small>
+      <h3>${esc(ex.titulo)}</h3>
+      <p class="muted small">${feito ? "✅ Você já resolveu este exercício." : "Coloque a mão na massa e verifique sua resposta automaticamente."}</p>
+    </div>
+    <a class="btn ${feito ? "ghost" : "primary"}" href="#/exercicio/${exId}">${feito ? "Rever" : "Resolver"} →</a>
+  </section>`;
+}
+
+const ctxSandbox = () => ({
+  uid: state.user.uid,
+  onResolvido: async (exId) => {
+    const k = chaveExercicio(exId);
+    const prog = (state.profile.progress ||= {});
+    if (prog[k]) return;
+    prog[k] = new Date();
+    try {
+      await updateDoc(doc(db, "users", state.user.uid), { ["progress." + k]: serverTimestamp() });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+});
+
+function montar(view, promessa) {
+  let cancelado = false;
+  let limpeza = null;
+  limparTela = () => {
+    cancelado = true;
+    limpeza?.();
+  };
+  promessa.then((f) => {
+    if (cancelado) f?.();
+    else limpeza = f;
+  }).catch((e) => {
+    console.error(e);
+    view.innerHTML = `<h1>🧪 Sandbox</h1><div class="banner warn">Não foi possível abrir o sandbox: ${esc(e.message)}</div>`;
+  });
+}
+
+function viewSandbox(view, a, b) {
+  if (a === "topico") {
+    const s = sandboxDoTopico(b || "");
+    if (!s) return viewSandbox(view);
+    const nivelId = Object.keys(s.trilha.niveis).find((n) => s.trilha.niveis[n].topicos.includes(s.topico));
+    const voltar = { href: `#/trilha/${s.trilha.id}/${nivelId}`, texto: `${s.trilha.nome} — ${s.topico.titulo}` };
+    if (s.indisponivel) {
+      view.innerHTML = `<a class="back" href="${voltar.href}">← ${esc(voltar.texto)}</a>
+        <h1>🧪 Sandbox</h1><div class="banner warn">⚠️ ${s.indisponivel}</div>`;
+      return;
+    }
+    return montar(view, renderSandbox(view, {
+      modo: "topico", lang: s.lang, inicial: s.inicial, entrada: s.entrada, db: s.db,
+      aba: { css: "css", javascript: "js" }[s.trilha.id],
+      titulo: s.topico.titulo,
+      subtitulo: `Exemplo de <b>${esc(s.trilha.nome)}</b>. Mude o código à vontade e execute para ver o que acontece.`,
+      voltar, chave: "top_" + s.topico.id, nuvem: false
+    }, ctxSandbox()));
+  }
+  let lang = LANGS[a] ? a : null;
+  try {
+    lang ||= localStorage.getItem("progrtotal:ultimaLang");
+  } catch { /* sem armazenamento */ }
+  if (!LANGS[lang]) lang = "python";
+  try {
+    localStorage.setItem("progrtotal:ultimaLang", lang);
+  } catch { /* sem armazenamento */ }
+  montar(view, renderSandbox(view, {
+    modo: "livre", lang, inicial: EXEMPLOS[lang], titulo: "Sandbox",
+    subtitulo: "Sua caixa de areia: teste ideias, exemplos e brinque com o código. Ele fica salvo na sua conta.",
+    chave: "livre_" + lang, nuvem: true
+  }, ctxSandbox()));
+}
+
+function viewExercicio(view, exId) {
+  const ex = EXERCICIOS[exId];
+  if (!ex) return viewSandbox(view);
+  const [trilhaId, nivelId] = exId.split("_");
+  const t = TRILHAS.find((x) => x.id === trilhaId);
+  const nivel = NIVEIS.find((n) => n.id === nivelId);
+  montar(view, renderSandbox(view, {
+    modo: "exercicio", lang: ex.lang, inicial: ex.inicial, exercicio: ex, exId,
+    aba: trilhaId === "css" ? "css" : undefined,
+    titulo: ex.titulo,
+    subtitulo: `Exercício de <b>${esc(t.nome)}</b> — nível ${nivel.nome}`,
+    voltar: { href: `#/trilha/${t.id}/${nivel.id}`, texto: `${t.nome} — ${nivel.nome}` },
+    resolvido: !!state.profile.progress?.[chaveExercicio(exId)],
+    chave: chaveExercicio(exId), nuvem: true
+  }, ctxSandbox()));
 }
 
 /* =================== Admin =================== */

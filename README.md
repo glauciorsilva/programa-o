@@ -19,6 +19,25 @@ Cada trilha tem os níveis **Básico, Intermediário e Avançado** (3 tópicos p
 
 Também há a página **Como pesquisar**, um guia para ler erros, pesquisar e usar a documentação.
 
+## 🧪 Sandbox e exercícios práticos
+
+O aluno programa **dentro do app**, sem instalar nada:
+
+| Linguagem | Como roda |
+|---|---|
+| HTML + CSS + JS | pré-visualização ao vivo com abas HTML / CSS / JS |
+| JavaScript e TypeScript | no navegador (Web Worker); TypeScript é convertido com Babel |
+| React | componente com `export default` renderizado ao vivo (React 18 + react-router-dom) |
+| Python | Python 3 completo no navegador (Pyodide), com `input()`, arquivos `vendas.csv`/`clientes.csv` e `pandas` |
+| SQL / MySQL | banco de exemplo (clientes, pedidos, produtos...) recriado a cada execução; motor SQLite com funções do MySQL (`NOW`, `DATE_FORMAT`, `TIMESTAMPDIFF`, `SHOW TABLES`, `DESCRIBE`...) |
+| Go, C#, Java | editor + botão para copiar e abrir no playground oficial (precisam de compilador) |
+
+- **▶ Testar no sandbox** em cada exemplo dos tópicos.
+- **🏋️ Exercício prático** no fim de cada nível (30 no total). HTML, CSS, JS/TS, React, Python, SQL e MySQL têm **correção automática**. Go, C# e Java mostram a saída esperada e a solução.
+- **Sandbox livre** no menu, para testar ideias. O código fica salvo na conta do aluno.
+- **Segurança:** o código do aluno roda em um `iframe` isolado (origem opaca), sem acesso ao login. Loops infinitos são interrompidos depois de 10 a 20 segundos.
+- O **Admin/TI** vê, por aluno, quais exercícios foram resolvidos, quantas tentativas e o último código enviado.
+
 ## Funcionalidades
 
 - Cadastro e login com e-mail pessoal e senha (Firebase Authentication), além de recuperação de senha.
@@ -40,7 +59,10 @@ public/                 site estático (Firebase Hosting)
   js/app.js             login, rotas, telas
   js/timer.js           cronômetro de estudo
   js/admin.js           painel Admin/TI
-  js/content/*.js       conteúdo das trilhas (fácil de editar)
+  js/content/*.js       conteúdo das trilhas e exercícios (fácil de editar)
+  js/sandbox/*.js       editor, execução e tela do sandbox
+  sandbox/runner.html   ambiente isolado que executa o código do aluno
+  sandbox/workers.js    executores de JS, Python (Pyodide) e SQL (sql.js)
 firestore.rules         regras de segurança
 firebase.json
 ```
@@ -50,10 +72,12 @@ firebase.json
 ```
 users/{uid}
   name, email, createdAt, lastAccess, totalSeconds, sessionsCount
-  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3
+  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício)
   daily:    { "dAAAAMMDD": segundos }
 users/{uid}/sessions/{id}
   start, lastPing, seconds, device, userAgent
+users/{uid}/codigos/{id}                     livre_<lang> ou ex_<trilha>_<nivel>
+  lang, codigo, ok, tentativas, atualizadoEm, resolvidoEm
 ```
 
 ## Como publicar (passo a passo)

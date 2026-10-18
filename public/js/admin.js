@@ -3,8 +3,11 @@ import {
   collection, getDocs, doc, getDoc, query, orderBy, limit
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  $, esc, human, fmtDate, toDate, progressoGeral, progressoPorTrilha, serieDiaria, barChart, progressBar
+  $, esc, human, fmtDate, toDate, progressoGeral, progressoPorTrilha, serieDiaria, barChart, progressBar,
+  progressoExercicios
 } from "./util.js";
+import { EXERCICIOS } from "./content/exercicios.js";
+import { TRILHAS, NIVEIS } from "./content/index.js";
 
 let cache = null;
 
@@ -64,7 +67,7 @@ async function renderLista(view, force = false) {
     </div>
     <div class="table-wrap"><table class="table">
       <thead><tr>
-        <th>Aluno</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Progresso</th><th></th>
+        <th>Aluno</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Progresso</th><th></th>
       </tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>`;
@@ -90,10 +93,11 @@ async function renderLista(view, force = false) {
         <td data-label="Último acesso">${fmtDate(a.lastAccess)}</td>
         <td data-label="Tempo total">${human(a.totalSeconds)}</td>
         <td data-label="Sessões">${a.sessionsCount || 0}</td>
+        <td data-label="Exercícios">${progressoExercicios(a.progress).feitos}/${progressoExercicios(a.progress).total}</td>
         <td data-label="Progresso"><div class="cell-progress">${progressBar(g.pct, true)}<small>${g.feitos}/${g.total} (${g.pct}%)</small></div></td>
         <td><a class="btn tiny primary" href="#/admin/${a.uid}">Ver evolução</a></td>
       </tr>`;
-    }).join("") || `<tr><td colspan="7" class="muted">Nenhum aluno encontrado.</td></tr>`;
+    }).join("") || `<tr><td colspan="8" class="muted">Nenhum aluno encontrado.</td></tr>`;
   };
   $("#filtro").addEventListener("input", desenhar);
   $("#ordem").addEventListener("change", desenhar);
@@ -111,6 +115,9 @@ async function renderAluno(view, uid) {
   const a = snap.data();
   const sessSnap = await getDocs(query(collection(db, "users", uid, "sessions"), orderBy("start", "desc"), limit(30)));
   const sessoes = sessSnap.docs.map((d) => d.data());
+  const codSnap = await getDocs(collection(db, "users", uid, "codigos"));
+  const codigos = Object.fromEntries(codSnap.docs.map((d) => [d.id, d.data()]));
+  const ex = progressoExercicios(a.progress);
   const g = progressoGeral(a.progress);
 
   view.innerHTML = `
@@ -121,6 +128,7 @@ async function renderAluno(view, uid) {
       <div class="stat"><small>Progresso geral</small><strong>${g.pct}%</strong>${progressBar(g.pct, true)}</div>
       <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
       <div class="stat"><small>Tempo total</small><strong>${human(a.totalSeconds)}</strong></div>
+      <div class="stat"><small>Exercícios resolvidos</small><strong>${ex.feitos}/${ex.total}</strong></div>
       <div class="stat"><small>Último acesso</small><strong class="smaller">${fmtDate(a.lastAccess)}</strong></div>
     </div>
     <section class="box">
@@ -139,6 +147,25 @@ async function renderAluno(view, uid) {
       </div>
     </section>
     <section class="box">
+      <h2>Exercícios práticos</h2>
+      <p class="muted small">Clique em um exercício para ver o último código salvo pelo aluno.</p>
+      <div class="admin-ex">
+        ${TRILHAS.flatMap((t) => NIVEIS.map((n) => {
+          const id = `${t.id}_${n.id}`;
+          const e = EXERCICIOS[id];
+          if (!e) return "";
+          const cod = codigos["ex_" + id];
+          const ok = !!a.progress?.["ex_" + id] || cod?.ok;
+          const status = ok ? "✅ resolvido" : cod ? `✏️ tentando (${cod.tentativas || 0} verificações)` : "— não iniciado";
+          return `<details class="admin-ex-item${ok ? " ok" : ""}">
+            <summary><span>${t.icone} ${esc(t.nome)} · ${n.nome}: ${esc(e.titulo)}</span><small>${status}</small></summary>
+            ${cod ? `<p class="muted small">Atualizado em ${fmtDate(cod.atualizadoEm)}</p><pre><code>${esc(formatarCodigo(cod.codigo))}</code></pre>`
+              : `<p class="muted small">Nenhum código salvo.</p>`}
+          </details>`;
+        })).join("")}
+      </div>
+    </section>
+    <section class="box">
       <h2>Últimas sessões</h2>
       <div class="table-wrap"><table class="table">
         <thead><tr><th>Início</th><th>Última atividade</th><th>Duração</th><th>Dispositivo</th></tr></thead>
@@ -154,15 +181,20 @@ async function renderAluno(view, uid) {
     </section>`;
 }
 
+function formatarCodigo(c) {
+  if (c && typeof c === "object") return `<!-- HTML -->\n${c.html || ""}\n\n/* CSS */\n${c.css || ""}\n\n// JS\n${c.js || ""}`;
+  return String(c ?? "");
+}
+
 function exportarCSV(alunos) {
   const trilhas = progressoPorTrilha({}).map((p) => p.trilha);
-  const cab = ["nome", "email", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "topicos_concluidos", "progresso_pct",
+  const cab = ["nome", "email", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "topicos_concluidos", "progresso_pct",
     ...trilhas.map((t) => t.id + "_concluidos")];
   const linhas = alunos.map((a) => {
     const g = progressoGeral(a.progress);
     const pt = progressoPorTrilha(a.progress);
     return [a.name, a.email, fmtDate(a.createdAt, false), fmtDate(a.lastAccess),
-      Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
+      Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, progressoExercicios(a.progress).feitos, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
   });
   const csv = [cab, ...linhas]
     .map((l) => l.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";"))

@@ -69,6 +69,13 @@ export function progressoPorTrilha(progress = {}) {
   });
 }
 
+export const TOTAL_EXERCICIOS = TRILHAS.length * NIVEIS.length;
+
+export function progressoExercicios(progress = {}) {
+  const feitos = Object.keys(progress).filter((k) => k.startsWith("ex_")).length;
+  return { feitos, total: TOTAL_EXERCICIOS, pct: Math.round((feitos / TOTAL_EXERCICIOS) * 100) };
+}
+
 export function progressoGeral(progress = {}) {
   const feitos = Object.keys(progress).filter((k) => TRILHAS.some((t) => k.startsWith(t.id + "_"))).length;
   return { feitos, total: TOTAL_TOPICOS, pct: Math.round((feitos / TOTAL_TOPICOS) * 100) };
