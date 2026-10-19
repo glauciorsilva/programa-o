@@ -21,7 +21,7 @@ function carregarCodeMirror() {
 }
 
 /**
- * Cria um editor dentro de `el`. Retorna { getValue, setValue, refresh, focus, onChange }.
+ * Cria um editor dentro de `el`. Retorna { getValue, setValue, refresh, focus, selecionar, onChange }.
  */
 export async function criarEditor(el, { valor = "", modo = "javascript", onExecutar } = {}) {
   const escutas = [];
@@ -55,6 +55,11 @@ export async function criarEditor(el, { valor = "", modo = "javascript", onExecu
       setValue: (v) => cm.setValue(v),
       refresh: () => cm.refresh(),
       focus: () => cm.focus(),
+      // Seleciona um trecho (índices no texto) e foca sem rolar a página.
+      selecionar: (de, ate) => {
+        cm.setSelection(cm.posFromIndex(de), cm.posFromIndex(ate));
+        cm.getInputField().focus({ preventScroll: true });
+      },
       onChange: (f) => escutas.push(f)
     };
   } catch {
@@ -77,6 +82,10 @@ export async function criarEditor(el, { valor = "", modo = "javascript", onExecu
       setValue: (v) => { ta.value = v; },
       refresh: () => {},
       focus: () => ta.focus(),
+      selecionar: (de, ate) => {
+        ta.focus({ preventScroll: true });
+        ta.setSelectionRange(de, ate);
+      },
       onChange: (f) => escutas.push(f)
     };
   }

@@ -15,9 +15,11 @@ import { sandboxDoTopico } from "./content/sandbox-topicos.js";
 import { LANGS, EXEMPLOS } from "./sandbox/langs.js";
 import { renderSandbox } from "./sandbox/view.js";
 import { renderFixacao } from "./fixacao.js";
+import { renderSQLPratica } from "./sqlpratica/view.js";
+import { chaveLicao } from "./content/sqlpratica.js";
 import {
   $, $$, esc, clock, human, stars, topicosDa, progressoPorTrilha, progressoGeral,
-  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, fmt
+  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, progressoSQLP, fmt
 } from "./util.js";
 
 const state = { user: null, profile: null, timer: null, isAdmin: false, pendingName: null };
@@ -229,6 +231,7 @@ function render() {
     progresso: viewProgresso,
     sandbox: () => viewSandbox(view, a, b),
     exercicio: () => viewExercicio(view, a),
+    sqlpratica: () => viewSQLPratica(view, a),
     admin: () => viewAdmin(a)
   };
   (telas[rota] || viewInicio)(view);
@@ -296,6 +299,7 @@ function viewInicio(view) {
         <li>Em cada tópico: leia a explicação, veja <b>o código parte por parte</b>, clique em <b>▶ Testar no sandbox</b> para mexer no código, leia o caso real e treine a pergunta de entrevista.</li>
         <li>Ao final de cada nível, faça os <b>✍️ exercícios de fixação</b> (10 questões rápidas com explicação).</li>
         <li>Em caso de ainda haver dúvida, <b>pesquise o termo na internet</b>. Saber pesquisar faz parte do trabalho de quem programa.</li>
+        <li>Para treinar SQL de verdade, faça a trilha interativa <a href="#/sqlpratica"><b>🧩 SQL na Prática</b></a>: 18 lições com banco de dados rodando no navegador.</li>
         <li>No fim de cada nível há um <b>🏋️ exercício prático</b> com correção automática. Use o <a href="#/sandbox">🧪 Sandbox</a> para testar suas próprias ideias.</li>
         <li>Marque <b>“Concluí”</b> para acompanhar sua evolução. O cronômetro no topo soma seu tempo de estudo.</li>
         <li>Sugestão de caminho: <b>HTML → CSS → JavaScript → React</b> (front-end) ou <b>Python → SQL → MySQL</b> (dados/back-end).</li>
@@ -328,7 +332,22 @@ function viewCategoria(cat) {
   $("#view").innerHTML = `
     <h1>${titulo}</h1>
     <p class="muted">${sub}</p>
-    <div class="track-grid">${lista.map((t, i) => cardTrilha(t, i + 1)).join("")}</div>`;
+    <div class="track-grid">${lista.map((t, i) => cardTrilha(t, i + 1)).join("")}</div>
+    ${cat === "bancos" ? cardSQLPratica() : ""}`;
+}
+
+function cardSQLPratica() {
+  const p = progressoSQLP(state.profile.progress);
+  return `<a class="sqlp-card" href="#/sqlpratica">
+    <span class="sqlp-card-ic" aria-hidden="true">🧩</span>
+    <span class="grow">
+      <strong>SQL na Prática</strong>
+      <span class="muted small">${p.total} lições interativas: escreva consultas num banco de dados de verdade, no navegador, e veja a correção na hora. Ótimo para treinar depois (ou junto) das trilhas de SQL e MySQL.</span>
+      ${progressBar(p.pct, true)}
+      <small class="muted">${p.feitos}/${p.total} lições · ${p.pct}%</small>
+    </span>
+    <span class="btn primary tiny">${p.feitos ? "Continuar" : "Começar"} →</span>
+  </a>`;
 }
 
 function viewTrilha(id, nivelId = "basico") {
@@ -514,6 +533,7 @@ function viewProgresso(view) {
       <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
       <div class="stat"><small>Tempo total de estudo</small><strong>${human(total)}</strong></div>
       <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(prog).feitos}/${progressoExercicios(prog).total}</strong></div>
+      <div class="stat"><small>SQL na Prática</small><strong>${progressoSQLP(prog).feitos}/${progressoSQLP(prog).total}</strong></div>
       <div class="stat"><small>Fixação (acertos)</small><strong>${resumoFixacao(state.profile.fixacao).acertos}/${resumoFixacao(state.profile.fixacao).total}</strong></div>
       <div class="stat"><small>Sessões</small><strong>${(state.profile.sessionsCount || 0) + 1}</strong></div>
     </div>
@@ -595,7 +615,7 @@ const ctxSandbox = () => ({
   }
 });
 
-function montar(view, promessa) {
+function montar(view, promessa, titulo = "🧪 Sandbox") {
   let cancelado = false;
   let limpeza = null;
   limparTela = () => {
@@ -607,7 +627,7 @@ function montar(view, promessa) {
     else limpeza = f;
   }).catch((e) => {
     console.error(e);
-    view.innerHTML = `<h1>🧪 Sandbox</h1><div class="banner warn">Não foi possível abrir o sandbox: ${esc(e.message)}</div>`;
+    view.innerHTML = `<h1>${titulo}</h1><div class="banner warn">Não foi possível abrir esta tela: ${esc(e.message)}</div>`;
   });
 }
 
@@ -660,6 +680,28 @@ function viewExercicio(view, exId) {
     resolvido: !!state.profile.progress?.[chaveExercicio(exId)],
     chave: chaveExercicio(exId), nuvem: true
   }, ctxSandbox()));
+}
+
+/* =================== SQL na Prática =================== */
+
+function viewSQLPratica(view, licaoId) {
+  montar(view, renderSQLPratica(view, {
+    licaoId,
+    uid: state.user.uid,
+    progresso: state.profile.progress || {},
+    liberarTudo: state.isAdmin,
+    onConcluir: async (id) => {
+      const k = chaveLicao(id);
+      const prog = (state.profile.progress ||= {});
+      if (prog[k]) return;
+      prog[k] = new Date();
+      try {
+        await updateDoc(doc(db, "users", state.user.uid), { ["progress." + k]: serverTimestamp() });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }), "🧩 SQL na Prática");
 }
 
 /* =================== Admin =================== */

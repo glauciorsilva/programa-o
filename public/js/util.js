@@ -1,4 +1,5 @@
 import { TRILHAS, NIVEIS } from "./content/index.js";
+import { LICOES as LICOES_SQLP, chaveLicao } from "./content/sqlpratica.js";
 
 export const $ = (sel, el = document) => el.querySelector(sel);
 export const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
@@ -86,6 +87,12 @@ export function resumoFixacao(fixacao = {}) {
   const total = TRILHAS.reduce((s, t) => s + NIVEIS.reduce((x, n) => x + t.niveis[n.id].fixacao.length, 0), 0);
   const acertos = Object.values(fixacao || {}).reduce((s, f) => s + (f?.melhor || 0), 0);
   return { acertos, total, pct: total ? Math.round((acertos / total) * 100) : 0 };
+}
+
+// Lições concluídas na trilha interativa "SQL na Prática"
+export function progressoSQLP(progress = {}) {
+  const feitos = LICOES_SQLP.filter((l) => progress[chaveLicao(l.id)]).length;
+  return { feitos, total: LICOES_SQLP.length, pct: Math.round((feitos / LICOES_SQLP.length) * 100) };
 }
 
 export function progressoGeral(progress = {}) {

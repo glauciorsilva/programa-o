@@ -43,6 +43,18 @@ O aluno programa **dentro do app**, sem instalar nada:
 - **Segurança:** o código do aluno roda em um `iframe` isolado (origem opaca), sem acesso ao login. Loops infinitos são interrompidos depois de 10 a 20 segundos.
 - O **Admin/TI** vê, por aluno, quais exercícios foram resolvidos, quantas tentativas e o último código enviado.
 
+## 🧩 SQL na Prática
+
+Trilha interativa de SQL (aba **Bancos de Dados** e menu lateral). São 18 lições, mais a introdução, o encerramento e 2 tópicos extras (subconsultas e UNION/INTERSECT/EXCEPT).
+
+- Cada lição traz uma teoria curta e um exercício com tarefas. Um banco SQLite (sql.js) roda no navegador, dentro de um Web Worker.
+- Lições de consulta (1 a 12 e extras): o resultado é atualizado enquanto o aluno digita.
+- Lições que alteram dados (13 a 18): o aluno clica em **▶ Executar**. As mudanças ficam no banco até ele clicar em **↺ Resetar banco**.
+- A correção é automática. Ela compara o resultado com o da solução oficial (com ou sem ordem) e confere o estado do banco (linhas, colunas, tabelas existentes).
+- Cada tarefa tem a opção **“Travou? Ver a solução”**.
+- A próxima lição só é liberada quando todas as tarefas da atual estiverem concluídas. O admin vê todas as lições liberadas.
+- Conteúdo em `js/content/sqlpratica.js`; motor de correção em `js/sqlpratica/motor.js`.
+
 ## Funcionalidades
 
 - Cadastro e login com e-mail pessoal e senha (Firebase Authentication), além de recuperação de senha.
@@ -68,6 +80,8 @@ public/                 site estático (Firebase Hosting)
   js/content/extras/    explicações detalhadas, código parte por parte e exercícios de fixação
   js/fixacao.js         tela dos exercícios de fixação
   js/sandbox/*.js       editor, execução e tela do sandbox
+  js/content/sqlpratica.js  lições, bancos e tarefas do "SQL na Prática"
+  js/sqlpratica/*.js    motor de correção (Web Worker + sql.js) e tela do "SQL na Prática"
   sandbox/runner.html   ambiente isolado que executa o código do aluno
   sandbox/workers.js    executores de JS, Python (Pyodide) e SQL (sql.js)
 firestore.rules         regras de segurança
@@ -79,7 +93,7 @@ firebase.json
 ```
 users/{uid}
   name, email, createdAt, lastAccess, totalSeconds, sessionsCount
-  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício)
+  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício), sqlp_7 (lição do SQL na Prática)
   daily:    { "dAAAAMMDD": segundos }
   fixacao:  { "<trilha>_<nivel>": { melhor, ultimo, total, tentativas, em } }
 users/{uid}/sessions/{id}
