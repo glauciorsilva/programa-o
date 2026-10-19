@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>runner</title>
+<!--
+  Este documento é carregado em um <iframe sandbox="allow-scripts"> (origem opaca).
+  Ele recebe código da página principal e executa em Web Workers, com limite de tempo.
+-->
+<script src="workers.js"></script>
+<script>
+(function () {
+  const PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/";
+  const SQLJS = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/";
+  const LIMITE = { js: 10000, python: 20000, sql: 10000 };
+
+  const persistentes = {}; // python e sql ficam carregados entre execuções
+  let atual = null;        // execução em andamento
+
+  function criarWorker(lang) {
+    const src = "(" + self.WORKERS[lang].toString() + ")()";
+    return new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
+  }
+
+  function responder(id, dados) {
+    parent.postMessage(Object.assign({ __runner: true, id: id }, dados), "*");
+  }
+
+  // Garante um worker pronto (python/sql carregam bibliotecas pesadas uma vez só).
+  function obterWorker(lang, id, init) {
+    if (lang === "js") return Promise.resolve(criarWorker("js"));
+    if (persistentes[lang]) return persistentes[lang];
+    persistentes[lang] = new Promise(function (ok, falha) {
+      const w = criarWorker(lang);
+      w.onmessage = function (e) {
+        if (e.data.tipo === "pronto") { w.onmessage = null; ok(w); }
+        else if (e.data.tipo === "fim") { delete persistentes[lang]; w.terminate(); falha(new Error("init")); }
+        else responder(id, e.data);
+      };
+      w.onerror = function (e) { delete persistentes[lang]; falha(e); };
+      w.postMessage(init);
+    });
+    return persistentes[lang];
+  }
+
+  function encerrar(lang, w) {
+    w.terminate();
+    if (lang !== "js") delete persistentes[lang];
+  }
+
+  window.addEventListener("message", async function (ev) {
+    const m = ev.data || {};
+    if (m.acao !== "executar") return;
+    const id = m.id;
+    const lang = m.lang;
+    if (atual) { encerrar(atual.lang, atual.worker); responder(atual.id, { tipo: "fim", ok: false, cancelado: true }); atual = null; }
+
+    let w;
+    try {
+      w = await obterWorker(lang, id, lang === "python"
+        ? { acao: "init", indexURL: PYODIDE, arquivos: m.arquivos || {} }
+        : { acao: "init", base: SQLJS });
+    } catch (e) {
+      responder(id, { tipo: "erro", texto: "Não foi possível iniciar o ambiente. Verifique sua internet e tente de novo." });
+      return responder(id, { tipo: "fim", ok: false });
+    }
+
+    let timer = null;
+    const exec = { id: id, lang: lang, worker: w };
+    atual = exec;
+    const iniciarRelogio = function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        if (atual !== exec) return;
+        encerrar(lang, w);
+        atual = null;
+        responder(id, { tipo: "erro", texto: "⏱️ Tempo esgotado (" + LIMITE[lang] / 1000 + "s). Será que há um loop infinito?" });
+        responder(id, { tipo: "fim", ok: false });
+      }, LIMITE[lang]);
+    };
+    if (lang === "js") iniciarRelogio();
+
+    w.onmessage = function (e) {
+      if (atual !== exec) return;
+      const d = e.data;
+      if (d.tipo === "executando") return iniciarRelogio();
+      responder(id, d);
+      if (d.tipo === "fim") {
+        clearTimeout(timer);
+        atual = null;
+        if (lang === "js") w.terminate();
+      }
+    };
+    w.onerror = function (e) {
+      if (atual !== exec) return;
+      e.preventDefault();
+      clearTimeout(timer);
+      responder(id, { tipo: "erro", texto: e.message || "Erro inesperado." });
+      responder(id, { tipo: "fim", ok: false });
+      encerrar(lang, w);
+      atual = null;
+    };
+    w.postMessage(m);
+  });
+
+  parent.postMessage({ __runner: true, tipo: "runner-pronto" }, "*");
+})();
+</script>
+</head>
+<body></body>
+</html>
