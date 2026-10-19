@@ -14,9 +14,10 @@ import { EXERCICIOS } from "./content/exercicios.js";
 import { sandboxDoTopico } from "./content/sandbox-topicos.js";
 import { LANGS, EXEMPLOS } from "./sandbox/langs.js";
 import { renderSandbox } from "./sandbox/view.js";
+import { renderFixacao } from "./fixacao.js";
 import {
   $, $$, esc, clock, human, stars, topicosDa, progressoPorTrilha, progressoGeral,
-  serieDiaria, barChart, progressBar, progressoExercicios
+  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, fmt
 } from "./util.js";
 
 const state = { user: null, profile: null, timer: null, isAdmin: false, pendingName: null };
@@ -170,14 +171,33 @@ onAuthStateChanged(auth, async (user) => {
   render();
 });
 
-/* =================== Menu mobile =================== */
+/* =================== Menu (gaveta no celular, retrátil no computador) =================== */
+
+const telaLarga = () => matchMedia("(min-width: 901px)").matches;
 
 function toggleMenu(open) {
   document.body.classList.toggle("menu-open", open);
   $("#backdrop").hidden = !open;
-  $("#menu-btn").setAttribute("aria-expanded", String(open));
+  if (!telaLarga()) $("#menu-btn").setAttribute("aria-expanded", String(open));
 }
-$("#menu-btn").addEventListener("click", () => toggleMenu(!document.body.classList.contains("menu-open")));
+
+function recolherMenu(recolher) {
+  document.body.classList.toggle("menu-recolhido", recolher);
+  $("#menu-btn").setAttribute("aria-expanded", String(!recolher));
+  $("#menu-btn").setAttribute("aria-label", recolher ? "Mostrar menu" : "Recolher menu");
+  try {
+    localStorage.setItem("progrtotal:menuRecolhido", recolher ? "1" : "");
+  } catch { /* sem armazenamento */ }
+}
+
+try {
+  if (localStorage.getItem("progrtotal:menuRecolhido")) recolherMenu(true);
+} catch { /* sem armazenamento */ }
+
+$("#menu-btn").addEventListener("click", () => {
+  if (telaLarga()) recolherMenu(!document.body.classList.contains("menu-recolhido"));
+  else toggleMenu(!document.body.classList.contains("menu-open"));
+});
 $("#backdrop").addEventListener("click", () => toggleMenu(false));
 
 /* =================== Rotas =================== */
@@ -256,6 +276,12 @@ function viewInicio(view) {
       </div>
     </section>
 
+    <section class="sobre" aria-labelledby="sobre-titulo">
+      <h2 id="sobre-titulo">🚪 Sobre este projeto</h2>
+      <p>O objetivo do ProgrTotal é <b>apresentar ao estudante algumas das muitas linguagens de programação</b>, servindo como uma <b>porta de entrada para o universo da tecnologia</b>.</p>
+      <p>Ele <b>não apresenta nem ensina, por si só, tudo o que deve ser aprendido</b> sobre cada linguagem. Use-o como ponto de partida: pratique, pesquise, leia a documentação oficial e continue estudando por outros cursos e materiais.</p>
+    </section>
+
     <section class="roadmap">
       <h2>💻 Linguagens <small class="muted">— da mais fácil à mais complexa</small></h2>
       <ol class="road">${LINGUAGENS.map((t, i) => roadItem(t, i + 1)).join("")}</ol>
@@ -267,7 +293,9 @@ function viewInicio(view) {
       <h2>🧭 Como usar este roadmap</h2>
       <ul>
         <li><b>Não precisa decorar tudo.</b> A meta é você saber fazer as tarefas mais comuns e saber <a href="#/pesquisar">procurar</a> o resto.</li>
-        <li>Em cada tópico: leia a explicação simples, clique em <b>▶ Testar no sandbox</b> para mexer no código, leia o caso real e treine a pergunta de entrevista.</li>
+        <li>Em cada tópico: leia a explicação, veja <b>o código parte por parte</b>, clique em <b>▶ Testar no sandbox</b> para mexer no código, leia o caso real e treine a pergunta de entrevista.</li>
+        <li>Ao final de cada nível, faça os <b>✍️ exercícios de fixação</b> (10 questões rápidas com explicação).</li>
+        <li>Em caso de ainda haver dúvida, <b>pesquise o termo na internet</b>. Saber pesquisar faz parte do trabalho de quem programa.</li>
         <li>No fim de cada nível há um <b>🏋️ exercício prático</b> com correção automática. Use o <a href="#/sandbox">🧪 Sandbox</a> para testar suas próprias ideias.</li>
         <li>Marque <b>“Concluí”</b> para acompanhar sua evolução. O cronômetro no topo soma seu tempo de estudo.</li>
         <li>Sugestão de caminho: <b>HTML → CSS → JavaScript → React</b> (front-end) ou <b>Python → SQL → MySQL</b> (dados/back-end).</li>
@@ -311,6 +339,8 @@ function viewTrilha(id, nivelId = "basico") {
   const p = progressoPorTrilha(prog).find((x) => x.trilha.id === t.id);
   const cat = trilhaCategoria(t.id);
   const bloco = t.niveis[nivel.id];
+  // Reaproveita os exercícios de fixação já respondidos ao redesenhar a mesma página
+  const fxAnterior = $("#fx-host")?.dataset.chave === `${t.id}_${nivel.id}` ? $("#fx-host .fixacao") : null;
 
   $("#view").innerHTML = `
     <a class="back" href="#/${cat}">← ${cat === "bancos" ? "Bancos de Dados" : "Linguagens"}</a>
@@ -343,6 +373,8 @@ function viewTrilha(id, nivelId = "basico") {
 
     ${cardExercicio(t, nivel, prog)}
 
+    <div id="fx-host"></div>
+
     <section class="docs">
       <h2>📚 Onde procurar quando não souber (${esc(t.nome)})</h2>
       <ul>${t.docs.map((d) => `<li><a href="${d.url}" target="_blank" rel="noopener">${esc(d.nome)}</a>${d.desc ? ` — <span class="muted">${d.desc}</span>` : ""}</li>`).join("")}</ul>
@@ -352,6 +384,8 @@ function viewTrilha(id, nivelId = "basico") {
       ${nivelVizinho(t, nivel, -1)}
       ${nivelVizinho(t, nivel, 1)}
     </nav>`;
+
+  montarFixacao(t, nivel, fxAnterior);
 
   $$(".topic").forEach((el) => {
     const tpId = el.dataset.id;
@@ -390,7 +424,12 @@ function topicoHTML(tp, num, feito) {
       <span class="grow">${esc(tp.titulo)}</span>
     </summary>
     <div class="topic-body">
-      <div class="box kid"><h4>🧒 Explicando para uma criança de 5 anos</h4><p>${tp.crianca}</p></div>
+      <div class="box kid">
+        <h4>📖 Entendendo o conceito</h4>
+        <p>${tp.crianca}</p>
+        ${tp.detalhes || ""}
+        <p class="dica-pesquisa">💡 Em caso de ainda haver dúvida, pesquise o termo na internet.</p>
+      </div>
 
       <div class="box code">
         <div class="code-head"><h4>💻 Na prática</h4>
@@ -404,6 +443,11 @@ function topicoHTML(tp, num, feito) {
         ${sbx?.indisponivel ? `<p class="muted small">⚠️ ${sbx.indisponivel}</p>` : ""}
       </div>
 
+      ${tp.partes?.length ? `<div class="box partes">
+        <h4>🔍 O código, parte por parte</h4>
+        <dl>${tp.partes.map(([trecho, expl]) => `<div class="parte"><dt><code>${esc(trecho.trim())}</code></dt><dd>${fmt(expl)}</dd></div>`).join("")}</dl>
+      </div>` : ""}
+
       <div class="box work"><h4>💼 Caso real no trabalho</h4><p>${tp.trabalho}</p></div>
 
       <div class="box interview">
@@ -413,7 +457,7 @@ function topicoHTML(tp, num, feito) {
         <div class="answer" hidden><p>${tp.entrevista.resposta}</p></div>
       </div>
 
-      <div class="box search"><h4>🔎 Se travar, pesquise</h4><div class="chips">${busca}</div></div>
+      <div class="box search"><h4>🔎 Em caso de ainda haver dúvida, pesquise o termo na internet</h4><p class="muted small">Sugestões de busca (abrem o Google em outra aba):</p><div class="chips">${busca}</div></div>
 
       <button class="done-btn btn ${feito ? "success" : "primary"}">${feito ? "✓ Concluído (desmarcar)" : "Marcar como concluído"}</button>
     </div>
@@ -453,7 +497,7 @@ function viewPesquisar(view) {
     ${GUIA_PESQUISA.map((s) => `
       <section class="box guide">
         <h2>${s.titulo}</h2>
-        ${s.crianca ? `<p class="kid-inline">🧒 ${s.crianca}</p>` : ""}
+        ${s.crianca ? `<p class="kid-inline">💡 ${s.crianca}</p>` : ""}
         ${s.html}
       </section>`).join("")}`;
 }
@@ -470,6 +514,7 @@ function viewProgresso(view) {
       <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
       <div class="stat"><small>Tempo total de estudo</small><strong>${human(total)}</strong></div>
       <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(prog).feitos}/${progressoExercicios(prog).total}</strong></div>
+      <div class="stat"><small>Fixação (acertos)</small><strong>${resumoFixacao(state.profile.fixacao).acertos}/${resumoFixacao(state.profile.fixacao).total}</strong></div>
       <div class="stat"><small>Sessões</small><strong>${(state.profile.sessionsCount || 0) + 1}</strong></div>
     </div>
     <section class="box">
@@ -507,6 +552,32 @@ function cardExercicio(t, nivel, prog) {
     </div>
     <a class="btn ${feito ? "ghost" : "primary"}" href="#/exercicio/${exId}">${feito ? "Rever" : "Resolver"} →</a>
   </section>`;
+}
+
+function montarFixacao(t, nivel, anterior) {
+  const host = $("#fx-host");
+  if (!host) return;
+  const chave = `${t.id}_${nivel.id}`;
+  host.dataset.chave = chave;
+  if (anterior) {
+    host.replaceChildren(anterior);
+    return;
+  }
+  renderFixacao(host, {
+    questoes: t.niveis[nivel.id].fixacao,
+    ci: ["html", "css", "sql", "mysql"].includes(t.id),
+    salvo: () => state.profile.fixacao?.[chave] || null,
+    onConcluir: async (acertos, total) => {
+      const atual = (state.profile.fixacao ||= {})[chave];
+      const novo = { melhor: Math.max(acertos, atual?.melhor || 0), ultimo: acertos, total, tentativas: (atual?.tentativas || 0) + 1 };
+      state.profile.fixacao[chave] = novo;
+      try {
+        await updateDoc(doc(db, "users", state.user.uid), { ["fixacao." + chave]: { ...novo, em: serverTimestamp() } });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  });
 }
 
 const ctxSandbox = () => ({

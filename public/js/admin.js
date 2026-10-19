@@ -4,7 +4,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   $, esc, human, fmtDate, toDate, progressoGeral, progressoPorTrilha, serieDiaria, barChart, progressBar,
-  progressoExercicios
+  progressoExercicios, resumoFixacao
 } from "./util.js";
 import { EXERCICIOS } from "./content/exercicios.js";
 import { TRILHAS, NIVEIS } from "./content/index.js";
@@ -67,7 +67,7 @@ async function renderLista(view, force = false) {
     </div>
     <div class="table-wrap"><table class="table">
       <thead><tr>
-        <th>Aluno</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Progresso</th><th></th>
+        <th>Aluno</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Fixação</th><th>Progresso</th><th></th>
       </tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>`;
@@ -94,10 +94,11 @@ async function renderLista(view, force = false) {
         <td data-label="Tempo total">${human(a.totalSeconds)}</td>
         <td data-label="Sessões">${a.sessionsCount || 0}</td>
         <td data-label="Exercícios">${progressoExercicios(a.progress).feitos}/${progressoExercicios(a.progress).total}</td>
+        <td data-label="Fixação">${resumoFixacao(a.fixacao).pct}%</td>
         <td data-label="Progresso"><div class="cell-progress">${progressBar(g.pct, true)}<small>${g.feitos}/${g.total} (${g.pct}%)</small></div></td>
         <td><a class="btn tiny primary" href="#/admin/${a.uid}">Ver evolução</a></td>
       </tr>`;
-    }).join("") || `<tr><td colspan="8" class="muted">Nenhum aluno encontrado.</td></tr>`;
+    }).join("") || `<tr><td colspan="9" class="muted">Nenhum aluno encontrado.</td></tr>`;
   };
   $("#filtro").addEventListener("input", desenhar);
   $("#ordem").addEventListener("change", desenhar);
@@ -147,6 +148,17 @@ async function renderAluno(view, uid) {
       </div>
     </section>
     <section class="box">
+      <h2>Exercícios de fixação</h2>
+      <p class="muted small">Melhor resultado do aluno em cada nível (10 questões por nível).</p>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Trilha</th>${NIVEIS.map((n) => `<th>${n.nome}</th>`).join("")}</tr></thead>
+        <tbody>${TRILHAS.map((t) => `<tr><td data-label="Trilha">${t.icone} ${esc(t.nome)}</td>${NIVEIS.map((n) => {
+          const f = a.fixacao?.[`${t.id}_${n.id}`];
+          return `<td data-label="${n.nome}">${f ? `${f.melhor}/${f.total}${f.tentativas > 1 ? ` <small class="muted">(${f.tentativas}x)</small>` : ""}` : '<span class="muted">—</span>'}</td>`;
+        }).join("")}</tr>`).join("")}</tbody>
+      </table></div>
+    </section>
+    <section class="box">
       <h2>Exercícios práticos</h2>
       <p class="muted small">Clique em um exercício para ver o último código salvo pelo aluno.</p>
       <div class="admin-ex">
@@ -188,13 +200,13 @@ function formatarCodigo(c) {
 
 function exportarCSV(alunos) {
   const trilhas = progressoPorTrilha({}).map((p) => p.trilha);
-  const cab = ["nome", "email", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "topicos_concluidos", "progresso_pct",
+  const cab = ["nome", "email", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "fixacao_pct", "topicos_concluidos", "progresso_pct",
     ...trilhas.map((t) => t.id + "_concluidos")];
   const linhas = alunos.map((a) => {
     const g = progressoGeral(a.progress);
     const pt = progressoPorTrilha(a.progress);
     return [a.name, a.email, fmtDate(a.createdAt, false), fmtDate(a.lastAccess),
-      Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, progressoExercicios(a.progress).feitos, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
+      Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, progressoExercicios(a.progress).feitos, resumoFixacao(a.fixacao).pct, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
   });
   const csv = [cab, ...linhas]
     .map((l) => l.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";"))

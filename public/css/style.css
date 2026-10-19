@@ -382,3 +382,67 @@ pre { tab-size: 4; margin: 0; background: var(--code-bg); color: var(--code-text
   .sbx .table, .sbx .table tbody { display: table; width: auto; }
   .sbx .table tbody { display: table-row-group; }
 }
+
+/* ---------- Menu retrátil (computador) ---------- */
+@media (min-width: 901px) {
+  #menu-btn { display: block; }
+  .sidebar { transition: transform .25s ease; }
+  main { transition: margin-left .25s ease; }
+  body.menu-recolhido .sidebar { transform: translateX(-100%); visibility: hidden; }
+  body.menu-recolhido main { margin-left: 0; max-width: 1100px; margin-inline: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar, main { transition: none !important; }
+}
+
+/* ---------- Sobre o projeto ---------- */
+.sobre { margin: 16px 0; padding: 16px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--primary); display: grid; gap: 8px; }
+.sobre h2 { margin: 0; }
+.sobre p { margin: 0; max-width: 75ch; }
+
+/* ---------- Tópicos: conceito e código parte por parte ---------- */
+.box.kid p + p { margin-top: .6em; }
+.box.kid ul, .box.kid ol { margin: .5em 0 0; padding-left: 1.2em; }
+.dica-pesquisa { margin-top: .8em !important; font-size: .88rem; color: var(--muted); }
+.box.partes { background: var(--surface-2); }
+.partes dl { margin: 0; display: grid; gap: 8px; }
+.parte { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 6px 14px; align-items: start; padding: 8px 0; border-top: 1px dashed var(--border); }
+.parte:first-child { border-top: 0; }
+.parte dt { min-width: 0; }
+.parte dt code { display: block; white-space: pre-wrap; word-break: break-word; background: var(--code-bg); color: var(--code-text); padding: 6px 8px; border-radius: 8px; font-size: .82rem; }
+.parte dd { margin: 0; font-size: .93rem; }
+@media (max-width: 700px) { .parte { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Exercícios de fixação ---------- */
+.fixacao { margin-top: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.fx-topo { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 20px; align-items: flex-start; }
+.fx-topo h2 { margin: 0 0 4px; }
+.fx-topo p { margin: 0; }
+.fx-placar { display: grid; justify-items: end; text-align: right; }
+.fx-placar strong { font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.fx-placar small { color: var(--muted); max-width: 26ch; }
+.fx-lista { margin: 14px 0 0; padding-left: 1.4em; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.fx-q { min-width: 0; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); }
+.fx-q::marker { font-weight: 700; color: var(--primary); }
+.fx-pergunta { margin: 0 0 8px; font-weight: 600; overflow-wrap: anywhere; }
+.fx-q pre { margin: 0 0 8px; }
+.fx-opcoes { display: grid; gap: 6px; }
+.fx-opcao { overflow-wrap: anywhere; text-align: left; font: inherit; padding: .55em .8em; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+.fx-opcao:hover:not(:disabled) { border-color: var(--primary); }
+.fx-opcao:disabled { cursor: default; opacity: .85; }
+.fx-opcao.certa { border-color: var(--success); background: color-mix(in srgb, var(--success) 14%, var(--surface)); opacity: 1; }
+.fx-opcao.errada { border-color: #d64545; background: color-mix(in srgb, #d64545 14%, var(--surface)); opacity: 1; }
+.fx-lacuna { display: flex; gap: 8px; flex-wrap: wrap; }
+.fx-input { flex: 1 1 200px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.fx-input.ok { border-color: var(--success); }
+.fx-input.erro { border-color: #d64545; }
+.fx-feedback { margin-top: 8px; padding: 8px 10px; border-radius: 8px; font-size: .92rem; }
+.fx-feedback.ok { background: #e3f6ea; color: #14532d; }
+.fx-feedback.erro { background: #fde8e8; color: #7f1d1d; }
+@media (prefers-color-scheme: dark) {
+  .fx-feedback.ok { background: #12301f; color: #b9f0cf; }
+  .fx-feedback.erro { background: #3a1616; color: #ffc9c9; }
+}
+.fx-rodape { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+.fx-rodape p { margin: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
