@@ -12,6 +12,11 @@ export function esc(str) {
     .replace(/'/g, "&#39;");
 }
 
+// Texto simples com `crases` → código destacado (usado em exercícios e explicações)
+export function fmt(txt) {
+  return esc(txt).replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+
 const pad = (n) => String(n).padStart(2, "0");
 
 // 3725 -> "01:02:05"
@@ -74,6 +79,13 @@ export const TOTAL_EXERCICIOS = TRILHAS.length * NIVEIS.length;
 export function progressoExercicios(progress = {}) {
   const feitos = Object.keys(progress).filter((k) => k.startsWith("ex_")).length;
   return { feitos, total: TOTAL_EXERCICIOS, pct: Math.round((feitos / TOTAL_EXERCICIOS) * 100) };
+}
+
+// Soma do melhor resultado de cada bloco de fixação (10 questões por nível)
+export function resumoFixacao(fixacao = {}) {
+  const total = TRILHAS.reduce((s, t) => s + NIVEIS.reduce((x, n) => x + t.niveis[n.id].fixacao.length, 0), 0);
+  const acertos = Object.values(fixacao || {}).reduce((s, f) => s + (f?.melhor || 0), 0);
+  return { acertos, total, pct: total ? Math.round((acertos / total) * 100) : 0 };
 }
 
 export function progressoGeral(progress = {}) {

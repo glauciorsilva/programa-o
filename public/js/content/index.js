@@ -8,6 +8,7 @@ import csharp from "./csharp.js";
 import java from "./java.js";
 import sql from "./sql.js";
 import mysql from "./mysql.js";
+import * as extras from "./extras/index.js";
 
 export const NIVEIS = [
   { id: "basico", nome: "Básico", emoji: "🌱" },
@@ -21,10 +22,16 @@ export const BANCOS = [sql, mysql];
 export const TRILHAS = [...LINGUAGENS, ...BANCOS];
 
 // IDs estáveis de cada tópico: <trilha>_<b|i|a><n>, ex.: python_b1
+// Também junta o conteúdo extra de cada trilha (explicação detalhada,
+// código parte por parte e exercícios de fixação), que fica em ./extras/.
 for (const t of TRILHAS) {
+  const extra = extras[t.id] || {};
   for (const n of NIVEIS) {
     t.niveis[n.id].topicos.forEach((tp, i) => {
-      tp.id = `${t.id}_${n.id[0]}${i + 1}`;
+      const chave = `${n.id[0]}${i + 1}`;
+      tp.id = `${t.id}_${chave}`;
+      Object.assign(tp, extra.topicos?.[chave]);
     });
+    t.niveis[n.id].fixacao = extra.fixacao?.[n.id] || [];
   }
 }
