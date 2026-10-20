@@ -1,5 +1,6 @@
 import { TRILHAS, NIVEIS } from "./content/index.js";
 import { LICOES as LICOES_SQLP, chaveLicao } from "./content/sqlpratica.js";
+import { TOTAL_CODIGO } from "./content/codigo/index.js";
 
 export const $ = (sel, el = document) => el.querySelector(sel);
 export const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
@@ -87,6 +88,12 @@ export function resumoFixacao(fixacao = {}) {
   const total = TRILHAS.reduce((s, t) => s + NIVEIS.reduce((x, n) => x + t.niveis[n.id].fixacao.length, 0), 0);
   const acertos = Object.values(fixacao || {}).reduce((s, f) => s + (f?.melhor || 0), 0);
   return { acertos, total, pct: total ? Math.round((acertos / total) * 100) : 0 };
+}
+
+// Exercícios de código dos tópicos (chaves cx_<id>)
+export function progressoCodigo(progress = {}) {
+  const feitos = Object.keys(progress).filter((k) => k.startsWith("cx_")).length;
+  return { feitos, total: TOTAL_CODIGO, pct: TOTAL_CODIGO ? Math.round((feitos / TOTAL_CODIGO) * 100) : 0 };
 }
 
 // Lições concluídas na trilha interativa "SQL na Prática"

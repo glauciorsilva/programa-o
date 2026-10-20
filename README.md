@@ -43,6 +43,20 @@ O aluno programa **dentro do app**, sem instalar nada:
 - **Segurança:** o código do aluno roda em um `iframe` isolado (origem opaca), sem acesso ao login. Loops infinitos são interrompidos depois de 10 a 20 segundos.
 - O **Admin/TI** vê, por aluno, quais exercícios foram resolvidos, quantas tentativas e o último código enviado.
 
+## 🧩 Exercícios de código por tópico
+
+Cada um dos 90 tópicos tem **pelo menos 5 exercícios de código** (lista “🧩 Exercícios de código” dentro do tópico):
+
+- **✏️ Completar:** o código vem pronto com lacunas `____` para o aluno preencher.
+- **🛠️ Do zero:** o aluno escreve tudo a partir do enunciado.
+
+Eles abrem no sandbox, com Dica, Solução e **✅ Verificar**:
+
+- HTML/CSS/JS/TS/React/Python/SQL/MySQL: o código roda e os testes conferem o resultado.
+- Go, C# e Java (e os comandos de MySQL que só rodam num servidor real): a verificação confere no código os trechos pedidos (`padroes`). A saída esperada aparece para comparar no playground.
+- O conteúdo fica em `js/content/codigo/<trilha>.js`; o registro, em `js/content/codigo/index.js`.
+- Os ids seguem o formato `<topico>_<n>` (ex.: `python_b1_3`). O progresso fica em `progress.cx_<id>`.
+
 ## 🧩 SQL na Prática
 
 Trilha interativa de SQL (aba **Bancos de Dados** e menu lateral). São 18 lições, mais a introdução, o encerramento e 2 tópicos extras (subconsultas e UNION/INTERSECT/EXCEPT).
@@ -81,6 +95,7 @@ public/                 site estático (Firebase Hosting)
   js/fixacao.js         tela dos exercícios de fixação
   js/sandbox/*.js       editor, execução e tela do sandbox
   js/content/sqlpratica.js  lições, bancos e tarefas do "SQL na Prática"
+  js/content/codigo/    exercícios de código por tópico (completar / criar do zero)
   js/sqlpratica/*.js    motor de correção (Web Worker + sql.js) e tela do "SQL na Prática"
   sandbox/runner.html   ambiente isolado que executa o código do aluno
   sandbox/workers.js    executores de JS, Python (Pyodide) e SQL (sql.js)
@@ -93,7 +108,7 @@ firebase.json
 ```
 users/{uid}
   name, email, createdAt, lastAccess, totalSeconds, sessionsCount
-  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício), sqlp_7 (lição do SQL na Prática)
+  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício), cx_python_b1_3 (exercício de código), sqlp_7 (lição do SQL na Prática)
   daily:    { "dAAAAMMDD": segundos }
   fixacao:  { "<trilha>_<nivel>": { melhor, ultimo, total, tentativas, em } }
 users/{uid}/sessions/{id}

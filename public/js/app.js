@@ -11,6 +11,7 @@ import { GUIA_PESQUISA } from "./content/guia.js";
 import { StudyTimer } from "./timer.js";
 import { renderAdmin } from "./admin.js";
 import { EXERCICIOS } from "./content/exercicios.js";
+import { EXERCICIOS_CODIGO, CODIGO_POR_TOPICO, chaveCodigo, proximoCodigo } from "./content/codigo/index.js";
 import { sandboxDoTopico } from "./content/sandbox-topicos.js";
 import { LANGS, EXEMPLOS } from "./sandbox/langs.js";
 import { renderSandbox } from "./sandbox/view.js";
@@ -19,7 +20,7 @@ import { renderSQLPratica } from "./sqlpratica/view.js";
 import { chaveLicao } from "./content/sqlpratica.js";
 import {
   $, $$, esc, clock, human, stars, topicosDa, progressoPorTrilha, progressoGeral,
-  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, progressoSQLP, fmt
+  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, progressoSQLP, progressoCodigo, fmt
 } from "./util.js";
 
 const state = { user: null, profile: null, timer: null, isAdmin: false, pendingName: null };
@@ -275,6 +276,7 @@ function viewInicio(view) {
         <div class="stat"><small>Progresso geral</small><strong>${g.pct}%</strong>${progressBar(g.pct, true)}</div>
         <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
         <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(state.profile.progress).feitos}/${progressoExercicios(state.profile.progress).total}</strong></div>
+        <div class="stat"><small>Exercícios de código</small><strong>${progressoCodigo(state.profile.progress).feitos}/${progressoCodigo(state.profile.progress).total}</strong></div>
         <div class="stat"><small>Tempo total</small><strong id="home-total">${human(state.profile.totalSeconds)}</strong></div>
       </div>
     </section>
@@ -297,6 +299,7 @@ function viewInicio(view) {
       <ul>
         <li><b>Não precisa decorar tudo.</b> A meta é você saber fazer as tarefas mais comuns e saber <a href="#/pesquisar">procurar</a> o resto.</li>
         <li>Em cada tópico: leia a explicação, veja <b>o código parte por parte</b>, clique em <b>▶ Testar no sandbox</b> para mexer no código, leia o caso real e treine a pergunta de entrevista.</li>
+        <li>Cada tópico tem <b>🧩 exercícios de código</b>: alguns para <b>completar</b> o que falta, outros para <b>criar do zero</b>. A correção é automática.</li>
         <li>Ao final de cada nível, faça os <b>✍️ exercícios de fixação</b> (10 questões rápidas com explicação).</li>
         <li>Em caso de ainda haver dúvida, <b>pesquise o termo na internet</b>. Saber pesquisar faz parte do trabalho de quem programa.</li>
         <li>Para treinar SQL de verdade, faça a trilha interativa <a href="#/sqlpratica"><b>🧩 SQL na Prática</b></a>: 18 lições com banco de dados rodando no navegador.</li>
@@ -433,6 +436,28 @@ function nivelVizinho(t, nivel, dir) {
   return `<a class="btn ghost" href="#/trilha/${t.id}/${n.id}">${dir < 0 ? "← " : ""}${n.nome}${dir > 0 ? " →" : ""}</a>`;
 }
 
+// Exercícios de código do tópico (completar / criar do zero)
+function listaCodigo(tp) {
+  const ids = CODIGO_POR_TOPICO[tp.id] || [];
+  if (!ids.length) return "";
+  const prog = state.profile.progress || {};
+  const feitos = ids.filter((id) => prog[chaveCodigo(id)]).length;
+  return `<div class="box codigo-ex">
+    <h4>🧩 Exercícios de código <small class="muted">${feitos}/${ids.length} resolvidos</small></h4>
+    <p class="muted small">Complete o código que falta ou crie do zero. A correção é automática.</p>
+    <ol class="cx-lista">${ids.map((id) => {
+      const ex = EXERCICIOS_CODIGO[id];
+      const ok = !!prog[chaveCodigo(id)];
+      return `<li><a href="#/exercicio/${id}" class="${ok ? "ok" : ""}">
+        <span class="cx-ok" aria-hidden="true">${ok ? "✅" : "⬜"}</span>
+        <span class="cx-tag ${ex.tipo === "completar" ? "completar" : "criar"}">${ex.tipo === "completar" ? "✏️ Completar" : "🛠️ Do zero"}</span>
+        <span class="grow">${esc(ex.titulo)}</span>
+        <span class="sr-only">${ok ? "(resolvido)" : ""}</span>
+      </a></li>`;
+    }).join("")}</ol>
+  </div>`;
+}
+
 function topicoHTML(tp, num, feito) {
   const sbx = sandboxDoTopico(tp.id);
   const busca = tp.busca.map((q) =>
@@ -466,6 +491,8 @@ function topicoHTML(tp, num, feito) {
         <h4>🔍 O código, parte por parte</h4>
         <dl>${tp.partes.map(([trecho, expl]) => `<div class="parte"><dt><code>${esc(trecho.trim())}</code></dt><dd>${fmt(expl)}</dd></div>`).join("")}</dl>
       </div>` : ""}
+
+      ${listaCodigo(tp)}
 
       <div class="box work"><h4>💼 Caso real no trabalho</h4><p>${tp.trabalho}</p></div>
 
@@ -533,6 +560,7 @@ function viewProgresso(view) {
       <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
       <div class="stat"><small>Tempo total de estudo</small><strong>${human(total)}</strong></div>
       <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(prog).feitos}/${progressoExercicios(prog).total}</strong></div>
+      <div class="stat"><small>Exercícios de código</small><strong>${progressoCodigo(prog).feitos}/${progressoCodigo(prog).total}</strong></div>
       <div class="stat"><small>SQL na Prática</small><strong>${progressoSQLP(prog).feitos}/${progressoSQLP(prog).total}</strong></div>
       <div class="stat"><small>Fixação (acertos)</small><strong>${resumoFixacao(state.profile.fixacao).acertos}/${resumoFixacao(state.profile.fixacao).total}</strong></div>
       <div class="stat"><small>Sessões</small><strong>${(state.profile.sessionsCount || 0) + 1}</strong></div>
@@ -603,7 +631,7 @@ function montarFixacao(t, nivel, anterior) {
 const ctxSandbox = () => ({
   uid: state.user.uid,
   onResolvido: async (exId) => {
-    const k = chaveExercicio(exId);
+    const k = EXERCICIOS_CODIGO[exId] ? chaveCodigo(exId) : chaveExercicio(exId);
     const prog = (state.profile.progress ||= {});
     if (prog[k]) return;
     prog[k] = new Date();
@@ -666,6 +694,7 @@ function viewSandbox(view, a, b) {
 }
 
 function viewExercicio(view, exId) {
+  if (EXERCICIOS_CODIGO[exId]) return viewExercicioCodigo(view, exId);
   const ex = EXERCICIOS[exId];
   if (!ex) return viewSandbox(view);
   const [trilhaId, nivelId] = exId.split("_");
@@ -679,6 +708,27 @@ function viewExercicio(view, exId) {
     voltar: { href: `#/trilha/${t.id}/${nivel.id}`, texto: `${t.nome} — ${nivel.nome}` },
     resolvido: !!state.profile.progress?.[chaveExercicio(exId)],
     chave: chaveExercicio(exId), nuvem: true
+  }, ctxSandbox()));
+}
+
+function viewExercicioCodigo(view, exId) {
+  const ex = EXERCICIOS_CODIGO[exId];
+  const { trilha: t, nivel, topico: tp } = ex;
+  const total = CODIGO_POR_TOPICO[tp.id].length;
+  const prox = proximoCodigo(exId);
+  const tipo = ex.tipo === "completar" ? "✏️ Completar o código" : "🛠️ Criar do zero";
+  montar(view, renderSandbox(view, {
+    modo: "exercicio", lang: ex.lang, inicial: ex.inicial, exercicio: ex, exId,
+    aba: ex.aba || (t.id === "css" ? "css" : undefined),
+    db: ex.db, entrada: ex.entrada,
+    titulo: ex.titulo,
+    subtitulo: `${tipo} · <b>${esc(t.nome)}</b> — ${esc(tp.titulo)} · exercício ${ex.n} de ${total}`,
+    voltar: { href: `#/trilha/${t.id}/${nivel.id}`, texto: `${t.nome} — ${tp.titulo}` },
+    proximo: prox
+      ? { href: `#/exercicio/${prox}`, texto: "Próximo exercício" }
+      : { href: `#/trilha/${t.id}/${nivel.id}`, texto: "Voltar ao tópico" },
+    resolvido: !!state.profile.progress?.[chaveCodigo(exId)],
+    chave: chaveCodigo(exId), nuvem: true
   }, ctxSandbox()));
 }
 
