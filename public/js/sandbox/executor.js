@@ -124,7 +124,7 @@ function enviar(tipo,args){parent.postMessage({__sbx:ID,tipo:tipo,texto:Array.pr
 ["log","info","warn","error"].forEach(function(k){var o=console[k];console[k]=function(){enviar(k==="error"?"erro":k==="warn"?"aviso":"log",arguments);o.apply(console,arguments)}});
 addEventListener("error",function(e){enviar("erro",[e.message+(e.lineno?" (linha "+e.lineno+")":"")])});
 addEventListener("unhandledrejection",function(e){enviar("erro",["Promise rejeitada: "+fmt(e.reason)])});
-addEventListener("submit",function(e){e.preventDefault();enviar("aviso",["Formulário enviado (no sandbox o envio é simulado)."])});
+addEventListener("submit",function(e){if(e.target&&e.target.method==="dialog")return;e.preventDefault();enviar("aviso",["Formulário enviado (no sandbox o envio é simulado)."])},true);
 window.__assert=function(c,m){if(!c)throw new Error(m||"verificação falhou")};
 window.__esperar=function(ms){return new Promise(function(r){setTimeout(r,ms||50)})};
 window.__css=function(sel,prop){var el=document.querySelector(sel);if(!el)throw new Error("Não encontrei o elemento "+sel);return getComputedStyle(el)[prop]};
@@ -219,7 +219,7 @@ async function executarPreview(opts, onEvento, frameHost) {
 
   // Um iframe novo a cada execução (zera o estado anterior)
   const frame = document.createElement("iframe");
-  frame.setAttribute("sandbox", "allow-scripts allow-modals");
+  frame.setAttribute("sandbox", "allow-scripts allow-modals allow-forms");
   frame.title = "Pré-visualização";
   frame.className = "sbx-preview";
   frameHost.replaceChildren(frame);
