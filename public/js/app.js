@@ -722,7 +722,8 @@ function viewExercicioCodigo(view, exId) {
     aba: ex.aba || (t.id === "css" ? "css" : undefined),
     db: ex.db, entrada: ex.entrada,
     titulo: ex.titulo,
-    subtitulo: `${tipo} · <b>${esc(t.nome)}</b> — ${esc(tp.titulo)} · exercício ${ex.n} de ${total}`,
+    subtitulo: `${tipo} · <b>${esc(t.nome)}</b> — ${esc(tp.titulo)} · exercício ${ex.n} de ${total}`
+      + (ex.tipo === "completar" ? `<br><span class="small">👉 Clique em cada <span class="lacuna-exemplo">retângulo</span> do código e escreva o que falta (Enter vai para o próximo).</span>` : ""),
     voltar: { href: `#/trilha/${t.id}/${nivel.id}`, texto: `${t.nome} — ${tp.titulo}` },
     proximo: prox
       ? { href: `#/exercicio/${prox}`, texto: "Próximo exercício" }
