@@ -45,7 +45,8 @@ function gravarLocal(uid, chave, codigo) {
 
 /**
  * opcoes: { modo: 'livre'|'topico'|'exercicio', lang, inicial, titulo, subtitulo, voltar:{href,texto},
- *           entrada, db, chave, nuvem (salva no Firestore), exercicio, exId, resolvido }
+ *           entrada, db, chave, nuvem (salva no Firestore), exercicio, exId, resolvido,
+ *           proximo:{href,texto} (link mostrado ao resolver) }
  * ctx: { uid, onResolvido(exId) }
  * Retorna uma função de limpeza.
  */
@@ -55,6 +56,8 @@ export async function renderSandbox(view, opcoes, ctx) {
   const web = cfg.tipo === "web";
   const preview = cfg.tipo === "web" || cfg.tipo === "react";
   const externo = cfg.tipo === "externo";
+  // Linguagens que não rodam no navegador só têm "Verificar" quando o exercício traz padrões a conferir
+  const verificavel = ex && (!externo || ex.padroes?.length);
   let resolvido = !!opcoes.resolvido;
   const abaInicial = opcoes.aba || "html";
   precarregar(opcoes.lang);
@@ -93,8 +96,8 @@ export async function renderSandbox(view, opcoes, ctx) {
           ${externo ? `<button class="btn primary" id="sbx-copiar-abrir">📋 Copiar código</button>
             ${cfg.playgrounds.map((p) => `<a class="btn ghost" href="${p.url}" target="_blank" rel="noopener">${esc(p.nome)} ↗</a>`).join("")}`
           : `<button class="btn primary" id="sbx-run" title="Ctrl+Enter">▶ Executar</button>`}
-          ${ex && !externo ? `<button class="btn success" id="sbx-verificar">✅ Verificar</button>` : ""}
-          ${ex && externo ? `<button class="btn success" id="sbx-marcar">✅ Marcar como resolvido</button>` : ""}
+          ${verificavel ? `<button class="btn success" id="sbx-verificar">✅ Verificar</button>` : ""}
+          ${ex && !verificavel ? `<button class="btn success" id="sbx-marcar">✅ Marcar como resolvido</button>` : ""}
           ${ex ? `<button class="btn ghost" id="sbx-dica">💡 Dica</button><button class="btn ghost" id="sbx-solucao">👀 Solução</button>` : ""}
           ${!externo ? `<button class="btn ghost" id="sbx-copiar">📋 Copiar</button>` : ""}
           <button class="btn ghost" id="sbx-restaurar" title="Volta ao código inicial">↺ Restaurar</button>
@@ -144,7 +147,7 @@ export async function renderSandbox(view, opcoes, ctx) {
   /* ---------- editores ---------- */
   const host = $("#sbx-editor", view);
   host.replaceChildren();
-  const executarAtalho = () => (ex && !externo ? verificar() : rodar());
+  const executarAtalho = () => (verificavel ? verificar() : rodar());
   let editores = {};
   if (web) {
     for (const a of ABAS_WEB) {
@@ -271,7 +274,32 @@ export async function renderSandbox(view, opcoes, ctx) {
     return resultadoTeste;
   }
 
+  // Confere lacunas "____" e os padrões exigidos pelo exercício, antes de executar.
+  function conferirTexto() {
+    const v = lerCodigo();
+    const texto = typeof v === "string" ? v : [v.html, v.css, v.js].join("\n");
+    if (/_{4,}/.test(texto)) return "Ainda há lacunas ____ no código. Substitua cada ____ pelo que falta.";
+    for (const [re, msg] of ex.padroes || []) {
+      if (!re.test(texto)) return msg;
+    }
+    return null;
+  }
+
   async function verificar() {
+    const falta = conferirTexto();
+    if (falta) {
+      mostrarResultado(false, falta);
+      salvar({ tentativas: increment(1) });
+      return;
+    }
+    if (externo || ex.somentePadroes) {
+      // Não dá para rodar aqui: os padrões bateram; a conferência final é num ambiente real.
+      await salvar({ ok: true, resolvidoEm: serverTimestamp(), tentativas: increment(1) });
+      marcarResolvidoUI();
+      mostrarResultado(true, "", ex.notaVerificacao || "Para conferir de verdade, copie o código e rode no playground: a saída deve ser igual à saída esperada.");
+      ctx.onResolvido?.(opcoes.exId);
+      return;
+    }
     const r = await rodar({
       teste: ex.teste, solucao: ex.lang === "sql" ? ex.solucao : undefined,
       verificacao: ex.verificacao, ordem: ex.ordem
@@ -291,9 +319,10 @@ export async function renderSandbox(view, opcoes, ctx) {
     }
   }
 
-  function mostrarResultado(ok, msg) {
+  function mostrarResultado(ok, msg, nota) {
+    const prox = opcoes.proximo ? ` <a class="btn tiny primary" href="${opcoes.proximo.href}">${esc(opcoes.proximo.texto)} →</a>` : "";
     resultadoEl.innerHTML = ok
-      ? `<div class="sbx-teste ok">🎉 <b>Parabéns!</b> Exercício resolvido.</div>`
+      ? `<div class="sbx-teste ok">🎉 <b>Parabéns!</b> Exercício resolvido.${nota ? ` ${esc(nota)}` : ""}${prox}</div>`
       : `<div class="sbx-teste erro">❌ <b>Ainda não.</b> ${esc(msg || "")}</div>`;
     resultadoEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
