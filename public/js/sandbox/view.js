@@ -148,6 +148,8 @@ export async function renderSandbox(view, opcoes, ctx) {
   const host = $("#sbx-editor", view);
   host.replaceChildren();
   const executarAtalho = () => (verificavel ? verificar() : rodar());
+  // Exercícios de completar: cada ____ vira um campo clicável no editor
+  const completar = ex?.tipo === "completar";
   let editores = {};
   if (web) {
     for (const a of ABAS_WEB) {
@@ -156,10 +158,10 @@ export async function renderSandbox(view, opcoes, ctx) {
       div.dataset.aba = a.id;
       div.hidden = a.id !== abaInicial;
       host.appendChild(div);
-      editores[a.id] = await criarEditor(div, { valor: codigo[a.id] || "", modo: a.modo, onExecutar: executarAtalho });
+      editores[a.id] = await criarEditor(div, { valor: codigo[a.id] || "", modo: a.modo, onExecutar: executarAtalho, lacunas: completar });
     }
   } else {
-    editores.main = await criarEditor(host, { valor: codigo, modo: cfg.modo, onExecutar: executarAtalho });
+    editores.main = await criarEditor(host, { valor: codigo, modo: cfg.modo, onExecutar: executarAtalho, lacunas: completar });
   }
   if (!view.isConnected) return () => {};
 
@@ -278,7 +280,9 @@ export async function renderSandbox(view, opcoes, ctx) {
   function conferirTexto() {
     const v = lerCodigo();
     const texto = typeof v === "string" ? v : [v.html, v.css, v.js].join("\n");
-    if (/_{4,}/.test(texto)) return "Ainda há lacunas ____ no código. Substitua cada ____ pelo que falta.";
+    if (/_{4,}/.test(texto)) return completar
+      ? "Ainda há lacunas em branco. Clique em cada retângulo do código e escreva o que falta."
+      : "Ainda há lacunas ____ no código. Substitua cada ____ pelo que falta.";
     for (const [re, msg] of ex.padroes || []) {
       if (!re.test(texto)) return msg;
     }
