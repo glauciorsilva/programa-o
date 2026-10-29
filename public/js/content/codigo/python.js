@@ -1917,5 +1917,368 @@ except HTTPException as _e:
     assert _e.status_code == 404, f"O status_code deveria ser 404, mas é {_e.status_code}"
     assert _e.detail == "Agendamento não encontrado", f'O detail deveria ser "Agendamento não encontrado", mas é {_e.detail!r}'`
     }
+  ]  ,
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Boas-vindas da padaria",
+      enunciado: `A padaria quer mostrar uma mensagem quando o cliente chega. Clique em cada retângulo e escreva o que falta para o programa mostrar exatamente:<br><code>Bem-vindo à Padaria Pão Quente!</code>`,
+      dica: `O comando que mostra algo na tela é o <code>print</code>.`,
+      lang: "python",
+      inicial: c`____("Bem-vindo à Padaria Pão Quente!")
+`,
+      solucao: c`print("Bem-vindo à Padaria Pão Quente!")`,
+      teste: c`
+assert "Bem-vindo à Padaria Pão Quente!" in __saida__, 'A tela deveria mostrar: Bem-vindo à Padaria Pão Quente!'`
+    },
+    {
+      tipo: "completar",
+      titulo: "Texto entre aspas",
+      enunciado: `Clique em cada retângulo e escreva o que falta para mostrar a mensagem <code>Pedido recebido</code>. Lembre: texto vai entre aspas!`,
+      dica: `Escreva o texto com aspas: <code>"Pedido recebido"</code>.`,
+      lang: "python",
+      inicial: c`print(____)
+`,
+      solucao: c`print("Pedido recebido")`,
+      teste: c`
+assert "Pedido recebido" in __saida__, 'A tela deveria mostrar: Pedido recebido'`
+    },
+    {
+      tipo: "completar",
+      titulo: "Lista de compras em ordem",
+      enunciado: `Mostre a lista de compras, um item por linha, nesta ordem:<br><code>Arroz</code><br><code>Feijão</code><br><code>Leite</code><br>Clique em cada retângulo e escreva o que falta.`,
+      dica: `Cada linha é um <code>print</code> com o texto entre aspas. A ordem das linhas é a ordem na tela.`,
+      lang: "python",
+      inicial: c`print("Arroz")
+print(____)
+____("Leite")
+`,
+      solucao: c`print("Arroz")
+print("Feijão")
+print("Leite")`,
+      teste: c`
+_l = [x.strip() for x in __saida__.strip().splitlines()]
+assert _l == ["Arroz", "Feijão", "Leite"], f"A tela deveria mostrar Arroz, Feijão e Leite, um por linha, nessa ordem. Mostrou: {_l}"`
+    },
+    {
+      tipo: "criar",
+      titulo: "Seu cartão de visita",
+      enunciado: `Escreva do zero um programa que mostre estas 2 linhas, exatamente assim:<br><code>Nome: Ana Lima</code><br><code>Cargo: Atendente</code>`,
+      dica: `Use dois <code>print</code>, um para cada linha, com o texto entre aspas.`,
+      lang: "python",
+      inicial: c`# Mostre as duas linhas do cartão de visita com print
+`,
+      solucao: c`print("Nome: Ana Lima")
+print("Cargo: Atendente")`,
+      teste: c`
+_l = [x.strip() for x in __saida__.strip().splitlines()]
+assert "Nome: Ana Lima" in _l, 'Falta a linha: Nome: Ana Lima'
+assert "Cargo: Atendente" in _l, 'Falta a linha: Cargo: Atendente'
+assert _l.index("Nome: Ana Lima") < _l.index("Cargo: Atendente"), "A linha do nome deve vir antes da linha do cargo."`
+    },
+    {
+      tipo: "criar",
+      titulo: "Horário da loja",
+      enunciado: `Escreva do zero um programa com:
+        <ul>
+          <li>um <b>comentário</b> (linha começando com <code>#</code>) dizendo o que o programa faz;</li>
+          <li>três linhas na tela, nesta ordem: <code>Horário de funcionamento</code>, <code>Segunda a sexta: 8h às 18h</code> e <code>Sábado: 8h às 12h</code>.</li>
+        </ul>`,
+      dica: `Comentário: <code># meu recado</code>. Depois, um <code>print</code> por linha.`,
+      lang: "python",
+      inicial: c`# Escreva aqui um comentário seu e os 3 print do horário
+`,
+      solucao: c`# Mostra o horário da loja
+print("Horário de funcionamento")
+print("Segunda a sexta: 8h às 18h")
+print("Sábado: 8h às 12h")`,
+      padroes: [[/^\s*#/m, "Escreva um comentário começando com #."]],
+      teste: c`
+_l = [x.strip() for x in __saida__.strip().splitlines()]
+_e = ["Horário de funcionamento", "Segunda a sexta: 8h às 18h", "Sábado: 8h às 12h"]
+assert _l == _e, f"A tela deveria mostrar exatamente estas 3 linhas, nesta ordem: {_e}. Mostrou: {_l}"`
+    }
+  ],
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Conta dos pães",
+      enunciado: `Um cliente levou 4 pães de R$ 2. Clique em cada retângulo e escreva o sinal que falta para o programa mostrar o total, <code>8</code>.`,
+      dica: `Em Python, “vezes” é o asterisco.`,
+      lang: "python",
+      inicial: c`print(4 ____ 2)
+`,
+      solucao: c`print(4 * 2)`,
+      padroes: [[/4\s*\*\s*2/, "Use o sinal de multiplicação entre 4 e 2."]],
+      teste: c`
+assert __saida__.strip() == "8", f"A tela deveria mostrar 8, mas mostrou {__saida__.strip()!r}"`
+    },
+    {
+      tipo: "completar",
+      titulo: "Troco do cliente",
+      enunciado: `O cliente pagou com R$ 50 uma compra de R$ 32. Clique em cada retângulo e escreva o que falta para mostrar o troco (<code>18</code>) e depois quanto cada um de 3 amigos paga se dividirem R$ 30 (<code>10.0</code>).`,
+      dica: `Subtrair é <code>-</code> e dividir é <code>/</code>.`,
+      lang: "python",
+      inicial: c`print(50 ____ 32)
+print(30 ____ 3)
+`,
+      solucao: c`print(50 - 32)
+print(30 / 3)`,
+      padroes: [[/50\s*-\s*32/, "Use a subtração 50 - 32."], [/30\s*\/\s*3/, "Use a divisão 30 / 3."]],
+      teste: c`
+_l = __saida__.strip().splitlines()
+assert _l == ["18", "10.0"], f"A tela deveria mostrar 18 e 10.0, um por linha. Mostrou: {_l}"`
+    },
+    {
+      tipo: "completar",
+      titulo: "Parênteses na hora certa",
+      enunciado: `Dois cafés de R$ 3 e um suco de R$ 5 foram divididos por 2 pessoas. A conta certa é <code>(2 * 3 + 5) / 2</code>, que dá <code>5.5</code>. Clique em cada retângulo e escreva o que falta (os parênteses).`,
+      dica: `Sem parênteses, o Python dividiria só o 5 por 2. Abra o parêntese antes do 2 e feche depois do 5.`,
+      lang: "python",
+      inicial: c`print(____2 * 3 + 5____ / 2)
+`,
+      solucao: c`print((2 * 3 + 5) / 2)`,
+      teste: c`
+assert __saida__.strip() == "5.5", f"A tela deveria mostrar 5.5, mas mostrou {__saida__.strip()!r}. Confira os parênteses."`
+    },
+    {
+      tipo: "criar",
+      titulo: "Compra na papelaria",
+      enunciado: `Escreva do zero um programa que mostre, com um único <code>print</code>, o total de uma compra de <b>3 cadernos de R$ 12</b> mais <b>1 caneta de R$ 2</b>. O resultado na tela deve ser <code>38</code>. Escreva a conta (não escreva o 38 direto!).`,
+      dica: `Multiplique a quantidade de cadernos pelo preço e some a caneta: <code>3 * 12 + ...</code>.`,
+      lang: "python",
+      inicial: c`# Mostre o total: 3 cadernos de R$ 12 + 1 caneta de R$ 2
+`,
+      solucao: c`print(3 * 12 + 2)`,
+      padroes: [[/\*/, "Use a multiplicação (*) para calcular os cadernos."], [/\+/, "Use a soma (+) para incluir a caneta."]],
+      teste: c`
+assert __saida__.strip() == "38", f"A tela deveria mostrar 38, mas mostrou {__saida__.strip()!r}"`
+    },
+    {
+      tipo: "criar",
+      titulo: "Pizza dividida",
+      enunciado: `Uma pizza custou R$ 40 e a entrega R$ 8. Quatro amigos vão dividir tudo igualmente. Escreva do zero <b>um</b> <code>print</code> com a conta que mostra quanto cada um paga. O resultado deve ser <code>12.0</code>.`,
+      dica: `Some primeiro (use parênteses) e depois divida por 4.`,
+      lang: "python",
+      inicial: c`# Mostre quanto cada amigo paga: (pizza + entrega) dividido por 4
+`,
+      solucao: c`print((40 + 8) / 4)`,
+      padroes: [[/\(/, "Use parênteses para somar antes de dividir."], [/\//, "Use a divisão (/)."]],
+      teste: c`
+assert __saida__.strip() == "12.0", f"A tela deveria mostrar 12.0, mas mostrou {__saida__.strip()!r}. Lembre de somar antes de dividir."`
+    }
+  ],
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Ficha do produto",
+      enunciado: `Guarde os dados de um produto da mercearia em variáveis. Clique em cada retângulo e escreva o que falta:
+        <ul>
+          <li><code>produto</code> deve guardar o texto <code>"Café"</code>;</li>
+          <li><code>preco</code> deve guardar o número <code>15</code>.</li>
+        </ul>`,
+      dica: `Texto vai entre aspas; número não.`,
+      lang: "python",
+      inicial: c`produto = ____
+preco = ____
+print(produto, preco)
+`,
+      solucao: c`produto = "Café"
+preco = 15
+print(produto, preco)`,
+      teste: c`
+assert produto == "Café", f'produto deveria ser "Café", mas é {produto!r}'
+assert preco == 15, f"preco deveria ser o número 15, mas é {preco!r}"`
+    },
+    {
+      tipo: "completar",
+      titulo: "Mostrando o valor guardado",
+      enunciado: `A variável <code>cliente</code> já guarda o nome. Clique em cada retângulo e escreva o que falta para a tela mostrar <code>Cliente: Rita</code> (o valor da variável, e não a palavra “cliente”).`,
+      dica: `Para mostrar o valor, use o nome da variável <b>sem aspas</b>.`,
+      lang: "python",
+      inicial: c`cliente = "Rita"
+print("Cliente:", ____)
+`,
+      solucao: c`cliente = "Rita"
+print("Cliente:", cliente)`,
+      padroes: [[/print\(\s*"Cliente:"\s*,\s*cliente\s*\)/, "Coloque a variável cliente (sem aspas) depois da vírgula."]],
+      teste: c`
+assert __saida__.strip() == "Cliente: Rita", f"A tela deveria mostrar Cliente: Rita, mas mostrou {__saida__.strip()!r}"`
+    },
+    {
+      tipo: "completar",
+      titulo: "Estoque que diminui",
+      enunciado: `O estoque de bolos começa em <code>10</code>. Foram vendidos 3. Clique em cada retângulo e escreva o que falta para a variável <code>estoque</code> ficar com o valor novo (<code>7</code>), usando o valor atual dela.`,
+      dica: `Pegue o valor atual e tire 3: <code>estoque = estoque - ...</code>.`,
+      lang: "python",
+      inicial: c`estoque = 10
+estoque = ____ - 3
+print("Bolos no estoque:", estoque)
+`,
+      solucao: c`estoque = 10
+estoque = estoque - 3
+print("Bolos no estoque:", estoque)`,
+      padroes: [[/estoque\s*=\s*estoque\s*-\s*3/, "Use o valor atual: estoque = estoque - 3."]],
+      teste: c`
+assert estoque == 7, f"estoque deveria ser 7, mas é {estoque!r}"
+assert "Bolos no estoque: 7" in __saida__, "A tela deveria mostrar: Bolos no estoque: 7"`
+    },
+    {
+      tipo: "criar",
+      titulo: "Total do carrinho",
+      enunciado: `Crie do zero:
+        <ul>
+          <li><code>preco</code> com o valor <code>8</code>;</li>
+          <li><code>quantidade</code> com o valor <code>5</code>;</li>
+          <li><code>total</code> com a conta <code>preco * quantidade</code> (use as variáveis, não escreva 40);</li>
+          <li>mostre na tela: <code>Total: 40</code>.</li>
+        </ul>`,
+      dica: `<code>print("Total:", total)</code> coloca um espaço entre o texto e o valor.`,
+      lang: "python",
+      inicial: c`# Crie preco, quantidade e total e mostre o total
+`,
+      solucao: c`preco = 8
+quantidade = 5
+total = preco * quantidade
+print("Total:", total)`,
+      padroes: [[/total\s*=\s*(preco\s*\*\s*quantidade|quantidade\s*\*\s*preco)/, "Calcule o total usando as variáveis: total = preco * quantidade."]],
+      teste: c`
+_g = globals()
+for _n in ("preco", "quantidade", "total"):
+    assert _n in _g, f"Crie a variável {_n}."
+assert preco == 8, f"preco deveria ser 8, mas é {preco!r}"
+assert quantidade == 5, f"quantidade deveria ser 5, mas é {quantidade!r}"
+assert total == 40, f"total deveria ser 40, mas é {total!r}"
+assert "Total: 40" in __saida__, "A tela deveria mostrar: Total: 40"`
+    },
+    {
+      tipo: "criar",
+      titulo: "Pontos do cartão fidelidade",
+      enunciado: `Crie do zero a variável <code>pontos</code> começando em <code>0</code>. Depois:
+        <ul>
+          <li>o cliente ganhou 10 pontos: atualize <code>pontos</code> somando 10 ao valor atual;</li>
+          <li>ganhou mais 5: some 5 ao valor atual;</li>
+          <li>no fim, mostre na tela: <code>Pontos: 15</code>.</li>
+        </ul>`,
+      dica: `Use o valor atual para calcular o novo: <code>pontos = pontos + 10</code>.`,
+      lang: "python",
+      inicial: c`# Crie pontos = 0, some 10, depois some 5 e mostre o resultado
+`,
+      solucao: c`pontos = 0
+pontos = pontos + 10
+pontos = pontos + 5
+print("Pontos:", pontos)`,
+      padroes: [[/pontos\s*=\s*0/, "Comece com pontos = 0."], [/pontos\s*(=\s*pontos\s*\+|\+=)\s*10/, "Some 10 ao valor atual: pontos = pontos + 10."], [/pontos\s*(=\s*pontos\s*\+|\+=)\s*5/, "Some 5 ao valor atual: pontos = pontos + 5."]],
+      teste: c`
+assert pontos == 15, f"pontos deveria terminar em 15, mas é {pontos!r}"
+assert "Pontos: 15" in __saida__, "A tela deveria mostrar: Pontos: 15"`
+    }
+  ],
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Perguntando o nome",
+      enunciado: `O totem da lanchonete pergunta o nome do cliente. Clique em cada retângulo e escreva o que falta para ler o que a pessoa digitar e guardar em <code>nome</code>. (Para o teste, a pessoa digita <code>Lucas</code>.)`,
+      dica: `O comando que pergunta e espera a pessoa digitar é o <code>input</code>.`,
+      lang: "python",
+      entrada: "Lucas",
+      inicial: c`nome = ____("Qual é o seu nome? ")
+print("Olá,", nome)
+`,
+      solucao: c`nome = input("Qual é o seu nome? ")
+print("Olá,", nome)`,
+      teste: c`
+assert nome == "Lucas", f'nome deveria guardar o que foi digitado ("Lucas"), mas é {nome!r}'
+assert "Olá, Lucas" in __saida__, "A tela deveria mostrar: Olá, Lucas"`
+    },
+    {
+      tipo: "completar",
+      titulo: "Convertendo a quantidade",
+      enunciado: `O cliente digita quantos salgados quer (no teste, <code>4</code>). Como o <code>input</code> devolve texto, clique em cada retângulo e escreva o que falta para converter a resposta em número inteiro. A tela deve mostrar <code>Total: 20</code> (cada salgado custa R$ 5).`,
+      dica: `Use <code>int(...)</code> em volta do <code>input</code>.`,
+      lang: "python",
+      entrada: "4",
+      inicial: c`quantidade = ____(input("Quantos salgados? "))
+total = quantidade * 5
+print("Total:", total)
+`,
+      solucao: c`quantidade = int(input("Quantos salgados? "))
+total = quantidade * 5
+print("Total:", total)`,
+      teste: c`
+assert isinstance(quantidade, int), f"quantidade precisa ser número inteiro (use int), mas é {type(quantidade).__name__}"
+assert total == 20, f"total deveria ser 20, mas é {total!r}"
+assert "Total: 20" in __saida__, "A tela deveria mostrar: Total: 20"`
+    },
+    {
+      tipo: "completar",
+      titulo: "Somando dois números digitados",
+      enunciado: `O programa lê dois números (no teste, <code>3</code> e <code>2</code>) e mostra a soma. Sem converter, aparece <code>32</code>! Clique em cada retângulo e escreva o que falta para a tela mostrar <code>Soma: 5</code>.`,
+      dica: `Converta cada texto com <code>int()</code> antes de somar.`,
+      lang: "python",
+      entrada: "3\n2",
+      inicial: c`a = ____(input("Primeiro número: "))
+b = ____(input("Segundo número: "))
+print("Soma:", a + b)
+`,
+      solucao: c`a = int(input("Primeiro número: "))
+b = int(input("Segundo número: "))
+print("Soma:", a + b)`,
+      teste: c`
+assert a == 3 and b == 2, f"a e b deveriam ser os números 3 e 2, mas são {a!r} e {b!r}"
+assert "Soma: 5" in __saida__, "A tela deveria mostrar: Soma: 5"`
+    },
+    {
+      tipo: "criar",
+      titulo: "Dobro do número",
+      enunciado: `Escreva do zero um programa que:
+        <ul>
+          <li>pergunte um número com <code>input</code> e guarde, já convertido com <code>int()</code>, na variável <code>numero</code>;</li>
+          <li>mostre na tela: <code>Dobro: </code> seguido do dobro do número.</li>
+        </ul>
+        No teste, a pessoa digita <code>7</code>, então a tela deve mostrar <code>Dobro: 14</code>.`,
+      dica: `<code>numero = int(input("Digite um número: "))</code> e depois <code>print("Dobro:", ...)</code>.`,
+      lang: "python",
+      entrada: "7",
+      inicial: c`# Pergunte um número, converta com int() e mostre o dobro
+`,
+      solucao: c`numero = int(input("Digite um número: "))
+print("Dobro:", numero * 2)`,
+      padroes: [[/input\s*\(/, "Use input() para perguntar o número."], [/int\s*\(/, "Converta a resposta com int()."]],
+      teste: c`
+assert numero == 7, f"numero deveria ser o número 7 (convertido com int), mas é {numero!r}"
+assert "Dobro: 14" in __saida__, "A tela deveria mostrar: Dobro: 14"`
+    },
+    {
+      tipo: "criar",
+      titulo: "Caixa da padaria",
+      enunciado: `Escreva do zero o caixa da padaria:
+        <ul>
+          <li>pergunte o nome do cliente e guarde em <code>nome</code> (texto, sem converter);</li>
+          <li>pergunte quantos pães e guarde em <code>paes</code>, convertido com <code>int()</code>;</li>
+          <li>calcule <code>total</code> = <code>paes</code> vezes <code>2</code> (cada pão custa R$ 2);</li>
+          <li>mostre na tela: <code>Cliente: </code> + nome e, na linha seguinte, <code>Total: </code> + total.</li>
+        </ul>
+        No teste, a pessoa digita <code>Marta</code> e <code>6</code>: a tela deve mostrar <code>Cliente: Marta</code> e <code>Total: 12</code>.`,
+      dica: `Faça na ordem: pergunta (input), conta (total) e resposta (print).`,
+      lang: "python",
+      entrada: "Marta\n6",
+      inicial: c`# 1. Pergunte o nome e a quantidade de pães
+# 2. Calcule o total (cada pão custa 2)
+# 3. Mostre Cliente: ... e Total: ...
+`,
+      solucao: c`nome = input("Nome do cliente: ")
+paes = int(input("Quantos pães? "))
+total = paes * 2
+print("Cliente:", nome)
+print("Total:", total)`,
+      padroes: [[/int\s*\(\s*input/, "Converta a quantidade de pães com int(input(...))."]],
+      teste: c`
+assert nome == "Marta", f'nome deveria ser "Marta", mas é {nome!r}'
+assert paes == 6, f"paes deveria ser o número 6, mas é {paes!r}"
+assert total == 12, f"total deveria ser 12, mas é {total!r}"
+assert "Cliente: Marta" in __saida__, "A tela deveria mostrar: Cliente: Marta"
+assert "Total: 12" in __saida__, "A tela deveria mostrar: Total: 12"`
+    }
   ]
 };
