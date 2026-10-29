@@ -118,6 +118,7 @@ function renderIndice(view, { progresso, liberarTudo }) {
     <p class="muted">Trilha interativa: cada lição traz uma explicação curta e um exercício com um banco de dados de verdade (SQLite) rodando no seu navegador. Escreva a consulta, veja o resultado na hora e avance quando todas as tarefas estiverem certas.</p>
     <div class="stat-row">
       <div class="stat"><small>Lições concluídas</small><strong>${feitas}/${LICOES.length}</strong>${progressBar(pct, true)}</div>
+      <div class="stat"><small>Pontos</small><strong>⭐ ${feitas * 10}</strong><small>10 pts por lição concluída</small></div>
     </div>
     <ol class="sqlp-indice">
       ${LICOES.map((l, i) => {
