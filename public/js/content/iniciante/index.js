@@ -1,0 +1,10 @@
+export { default as html } from "./html.js";
+export { default as css } from "./css.js";
+export { default as python } from "./python.js";
+export { default as javascript } from "./javascript.js";
+export { default as react } from "./react.js";
+export { default as go } from "./go.js";
+export { default as csharp } from "./csharp.js";
+export { default as java } from "./java.js";
+export { default as sql } from "./sql.js";
+export { default as mysql } from "./mysql.js";

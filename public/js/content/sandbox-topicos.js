@@ -247,7 +247,8 @@ export function sandboxDoTopico(topicoId) {
   for (const n of Object.values(trilha.niveis)) topico ||= n.topicos.find((tp) => tp.id === topicoId);
   if (!topico) return null;
 
-  const aj = AJUSTES[topicoId];
+  // Ajuste central ou o próprio tópico (campo "sandbox", usado no nível Iniciante)
+  const aj = AJUSTES[topicoId] ?? topico.sandbox;
   if (aj === false) return { trilha, topico, indisponivel: MOTIVOS[topicoId] || "Este exemplo não roda no navegador." };
   const lang = aj?.lang || TRILHA_LANG[trilha.id];
   const codigo = (aj?.codigo ?? topico.codigo).trim();
