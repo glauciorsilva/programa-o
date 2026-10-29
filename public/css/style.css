@@ -591,3 +591,4 @@ li.CodeMirror-hint-active { background: var(--primary); }
 .pr-q pre { max-width: 100%; overflow-x: auto; }
 .pr-q .fx-opcoes { display: flex; flex-wrap: wrap; gap: 6px; }
 .box.nocss { background: color-mix(in srgb, #2965f1 8%, var(--surface)); border-left: 4px solid #2965f1; }
+.passo-texto :not(pre) > code, .pr-q :not(pre) > code, .fx-feedback code, .box.nocss :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }

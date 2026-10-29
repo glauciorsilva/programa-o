@@ -1379,5 +1379,375 @@ SHOW REPLICA STATUS\G`,
         [/SHOW\s+REPLICA\s+STATUS/i, "Confira com SHOW REPLICA STATUS."]
       ]
     }
+  ],
+  // ===== Nível Iniciante =====
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Pedir os nomes dos produtos",
+      enunciado: `A loja de exemplo já tem a tabela <code>produtos</code>. Faça seu primeiro pedido ao MySQL: mostrar a coluna <code>nome</code> de todos os produtos.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Depois do <code>FROM</code> vem o nome da tabela.`,
+      lang: "sql",
+      inicial: c`SELECT nome FROM ____;`,
+      solucao: c`SELECT nome FROM produtos;`
+    },
+    {
+      tipo: "completar",
+      titulo: "A palavra que mostra dados",
+      enunciado: `O gerente quer ver o <code>nome</code> e o <code>preco</code> de cada produto. Falta a primeira palavra do pedido, aquela que quer dizer “mostre”.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Em inglês, “selecione” é <i>select</i>.`,
+      lang: "sql",
+      inicial: c`____ nome, preco FROM produtos;`,
+      solucao: c`SELECT nome, preco FROM produtos;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Todas as colunas dos clientes",
+      enunciado: `Mostre <b>todas as colunas</b> da tabela <code>clientes</code>. Use o símbolo que quer dizer “todas as colunas” e o nome da tabela.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `“Todas as colunas” é o asterisco <code>*</code>.`,
+      lang: "sql",
+      inicial: c`SELECT ____ FROM ____;`,
+      solucao: c`SELECT * FROM clientes;`,
+      padroes: [[/SELECT\s+\*\s+FROM\s+clientes/i, "Use SELECT * FROM clientes;"]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Lista completa de produtos",
+      enunciado: `Escreva, do zero, um pedido em SQL que mostre <b>todas as colunas</b> de <b>todos</b> os produtos da tabela <code>produtos</code>. Não esqueça o <code>;</code> no final.`,
+      dica: `São só quatro pedacinhos: <code>SELECT</code>, <code>*</code>, <code>FROM</code> e o nome da tabela.`,
+      lang: "sql",
+      inicial: c`-- Escreva aqui o pedido para mostrar todos os produtos
+`,
+      solucao: c`SELECT * FROM produtos;`
+    },
+    {
+      tipo: "criar",
+      titulo: "Nome e cidade dos clientes",
+      enunciado: `O time de entregas quer uma lista só com o <code>nome</code> e a <code>cidade</code> de cada cliente da tabela <code>clientes</code>, nessa ordem de colunas. Escreva o pedido.`,
+      dica: `Separe as colunas por vírgula: <code>SELECT coluna1, coluna2 FROM ...</code>`,
+      lang: "sql",
+      inicial: c`-- Mostre o nome e a cidade dos clientes
+`,
+      solucao: c`SELECT nome, cidade FROM clientes;`
+    }
+  ],
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Dizer oi para o servidor",
+      enunciado: `Acabou de conectar? Faça o servidor responder um texto para ter certeza de que está tudo funcionando.
+        Clique em cada retângulo e escreva o que falta (a palavra que pede para “mostrar”).`,
+      dica: `É a mesma palavra que usamos para mostrar colunas de uma tabela.`,
+      lang: "sql",
+      inicial: c`____ 'Conectei no MySQL!';`,
+      solucao: c`SELECT 'Conectei no MySQL!';`
+    },
+    {
+      tipo: "completar",
+      titulo: "Que tabelas existem aqui?",
+      enunciado: `Primeiro dia no emprego: descubra quais tabelas existem no banco da loja.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `“Mostre as tabelas” em inglês: <i>show tables</i>.`,
+      lang: "sql",
+      inicial: c`SHOW ____;`,
+      solucao: c`SHOW TABLES;`,
+      padroes: [[/SHOW\s+TABLES/i, "Use SHOW TABLES; para listar as tabelas."]]
+    },
+    {
+      tipo: "completar",
+      titulo: "Conhecer as colunas de produtos",
+      enunciado: `Agora veja quais colunas a tabela <code>produtos</code> tem.
+        Clique em cada retângulo e escreva o comando que “descreve” a tabela.`,
+      dica: `Descrever, em inglês, é <i>describe</i>.`,
+      lang: "sql",
+      inicial: c`____ produtos;`,
+      solucao: c`DESCRIBE produtos;`,
+      padroes: [[/\b(DESCRIBE|DESC)\s+produtos/i, "Use DESCRIBE produtos; para ver as colunas."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Mensagem de teste da conexão",
+      enunciado: `Escreva um pedido que faça o MySQL mostrar exatamente o texto <code>Servidor funcionando</code> (sem ponto no final).`,
+      dica: `Texto vai entre aspas simples, depois do <code>SELECT</code>.`,
+      lang: "sql",
+      inicial: c`-- Peça para o MySQL mostrar o texto Servidor funcionando
+`,
+      solucao: c`SELECT 'Servidor funcionando';`
+    },
+    {
+      tipo: "criar",
+      titulo: "Explorando o banco da loja",
+      enunciado: `Você ganhou acesso ao banco da loja e quer se situar. Escreva dois comandos, nesta ordem:
+        <ol>
+          <li>liste as tabelas do banco;</li>
+          <li>mostre as colunas da tabela <code>clientes</code>.</li>
+        </ol>`,
+      dica: `Um comando começa com <code>SHOW</code> e o outro com <code>DESCRIBE</code>. Termine cada um com <code>;</code>.`,
+      lang: "sql",
+      inicial: c`-- 1) Liste as tabelas
+
+-- 2) Mostre as colunas de clientes
+`,
+      solucao: c`SHOW TABLES;
+DESCRIBE clientes;`,
+      padroes: [[/SHOW\s+TABLES/i, "Comece listando as tabelas com SHOW TABLES;"]]
+    }
+  ],
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Banco e tabela da padaria",
+      enunciado: `A Padaria Pão Quente quer começar a anotar os pães. Complete o script que cria o banco <code>padaria</code> e a tabela <code>paes</code>.
+        Clique em cada retângulo e escreva o que falta. (No sandbox, o <code>CREATE DATABASE</code> e o <code>USE</code> são ignorados, mas a tabela é criada de verdade.)`,
+      dica: `As duas lacunas pedem o que está sendo criado: um banco (<i>database</i>) e uma tabela (<i>table</i>).`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE ____ padaria;
+USE padaria;
+
+CREATE ____ paes (
+  nome VARCHAR(50),
+  quantidade INT
+);`,
+      solucao: c`CREATE DATABASE padaria;
+USE padaria;
+
+CREATE TABLE paes (
+  nome VARCHAR(50),
+  quantidade INT
+);`,
+      padroes: [[/CREATE\s+(DATABASE|SCHEMA)\s+padaria/i, "A primeira linha deve ser CREATE DATABASE padaria;"]],
+      verificacao: estrutura("paes")
+    },
+    {
+      tipo: "completar",
+      titulo: "Os tipos das colunas de clientes",
+      enunciado: `Na tabela <code>clientes</code>, o <code>nome</code> é um <b>texto</b> de até 100 letras e a <code>idade</code> é um <b>número inteiro</b>. Complete os tipos.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Texto: <code>VARCHAR</code>. Número inteiro: <code>INT</code>.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE TABLE clientes (
+  nome ____(100),
+  idade ____
+);`,
+      solucao: c`CREATE TABLE clientes (
+  nome VARCHAR(100),
+  idade INT
+);`,
+      verificacao: estrutura("clientes")
+    },
+    {
+      tipo: "completar",
+      titulo: "Agenda de contatos",
+      enunciado: `Crie a agenda: o banco <code>agenda</code> (entre nele) e a tabela <code>contatos</code>.
+        Clique em cada retângulo e escreva o que falta: o nome do banco no <code>USE</code> e o nome da tabela.`,
+      dica: `Use os mesmos nomes do enunciado: <code>agenda</code> e <code>contatos</code>.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE DATABASE agenda;
+USE ____;
+
+CREATE TABLE ____ (
+  nome VARCHAR(80),
+  telefone VARCHAR(20)
+);`,
+      solucao: c`CREATE DATABASE agenda;
+USE agenda;
+
+CREATE TABLE contatos (
+  nome VARCHAR(80),
+  telefone VARCHAR(20)
+);`,
+      padroes: [[/USE\s+agenda\s*;/i, "Entre no banco com USE agenda;"]],
+      verificacao: estrutura("contatos")
+    },
+    {
+      tipo: "criar",
+      titulo: "Tabela de alunos",
+      enunciado: `A Escola Saber quer a tabela <code>alunos</code> com duas colunas, nesta ordem:
+        <ul>
+          <li><code>nome</code>: texto de até 100 letras (<code>VARCHAR(100)</code>);</li>
+          <li><code>idade</code>: número inteiro (<code>INT</code>).</li>
+        </ul>`,
+      dica: `<code>CREATE TABLE alunos ( coluna tipo, coluna tipo );</code> Vírgula entre as colunas, nenhuma depois da última.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`-- Crie a tabela alunos com nome e idade
+`,
+      solucao: c`CREATE TABLE alunos (
+  nome VARCHAR(100),
+  idade INT
+);`,
+      verificacao: estrutura("alunos")
+    },
+    {
+      tipo: "criar",
+      titulo: "Biblioteca da escola",
+      enunciado: `Monte do zero a biblioteca:
+        <ol>
+          <li>crie o banco <code>biblioteca</code>;</li>
+          <li>entre nele com <code>USE</code>;</li>
+          <li>crie a tabela <code>livros</code> com <code>titulo</code> (<code>VARCHAR(150)</code>) e <code>paginas</code> (<code>INT</code>), nesta ordem.</li>
+        </ol>`,
+      dica: `Três comandos, cada um terminando com <code>;</code>: <code>CREATE DATABASE</code>, <code>USE</code> e <code>CREATE TABLE</code>.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`-- 1) Crie o banco biblioteca
+
+-- 2) Entre no banco
+
+-- 3) Crie a tabela livros
+`,
+      solucao: c`CREATE DATABASE biblioteca;
+USE biblioteca;
+
+CREATE TABLE livros (
+  titulo VARCHAR(150),
+  paginas INT
+);`,
+      padroes: [
+        [/CREATE\s+(DATABASE|SCHEMA)\s+biblioteca\s*;/i, "Crie o banco com CREATE DATABASE biblioteca;"],
+        [/USE\s+biblioteca\s*;/i, "Entre no banco com USE biblioteca;"]
+      ],
+      verificacao: estrutura("livros")
+    }
+  ],
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Anotar uma fruta na feira",
+      enunciado: `A barraca de frutas tem a tabela <code>frutas</code>. Coloque nela a fruta <code>'Banana'</code> com quantidade <code>12</code>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `O comando é <code>INSERT ... tabela (colunas) ... (valores)</code>. Faltam a palavra que vem depois do INSERT e a que vem antes dos valores.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE TABLE frutas (
+  nome VARCHAR(50),
+  quantidade INT
+);
+
+INSERT ____ frutas (nome, quantidade) ____ ('Banana', 12);`,
+      solucao: c`CREATE TABLE frutas (
+  nome VARCHAR(50),
+  quantidade INT
+);
+
+INSERT INTO frutas (nome, quantidade) VALUES ('Banana', 12);`,
+      verificacao: c`SELECT nome, quantidade FROM frutas ORDER BY nome`
+    },
+    {
+      tipo: "completar",
+      titulo: "Ver tudo o que foi anotado",
+      enunciado: `Os pães já foram cadastrados. Agora mostre <b>todas as colunas</b> da tabela <code>paes</code>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `“Todas as colunas” é o <code>*</code>.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE TABLE paes (
+  nome VARCHAR(50),
+  quantidade INT
+);
+INSERT INTO paes (nome, quantidade) VALUES ('Pão francês', 30), ('Sonho', 12);
+
+SELECT ____ FROM paes;`,
+      solucao: c`CREATE TABLE paes (
+  nome VARCHAR(50),
+  quantidade INT
+);
+INSERT INTO paes (nome, quantidade) VALUES ('Pão francês', 30), ('Sonho', 12);
+
+SELECT * FROM paes;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Cliente novo na loja",
+      enunciado: `Cadastre a cliente <code>Ana</code>, de <code>Recife</code>. A cidade já está pronta; falta o nome.
+        Clique em cada retângulo e escreva o que falta (lembre: texto vai entre aspas).`,
+      dica: `Escreva o nome entre aspas simples, igual à cidade: <code>'Recife'</code>.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE TABLE clientes (
+  nome VARCHAR(100),
+  cidade VARCHAR(60)
+);
+
+INSERT INTO clientes (nome, cidade) VALUES (____, 'Recife');`,
+      solucao: c`CREATE TABLE clientes (
+  nome VARCHAR(100),
+  cidade VARCHAR(60)
+);
+
+INSERT INTO clientes (nome, cidade) VALUES ('Ana', 'Recife');`,
+      verificacao: c`SELECT nome, cidade FROM clientes`
+    },
+    {
+      tipo: "criar",
+      titulo: "Dois contatos na agenda",
+      enunciado: `A tabela <code>contatos</code> já existe. Cadastre os dois contatos abaixo e, no final, mostre tudo com <code>SELECT * FROM contatos;</code>.
+        <ul>
+          <li><code>'Maria'</code>, telefone <code>'81999990000'</code>;</li>
+          <li><code>'João'</code>, telefone <code>'11988887777'</code>.</li>
+        </ul>`,
+      dica: `<code>INSERT INTO contatos (nome, telefone) VALUES (...), (...);</code> O telefone é texto, então vai entre aspas.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`CREATE TABLE contatos (
+  nome VARCHAR(80),
+  telefone VARCHAR(20)
+);
+
+-- Cadastre Maria e João
+
+-- Mostre todos os contatos
+`,
+      solucao: c`CREATE TABLE contatos (
+  nome VARCHAR(80),
+  telefone VARCHAR(20)
+);
+
+INSERT INTO contatos (nome, telefone) VALUES
+  ('Maria', '81999990000'),
+  ('João', '11988887777');
+
+SELECT * FROM contatos;`,
+      padroes: [[/SELECT\s+\*\s+FROM\s+contatos/i, "No final, mostre tudo com SELECT * FROM contatos;"]],
+      verificacao: c`SELECT nome, telefone FROM contatos ORDER BY nome`
+    },
+    {
+      tipo: "criar",
+      titulo: "Estoque da papelaria do zero",
+      enunciado: `Faça tudo sozinho para a papelaria:
+        <ol>
+          <li>crie a tabela <code>produtos</code> com <code>nome</code> (<code>VARCHAR(80)</code>) e <code>estoque</code> (<code>INT</code>);</li>
+          <li>cadastre <code>'Caderno'</code> com 20, <code>'Lápis'</code> com 100 e <code>'Borracha'</code> com 35;</li>
+          <li>mostre <b>só a coluna</b> <code>nome</code> de todos os produtos.</li>
+        </ol>`,
+      dica: `Três partes: <code>CREATE TABLE</code>, <code>INSERT INTO ... VALUES</code> e <code>SELECT nome FROM produtos;</code>.`,
+      lang: "sql",
+      db: "vazio",
+      inicial: c`-- 1) Crie a tabela produtos
+
+-- 2) Cadastre os três produtos
+
+-- 3) Mostre só os nomes
+`,
+      solucao: c`CREATE TABLE produtos (
+  nome VARCHAR(80),
+  estoque INT
+);
+
+INSERT INTO produtos (nome, estoque) VALUES
+  ('Caderno', 20),
+  ('Lápis', 100),
+  ('Borracha', 35);
+
+SELECT nome FROM produtos;`,
+      padroes: [[/SELECT\s+nome\s+FROM\s+produtos/i, "No final, mostre só os nomes com SELECT nome FROM produtos;"]],
+      verificacao: c`SELECT p.nome, p.estoque, (SELECT GROUP_CONCAT(UPPER(REPLACE(type, ' ', '')), '|') FROM pragma_table_info('produtos')) FROM produtos p ORDER BY p.nome`
+    }
   ]
 };
