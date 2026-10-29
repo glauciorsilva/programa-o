@@ -5,14 +5,14 @@ Sistema web (desktop e celular) com roadmap de estudos, do básico ao avançado,
 ## Conteúdo
 
 **Aba Linguagens** (da mais fácil à mais complexa):
-1. HTML · 2. CSS · 3. Python · 4. JavaScript/TypeScript · 5. React · 6. Go · 7. C# · 8. Java
+1. HTML · 2. CSS · 3. Python · 4. JavaScript/TypeScript · 5. React · 6. Go · 7. C# · 8. Java · 9. C++
 
 **Aba Bancos de Dados:**
 1. SQL (fundamentos) · 2. MySQL
 
 > **Sobre o projeto:** o ProgrTotal apresenta ao estudante algumas das muitas linguagens de programação, como uma porta de entrada para o universo da tecnologia. Ele não apresenta nem ensina, por si só, tudo o que deve ser aprendido.
 
-Cada trilha tem os níveis **Básico, Intermediário e Avançado** (3 tópicos por nível, 90 no total). Cada tópico traz:
+Cada trilha começa pelo nível **🐣 Iniciante** (4 ou 5 tópicos) e segue com **Básico, Intermediário e Avançado** (3 tópicos por nível). Cada tópico traz:
 - 📖 explicação do conceito (com analogia e detalhes)
 - 💻 código pronto para copiar e testar no sandbox
 - 🔍 o código explicado parte por parte (o que cada trecho faz e por que está lá)
@@ -20,7 +20,7 @@ Cada trilha tem os níveis **Básico, Intermediário e Avançado** (3 tópicos p
 - 🎤 pergunta de entrevista com resposta
 - 🔎 termos para pesquisar na internet em caso de dúvida
 
-Ao final de cada nível há **10 exercícios de fixação** (300 no total): múltipla escolha, verdadeiro/falso e “complete o código”, com correção na hora e explicação de cada resposta.
+Ao final de cada nível há **exercícios de fixação** (12 no Iniciante e 10 nos demais níveis): múltipla escolha, verdadeiro/falso e “complete o código”, com correção na hora e explicação de cada resposta.
 
 Também há a página **Como pesquisar**, um guia para ler erros, pesquisar e usar a documentação.
 

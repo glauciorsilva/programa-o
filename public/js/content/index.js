@@ -6,6 +6,7 @@ import react from "./react.js";
 import go from "./go.js";
 import csharp from "./csharp.js";
 import java from "./java.js";
+import cpp from "./cpp.js";
 import sql from "./sql.js";
 import mysql from "./mysql.js";
 import * as extras from "./extras/index.js";
@@ -20,7 +21,7 @@ export const NIVEIS = [
 ];
 
 // Ordem = da mais fácil de aprender (e de ver resultado) até a mais complexa.
-export const LINGUAGENS = [html, css, python, javascript, react, go, csharp, java];
+export const LINGUAGENS = [html, css, python, javascript, react, go, csharp, java, cpp];
 export const BANCOS = [sql, mysql];
 export const TRILHAS = [...LINGUAGENS, ...BANCOS];
 

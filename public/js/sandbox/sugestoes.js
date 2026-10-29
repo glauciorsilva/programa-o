@@ -60,6 +60,13 @@ throw throws null true false this super List ArrayList Map HashMap TreeMap Set H
 map collect Collectors toList forEach System out println printf Math Integer Double parseInt Exception
 RuntimeException Override Thread Runnable ExecutorService Executors record`;
 
+const CPP = `include iostream string vector map set algorithm cmath iomanip fstream sstream memory thread mutex
+using namespace std int main return void char bool double float long short unsigned const constexpr auto static
+if else for while do switch case default break continue true false nullptr new delete class struct public private
+protected virtual override friend this template typename try catch throw cout cin cerr endl getline string vector
+push_back pop_back size empty begin end sort find insert erase at front back size_t map pair make_pair first second
+unique_ptr make_unique shared_ptr make_shared setprecision fixed sqrt pow abs max min swap reference operator`;
+
 const CSS = `color background background-color margin padding border border-radius width height max-width min-width
 display flex grid block inline-block none position relative absolute fixed sticky top left right bottom
 font-size font-weight font-family line-height text-align justify-content align-items gap flex-direction
@@ -82,6 +89,7 @@ const POR_MODO = {
   "text/x-go": lista(GO),
   "text/x-csharp": lista(CSHARP),
   "text/x-java": lista(JAVA),
+  "text/x-c++src": lista(CPP),
   css: lista(CSS),
   htmlmixed: lista(HTML, CSS)
 };

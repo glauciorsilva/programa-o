@@ -23,7 +23,8 @@ const NOTAS = {
   sql: "Banco de exemplo recriado a cada execução (motor SQLite com funções do MySQL como <code>NOW()</code>, <code>DATE_FORMAT</code>, <code>TIMESTAMPDIFF</code>). Comandos administrativos (usuários, procedures, triggers) precisam de um MySQL real.",
   go: "Go precisa de compilador: copie o código e rode no playground oficial (abre em outra aba).",
   csharp: "C# precisa do .NET: copie o código e rode em um playground online (abre em outra aba).",
-  java: "Java precisa da JVM: copie o código e rode em um playground online (abre em outra aba)."
+  java: "Java precisa da JVM: copie o código e rode em um playground online (abre em outra aba).",
+  cpp: "C++ precisa ser compilado: copie o código e rode em um playground online (abre em outra aba)."
 };
 
 const chaveLocal = (uid, chave) => `progrtotal:sbx:${uid}:${chave}`;
