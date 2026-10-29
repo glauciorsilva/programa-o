@@ -3263,5 +3263,590 @@ public class Main {
       ],
       saidaEsperada: "lanche: 2\npizza: 4\nsushi: 2\nTotal processado: 8"
     }
+  ],
+  // ───────────────────────── p1: O que é Java e como rodar (Iniciante)
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Olá da padaria",
+      enunciado: `A padaria quer que o programa mostre a mensagem <b>Bom dia, padaria!</b> na tela.
+        Clique em cada retângulo e escreva o que falta: o comando que imprime uma linha.`,
+      dica: `O comando completo é <code>System.out.println</code>. Falta só a última palavra.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        System.out.____("Bom dia, padaria!");
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Bom dia, padaria!");
+    }
+}`,
+      padroes: [
+        [/System\.out\.println\s*\(\s*"Bom dia, padaria!"\s*\)\s*;/, "Use System.out.println(\"Bom dia, padaria!\"); com aspas e ponto e vírgula."],
+        [/public\s+static\s+void\s+main\s*\(\s*String\s*\[\]\s*\w+\s*\)/, "Mantenha a linha do main igual: public static void main(String[] args)."]
+      ],
+      saidaEsperada: "Bom dia, padaria!"
+    },
+    {
+      tipo: "completar",
+      titulo: "A embalagem do programa",
+      enunciado: `Faltam pedaços da “embalagem” do programa. Clique em cada retângulo e escreva o que falta:
+        a palavra que cria a classe e o nome da porta de entrada do programa.
+        O programa deve mostrar <b>Loja aberta</b>.`,
+      dica: `A classe começa com <code>public class Main</code> e a porta de entrada é o método <code>main</code> (tudo minúsculo).`,
+      lang: "java",
+      inicial: c`public ____ Main {
+    public static void ____(String[] args) {
+        System.out.println("Loja aberta");
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Loja aberta");
+    }
+}`,
+      padroes: [
+        [/public\s+class\s+Main\s*\{/, "A primeira linha deve ser public class Main {."],
+        [/public\s+static\s+void\s+main\s*\(/, "A porta de entrada se chama main (minúsculo): public static void main(...)."],
+        [/System\.out\.println\s*\(\s*"Loja aberta"\s*\)\s*;/, "Mantenha System.out.println(\"Loja aberta\");."]
+      ],
+      saidaEsperada: "Loja aberta"
+    },
+    {
+      tipo: "completar",
+      titulo: "Aspas e ponto e vírgula",
+      enunciado: `A mensagem <b>Pedido recebido</b> está sem as aspas e sem o ponto e vírgula.
+        Clique em cada retângulo e escreva o que falta: no primeiro, o texto <b>entre aspas</b>; no segundo, o sinal que encerra a instrução.`,
+      dica: `Texto vai entre aspas duplas: <code>"Pedido recebido"</code>. Toda instrução termina com <code>;</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println(____)____
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Pedido recebido");
+    }
+}`,
+      padroes: [
+        [/System\.out\.println\s*\(\s*"Pedido recebido"\s*\)/, "O texto Pedido recebido precisa estar entre aspas duplas dentro dos parênteses."],
+        [/println\s*\(\s*"Pedido recebido"\s*\)\s*;/, "Termine a linha com ponto e vírgula ;."]
+      ],
+      saidaEsperada: "Pedido recebido"
+    },
+    {
+      tipo: "criar",
+      titulo: "Seu cartão de visita",
+      enunciado: `Escreva um programa que mostre exatamente estas duas linhas, nesta ordem:
+        <pre>Meu nome é Ana
+Estou aprendendo Java</pre>
+        Use um <code>System.out.println</code> para cada linha. Depois cole no playground (onecompiler.com/java) e clique em Run para ver.`,
+      dica: `Escreva as duas linhas dentro do <code>main</code>, uma embaixo da outra, cada uma com aspas e <code>;</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // escreva aqui os dois System.out.println
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Meu nome é Ana");
+        System.out.println("Estou aprendendo Java");
+    }
+}`,
+      padroes: [
+        [/System\.out\.println\s*\(\s*"Meu nome é Ana"\s*\)\s*;/, "Falta a linha System.out.println(\"Meu nome é Ana\");."],
+        [/System\.out\.println\s*\(\s*"Estou aprendendo Java"\s*\)\s*;/, "Falta a linha System.out.println(\"Estou aprendendo Java\");."],
+        [/"Meu nome é Ana"[\s\S]*"Estou aprendendo Java"/, "A linha do nome deve vir antes da linha do Java."]
+      ],
+      saidaEsperada: "Meu nome é Ana\nEstou aprendendo Java"
+    },
+    {
+      tipo: "criar",
+      titulo: "Programa completo do zero",
+      enunciado: `Agora escreva o programa <b>inteiro</b>, com a classe <code>Main</code> e o método <code>main</code>, que mostre estas três linhas de uma agenda:
+        <pre>Agenda de hoje
+09h Dentista
+14h Reunião</pre>`,
+      dica: `Comece com <code>public class Main {</code>, depois <code>public static void main(String[] args) {</code>, os três <code>println</code> e feche as duas chaves.`,
+      lang: "java",
+      inicial: c`// Escreva aqui o programa completo:
+// 1) a classe Main
+// 2) o método main
+// 3) três System.out.println
+`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Agenda de hoje");
+        System.out.println("09h Dentista");
+        System.out.println("14h Reunião");
+    }
+}`,
+      padroes: [
+        [/public\s+class\s+Main\s*\{/, "Comece com public class Main {."],
+        [/public\s+static\s+void\s+main\s*\(\s*String\s*\[\]\s*\w+\s*\)\s*\{/, "Crie a porta de entrada: public static void main(String[] args) {."],
+        [/println\s*\(\s*"Agenda de hoje"\s*\)\s*;[\s\S]*println\s*\(\s*"09h Dentista"\s*\)\s*;[\s\S]*println\s*\(\s*"14h Reunião"\s*\)\s*;/, "Mostre as três linhas na ordem: Agenda de hoje, 09h Dentista, 14h Reunião."],
+        [/\}\s*\}\s*$/, "Feche as duas chaves no final: uma do main e uma da classe."]
+      ],
+      saidaEsperada: "Agenda de hoje\n09h Dentista\n14h Reunião"
+    }
+  ],
+  // ───────────────────────── p2: Contas e textos (Iniciante)
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Conta do pão",
+      enunciado: `Um cliente levou 5 pães de R$ 2. Clique em cada retângulo e escreva o que falta: o sinal de <b>multiplicar</b>.
+        O programa deve mostrar <b>10</b>.`,
+      dica: `Em Java, multiplicar é o asterisco.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println(5 ____ 2);
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println(5 * 2);
+    }
+}`,
+      padroes: [
+        [/println\s*\(\s*5\s*\*\s*2\s*\)\s*;/, "Use o asterisco para multiplicar: 5 * 2."]
+      ],
+      saidaEsperada: "10"
+    },
+    {
+      tipo: "completar",
+      titulo: "Etiqueta com total",
+      enunciado: `A balança deve mostrar <b>Total: 12</b>, fazendo a conta 7 + 5.
+        Clique em cada retângulo e escreva o que falta: o sinal que <b>junta o texto</b> com a conta e a conta <b>entre parênteses</b>.`,
+      dica: `Sem parênteses, o Java cola o 7 e o 5 e mostra 75. Escreva <code>(7 + 5)</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Total: " ____ ____);
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Total: " + (7 + 5));
+    }
+}`,
+      padroes: [
+        [/"Total: "\s*\+\s*\(\s*7\s*\+\s*5\s*\)/, "Junte o texto com + e coloque a conta entre parênteses: \"Total: \" + (7 + 5)."]
+      ],
+      saidaEsperada: "Total: 12"
+    },
+    {
+      tipo: "completar",
+      titulo: "Dividindo a pizza",
+      enunciado: `Uma pizza de 8 fatias será dividida entre 4 amigos, e o caixa recebeu 50 e precisa dar o troco de uma conta de 35.
+        Clique em cada retângulo e escreva o sinal que falta: <b>dividir</b> no primeiro e <b>subtrair</b> no segundo.`,
+      dica: `Dividir é a barra <code>/</code>. Subtrair é o sinal de menos <code>-</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Fatias por pessoa: " + (8 ____ 4));
+        System.out.println("Troco: " + (50 ____ 35));
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Fatias por pessoa: " + (8 / 4));
+        System.out.println("Troco: " + (50 - 35));
+    }
+}`,
+      padroes: [
+        [/\(\s*8\s*\/\s*4\s*\)/, "Para dividir, use a barra: (8 / 4)."],
+        [/\(\s*50\s*-\s*35\s*\)/, "Para o troco, subtraia: (50 - 35)."]
+      ],
+      saidaEsperada: "Fatias por pessoa: 2\nTroco: 15"
+    },
+    {
+      tipo: "criar",
+      titulo: "Nome completo",
+      enunciado: `Mostre o nome completo de uma cliente <b>juntando dois textos</b> com <code>+</code>: <code>"Maria"</code> e <code>"Souza"</code>, com um espaço entre eles.
+        A saída deve ser exatamente <b>Maria Souza</b>.`,
+      dica: `Você pode juntar três pedaços: <code>"Maria" + " " + "Souza"</code>, ou colocar o espaço dentro de uma das aspas.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // junte "Maria" e "Souza" com + e mostre com System.out.println
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Maria" + " " + "Souza");
+    }
+}`,
+      padroes: [
+        [/println\s*\([^;]*"Maria ?"\s*\+/, "Comece com o texto \"Maria\" e use + para juntar."],
+        [/\+\s*" ?Souza"/, "Junte o texto \"Souza\" com +."],
+        [/"Maria "|" "|" Souza"/, "Não esqueça do espaço entre o nome e o sobrenome."]
+      ],
+      saidaEsperada: "Maria Souza"
+    },
+    {
+      tipo: "criar",
+      titulo: "Cupom da lanchonete",
+      enunciado: `Mostre o cupom de uma lanchonete com <b>três linhas</b>, fazendo as contas dentro do código (entre parênteses):
+        <ul>
+          <li><b>Lanches: 3</b></li>
+          <li><b>Total: 45</b> (3 lanches de 15: use <code>3 * 15</code>)</li>
+          <li><b>Por pessoa: 15</b> (o total dividido por 3: use <code>45 / 3</code>)</li>
+        </ul>`,
+      dica: `Exemplo: <code>System.out.println("Total: " + (3 * 15));</code>. Os parênteses fazem a conta acontecer antes de juntar com o texto.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // linha 1: Lanches: 3
+        // linha 2: Total: (3 * 15)
+        // linha 3: Por pessoa: (45 / 3)
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Lanches: 3");
+        System.out.println("Total: " + (3 * 15));
+        System.out.println("Por pessoa: " + (45 / 3));
+    }
+}`,
+      padroes: [
+        [/println\s*\(\s*"Lanches: 3"\s*\)|println\s*\(\s*"Lanches: "\s*\+\s*3\s*\)/, "A primeira linha deve mostrar Lanches: 3."],
+        [/"Total: "\s*\+\s*\(\s*3\s*\*\s*15\s*\)/, "Calcule o total no código: \"Total: \" + (3 * 15)."],
+        [/"Por pessoa: "\s*\+\s*\(\s*45\s*\/\s*3\s*\)/, "Calcule a divisão no código: \"Por pessoa: \" + (45 / 3)."]
+      ],
+      saidaEsperada: "Lanches: 3\nTotal: 45\nPor pessoa: 15"
+    }
+  ],
+  // ───────────────────────── p3: Variáveis e tipos (Iniciante)
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Cadastro do produto",
+      enunciado: `Guarde os dados de um produto em variáveis com o tipo certo. Clique em cada retângulo e escreva o tipo que falta:
+        <ul>
+          <li><code>nome</code> é um texto;</li>
+          <li><code>quantidade</code> é um número inteiro.</li>
+        </ul>`,
+      dica: `Texto é <code>String</code> (S maiúsculo). Número inteiro é <code>int</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        ____ nome = "Sonho de creme";
+        ____ quantidade = 12;
+        System.out.println(nome + ": " + quantidade);
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        String nome = "Sonho de creme";
+        int quantidade = 12;
+        System.out.println(nome + ": " + quantidade);
+    }
+}`,
+      padroes: [
+        [/String\s+nome\s*=/, "nome é um texto: use String (com S maiúsculo)."],
+        [/int\s+quantidade\s*=/, "quantidade é um número inteiro: use int."]
+      ],
+      saidaEsperada: "Sonho de creme: 12"
+    },
+    {
+      tipo: "completar",
+      titulo: "Preço e estoque",
+      enunciado: `Clique em cada retângulo e escreva o tipo que falta: <code>preco</code> tem centavos e <code>disponivel</code> é verdadeiro ou falso.`,
+      dica: `Número com casas decimais é <code>double</code>. Verdadeiro/falso é <code>boolean</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        ____ preco = 7.5;
+        ____ disponivel = true;
+        System.out.println("Preço: " + preco);
+        System.out.println("Disponível: " + disponivel);
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        double preco = 7.5;
+        boolean disponivel = true;
+        System.out.println("Preço: " + preco);
+        System.out.println("Disponível: " + disponivel);
+    }
+}`,
+      padroes: [
+        [/double\s+preco\s*=/, "preco tem casas decimais: use double."],
+        [/boolean\s+disponivel\s*=/, "disponivel é verdadeiro ou falso: use boolean."]
+      ],
+      saidaEsperada: "Preço: 7.5\nDisponível: true"
+    },
+    {
+      tipo: "completar",
+      titulo: "Total da compra",
+      enunciado: `Calcule o total de uma compra usando as variáveis. Clique em cada retângulo e escreva o que falta:
+        no primeiro, o <b>nome da variável</b> do preço; no segundo, o nome da variável que guarda o resultado, para mostrar na tela.
+        A saída deve ser <b>Total: 9.0</b>.`,
+      dica: `As variáveis se chamam <code>preco</code> e <code>total</code>. Use o nome sem aspas.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        double preco = 3.0;
+        int quantidade = 3;
+        double total = ____ * quantidade;
+        System.out.println("Total: " + ____);
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        double preco = 3.0;
+        int quantidade = 3;
+        double total = preco * quantidade;
+        System.out.println("Total: " + total);
+    }
+}`,
+      padroes: [
+        [/double\s+total\s*=\s*preco\s*\*\s*quantidade\s*;|double\s+total\s*=\s*quantidade\s*\*\s*preco\s*;/, "Calcule total multiplicando as variáveis: preco * quantidade."],
+        [/"Total: "\s*\+\s*total\s*\)/, "Mostre a variável total (sem aspas): \"Total: \" + total."]
+      ],
+      saidaEsperada: "Total: 9.0"
+    },
+    {
+      tipo: "criar",
+      titulo: "Ficha da cliente",
+      enunciado: `Crie <b>três variáveis</b> com o tipo certo e mostre cada uma numa linha:
+        <ul>
+          <li><code>nome</code> com o valor <code>"Joana"</code>;</li>
+          <li><code>idade</code> com o valor <code>28</code>;</li>
+          <li><code>vip</code> com o valor <code>true</code>.</li>
+        </ul>
+        A saída deve ser:
+        <pre>Nome: Joana
+Idade: 28
+VIP: true</pre>`,
+      dica: `Exemplo de uma linha: <code>System.out.println("Nome: " + nome);</code>. Use o nome da variável sem aspas.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // crie as variáveis nome, idade e vip
+        // mostre cada uma com System.out.println
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        String nome = "Joana";
+        int idade = 28;
+        boolean vip = true;
+        System.out.println("Nome: " + nome);
+        System.out.println("Idade: " + idade);
+        System.out.println("VIP: " + vip);
+    }
+}`,
+      padroes: [
+        [/String\s+nome\s*=\s*"Joana"\s*;/, "Crie String nome = \"Joana\";."],
+        [/int\s+idade\s*=\s*28\s*;/, "Crie int idade = 28;."],
+        [/boolean\s+vip\s*=\s*true\s*;/, "Crie boolean vip = true;."],
+        [/"Nome: "\s*\+\s*nome[\s\S]*"Idade: "\s*\+\s*idade[\s\S]*"VIP: "\s*\+\s*vip/, "Mostre as três linhas usando as variáveis, na ordem: Nome, Idade, VIP."]
+      ],
+      saidaEsperada: "Nome: Joana\nIdade: 28\nVIP: true"
+    },
+    {
+      tipo: "criar",
+      titulo: "Estoque que muda",
+      enunciado: `A loja tem 20 camisetas. Crie <code>int estoque = 20;</code> e mostre <b>Estoque: 20</b>.
+        Depois a loja vendeu algumas: <b>mude o valor</b> da mesma variável para <code>15</code> (sem criar outra) e mostre <b>Estoque: 15</b>.`,
+      dica: `Para trocar o valor, escreva só <code>estoque = 15;</code>, sem o <code>int</code> na frente.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // 1) crie a variável estoque com 20 e mostre
+        // 2) mude o valor para 15 e mostre de novo
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        int estoque = 20;
+        System.out.println("Estoque: " + estoque);
+        estoque = 15;
+        System.out.println("Estoque: " + estoque);
+    }
+}`,
+      padroes: [
+        [/int\s+estoque\s*=\s*20\s*;/, "Crie a variável: int estoque = 20;."],
+        [/(^|[^\w\s])\s*estoque\s*=\s*15\s*;/m, "Mude o valor com estoque = 15; (sem escrever int de novo)."],
+        [/int\s+estoque[\s\S]*"Estoque: "\s*\+\s*estoque[\s\S]*estoque\s*=\s*15[\s\S]*"Estoque: "\s*\+\s*estoque/, "Mostre o estoque antes e depois da mudança: \"Estoque: \" + estoque."]
+      ],
+      saidaEsperada: "Estoque: 20\nEstoque: 15"
+    }
+  ],
+  // ───────────────────────── p4: Decidindo com if (Iniciante)
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Pode dirigir?",
+      enunciado: `Mostre <b>Pode tirar carteira</b> quando a idade for 18 ou mais.
+        Clique em cada retângulo e escreva o que falta: a palavra que começa a decisão e o sinal de “maior ou igual”.`,
+      dica: `A decisão começa com <code>if</code>. “Maior ou igual” é <code>&gt;=</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        int idade = 19;
+        ____ (idade ____ 18) {
+            System.out.println("Pode tirar carteira");
+        }
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        int idade = 19;
+        if (idade >= 18) {
+            System.out.println("Pode tirar carteira");
+        }
+    }
+}`,
+      padroes: [
+        [/if\s*\(\s*idade\s*>=\s*18\s*\)/, "Use if (idade >= 18)."]
+      ],
+      saidaEsperada: "Pode tirar carteira"
+    },
+    {
+      tipo: "completar",
+      titulo: "Aprovado ou recuperação",
+      enunciado: `Se a nota for 6 ou mais, mostre <b>Aprovado</b>; senão, mostre <b>Recuperação</b>.
+        Clique em cada retângulo e escreva o que falta: a palavra do caminho “senão”.`,
+      dica: `“Senão”, em Java, é <code>else</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        double nota = 4.5;
+        if (nota >= 6) {
+            System.out.println("Aprovado");
+        } ____ {
+            System.out.println("Recuperação");
+        }
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        double nota = 4.5;
+        if (nota >= 6) {
+            System.out.println("Aprovado");
+        } else {
+            System.out.println("Recuperação");
+        }
+    }
+}`,
+      padroes: [
+        [/\}\s*else\s*\{/, "Use } else { para o caminho da recuperação."]
+      ],
+      saidaEsperada: "Recuperação"
+    },
+    {
+      tipo: "completar",
+      titulo: "Faixas do frete",
+      enunciado: `Compras de 200 ou mais têm <b>Frete grátis</b>; de 100 ou mais, <b>Frete com desconto</b>; abaixo disso, <b>Frete normal</b>.
+        Clique em cada retângulo e escreva o que falta: o caminho do meio e o sinal de comparação.`,
+      dica: `O caminho do meio é <code>else if</code>, e a comparação é “maior ou igual a 100”.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        int compras = 150;
+        if (compras >= 200) {
+            System.out.println("Frete grátis");
+        } ____ (compras ____ 100) {
+            System.out.println("Frete com desconto");
+        } else {
+            System.out.println("Frete normal");
+        }
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        int compras = 150;
+        if (compras >= 200) {
+            System.out.println("Frete grátis");
+        } else if (compras >= 100) {
+            System.out.println("Frete com desconto");
+        } else {
+            System.out.println("Frete normal");
+        }
+    }
+}`,
+      padroes: [
+        [/\}\s*else\s+if\s*\(\s*compras\s*>=\s*100\s*\)/, "O caminho do meio é } else if (compras >= 100)."]
+      ],
+      saidaEsperada: "Frete com desconto"
+    },
+    {
+      tipo: "criar",
+      titulo: "Loja aberta ou fechada",
+      enunciado: `Crie <code>boolean aberta = false;</code>. Use <code>if</code> e <code>else</code>: se <code>aberta</code> for verdadeiro, mostre <b>Pode entrar</b>; senão, mostre <b>Volte amanhã</b>.
+        Com o valor <code>false</code>, a saída deve ser <b>Volte amanhã</b>.`,
+      dica: `Um boolean pode ir direto no if: <code>if (aberta) { ... } else { ... }</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // crie a variável aberta
+        // use if e else para mostrar a mensagem
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        boolean aberta = false;
+        if (aberta) {
+            System.out.println("Pode entrar");
+        } else {
+            System.out.println("Volte amanhã");
+        }
+    }
+}`,
+      padroes: [
+        [/boolean\s+aberta\s*=\s*false\s*;/, "Crie boolean aberta = false;."],
+        [/if\s*\(\s*(aberta|aberta\s*==\s*true)\s*\)/, "Teste a variável no if: if (aberta)."],
+        [/\}\s*else\s*\{/, "Use else para o caminho do Volte amanhã."],
+        [/"Pode entrar"[\s\S]*else[\s\S]*"Volte amanhã"/, "Pode entrar vai no bloco do if e Volte amanhã no bloco do else."]
+      ],
+      saidaEsperada: "Volte amanhã"
+    },
+    {
+      tipo: "criar",
+      titulo: "Termômetro da cozinha",
+      enunciado: `Crie <code>int temperatura = 32;</code> e mostre:
+        <ul>
+          <li><b>Quente</b> se for maior que 30;</li>
+          <li><b>Agradável</b> se for maior que 18;</li>
+          <li><b>Frio</b> nos outros casos.</li>
+        </ul>
+        Use <code>if</code>, <code>else if</code> e <code>else</code>. Com 32, a saída deve ser <b>Quente</b>.`,
+      dica: `Teste primeiro o maior (<code>temperatura &gt; 30</code>), depois <code>else if (temperatura &gt; 18)</code> e por último <code>else</code>.`,
+      lang: "java",
+      inicial: c`public class Main {
+    public static void main(String[] args) {
+        // crie a variável temperatura com 32
+        // use if, else if e else
+    }
+}`,
+      solucao: c`public class Main {
+    public static void main(String[] args) {
+        int temperatura = 32;
+        if (temperatura > 30) {
+            System.out.println("Quente");
+        } else if (temperatura > 18) {
+            System.out.println("Agradável");
+        } else {
+            System.out.println("Frio");
+        }
+    }
+}`,
+      padroes: [
+        [/int\s+temperatura\s*=\s*32\s*;/, "Crie int temperatura = 32;."],
+        [/if\s*\(\s*temperatura\s*>\s*30\s*\)/, "O primeiro teste é if (temperatura > 30)."],
+        [/else\s+if\s*\(\s*temperatura\s*>\s*18\s*\)/, "O segundo é else if (temperatura > 18)."],
+        [/"Quente"[\s\S]*"Agradável"[\s\S]*else\s*\{[\s\S]*"Frio"/, "Coloque Quente, Agradável e Frio nos blocos certos, nessa ordem."]
+      ],
+      saidaEsperada: "Quente"
+    }
   ]
+
 };
