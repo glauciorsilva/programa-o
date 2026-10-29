@@ -2002,5 +2002,626 @@ __assert(w === "700" || w === "bold", "O link de destaque deveria estar em negri
 var r = __regra(".menu__link:hover");
 __assert(r && /underline/.test(r.st.textDecoration || r.st.textDecorationLine), "Falta .menu__link:hover com text-decoration: underline.");`
     }
+  ],
+
+  /* ------------------------------------------------------------------ */
+  /* Nível Iniciante                                                     */
+  /* ------------------------------------------------------------------ */
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "A tag style da padaria",
+      enunciado: `A página da Padaria Pão Quente está “sem roupa”. O CSS já foi escrito dentro do <code>&lt;head&gt;</code>, mas faltou o nome da tag que guarda o CSS.
+        Clique em cada retângulo e escreva o que falta para que o título <code>&lt;h1&gt;</code> fique azul.`,
+      dica: `A tag que guarda CSS dentro da página se chama “estilo” em inglês. Ela abre e fecha com o mesmo nome.`,
+      lang: "web",
+      aba: "html",
+      inicial: W(c`<html>
+<head>
+  <____>
+    h1 { color: blue; }
+  </____>
+</head>
+<body>
+  <h1>Padaria Pão Quente</h1>
+  <p>Pão francês fresquinho todo dia.</p>
+</body>
+</html>`, c``),
+      solucao: W(c`<html>
+<head>
+  <style>
+    h1 { color: blue; }
+  </style>
+</head>
+<body>
+  <h1>Padaria Pão Quente</h1>
+  <p>Pão francês fresquinho todo dia.</p>
+</body>
+</html>`, c``),
+      teste: c`
+var estilos = document.querySelectorAll("head style");
+var achou = false;
+for (var i = 0; i < estilos.length; i++) { if (estilos[i].textContent.indexOf("h1") >= 0) achou = true; }
+__assert(achou, "Não encontrei uma tag <style> com o CSS dentro do <head>. Confira o nome da tag nos dois retângulos.");
+var cor = __css("h1", "color");
+__assert(cor === "rgb(0, 0, 255)", "O título deveria estar azul (blue), mas está " + cor);`
+    },
+    {
+      tipo: "completar",
+      titulo: "Ligando o arquivo estilo.css",
+      enunciado: `O CSS da Loja da Esquina está num arquivo separado chamado <code>estilo.css</code>, na mesma pasta do HTML.
+        Clique em cada retângulo e escreva o que falta na tag <code>&lt;link&gt;</code> para o navegador buscar esse arquivo:
+        <ul>
+          <li>no <code>rel</code>: o tipo do arquivo (folha de estilo);</li>
+          <li>no <code>href</code>: o nome exato do arquivo.</li>
+        </ul>`,
+      dica: `Folha de estilo em inglês é <i>stylesheet</i>. O <code>href</code> recebe o nome do arquivo com o final <code>.css</code>.`,
+      lang: "web",
+      aba: "html",
+      inicial: W(c`<html>
+<head>
+  <link rel="____" href="____">
+</head>
+<body>
+  <h1>Loja da Esquina</h1>
+  <p>Roupas e acessórios.</p>
+</body>
+</html>`, c``),
+      solucao: W(c`<html>
+<head>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <h1>Loja da Esquina</h1>
+  <p>Roupas e acessórios.</p>
+</body>
+</html>`, c``),
+      teste: c`
+var lk = document.querySelector("head link");
+__assert(lk, "Não encontrei a tag <link> dentro do <head>.");
+__assert((lk.getAttribute("rel") || "").trim().toLowerCase() === "stylesheet", "O rel deveria ser stylesheet, mas está \"" + lk.getAttribute("rel") + "\".");
+__assert((lk.getAttribute("href") || "").trim() === "estilo.css", "O href deveria ser estilo.css (o nome exato do arquivo), mas está \"" + lk.getAttribute("href") + "\".");`,
+      notaVerificacao: "Aqui no sandbox não existe o arquivo estilo.css de verdade, então a página não muda de cor. No seu computador, com os dois arquivos na mesma pasta, o navegador busca o estilo.css e aplica o CSS."
+    },
+    {
+      tipo: "completar",
+      titulo: "Vestindo a página da padaria",
+      enunciado: `O HTML da padaria já está pronto e o CSS fica na aba CSS (é como se fosse o arquivo <code>estilo.css</code>).
+        Clique em cada retângulo e escreva o que falta para que:
+        <ul>
+          <li>o fundo da página (<code>body</code>) fique <code>lightyellow</code>;</li>
+          <li>o título <code>&lt;h1&gt;</code> fique com a letra <code>brown</code> (marrom).</li>
+        </ul>`,
+      dica: `Escreva só o nome da cor, em inglês, do jeitinho que está no enunciado.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Padaria Pão Quente</h1>
+<p>Pão francês fresquinho todo dia.</p>`, c`body { background-color: ____; }
+h1 { color: ____; }`),
+      solucao: W(c`<h1>Padaria Pão Quente</h1>
+<p>Pão francês fresquinho todo dia.</p>`, c`body { background-color: lightyellow; }
+h1 { color: brown; }`),
+      teste: c`
+var f = __css("body", "backgroundColor");
+__assert(f === "rgb(255, 255, 224)", "O fundo da página deveria ser lightyellow, mas está " + f);
+var t = __css("h1", "color");
+__assert(t === "rgb(165, 42, 42)", "O título deveria estar brown (marrom), mas está " + t);`
+    },
+    {
+      tipo: "criar",
+      titulo: "Escreva a tag style do zero",
+      enunciado: `A página do Mercadinho Bom Preço não tem nenhum CSS. Na aba HTML, dentro do <code>&lt;head&gt;</code>, escreva uma tag <code>&lt;style&gt;</code> (abrindo e fechando) com uma regra que deixe o título <code>&lt;h1&gt;</code> com a letra <code>red</code> (vermelha).`,
+      dica: `Abra com <code>&lt;style&gt;</code>, escreva <code>h1 { color: red; }</code> e feche com <code>&lt;/style&gt;</code>. Tudo entre <code>&lt;head&gt;</code> e <code>&lt;/head&gt;</code>.`,
+      lang: "web",
+      aba: "html",
+      inicial: W(c`<html>
+<head>
+  <!-- escreva a tag style aqui -->
+</head>
+<body>
+  <h1>Mercadinho Bom Preço</h1>
+  <p>Ofertas toda semana.</p>
+</body>
+</html>`, c``),
+      solucao: W(c`<html>
+<head>
+  <style>
+    h1 { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Mercadinho Bom Preço</h1>
+  <p>Ofertas toda semana.</p>
+</body>
+</html>`, c``),
+      teste: c`
+var estilos = document.querySelectorAll("head style");
+var achou = false;
+for (var i = 0; i < estilos.length; i++) { if (estilos[i].textContent.indexOf("h1") >= 0) achou = true; }
+__assert(achou, "Não encontrei uma tag <style> com a regra do h1 dentro do <head>.");
+var cor = __css("h1", "color");
+__assert(cor === "rgb(255, 0, 0)", "O título deveria estar vermelho (red), mas está " + cor);`
+    },
+    {
+      tipo: "criar",
+      titulo: "Ligue o arquivo loja.css",
+      enunciado: `O site da Sapataria Passo Certo guarda o CSS num arquivo chamado <code>loja.css</code>, na mesma pasta do HTML.
+        Na aba HTML, dentro do <code>&lt;head&gt;</code>, escreva a tag <code>&lt;link&gt;</code> que manda o navegador buscar esse arquivo.`,
+      dica: `A tag tem dois atributos: <code>rel="stylesheet"</code> e <code>href</code> com o nome do arquivo.`,
+      lang: "web",
+      aba: "html",
+      inicial: W(c`<html>
+<head>
+  <!-- ligue o arquivo loja.css aqui -->
+</head>
+<body>
+  <h1>Sapataria Passo Certo</h1>
+  <p>Sapatos, tênis e sandálias.</p>
+</body>
+</html>`, c``),
+      solucao: W(c`<html>
+<head>
+  <link rel="stylesheet" href="loja.css">
+</head>
+<body>
+  <h1>Sapataria Passo Certo</h1>
+  <p>Sapatos, tênis e sandálias.</p>
+</body>
+</html>`, c``),
+      teste: c`
+var lk = document.querySelector("head link");
+__assert(lk, "Não encontrei a tag <link> dentro do <head>.");
+__assert((lk.getAttribute("rel") || "").trim().toLowerCase() === "stylesheet", "O rel deveria ser stylesheet, mas está \"" + lk.getAttribute("rel") + "\".");
+__assert((lk.getAttribute("href") || "").trim() === "loja.css", "O href deveria ser loja.css, mas está \"" + lk.getAttribute("href") + "\".");`,
+      notaVerificacao: "No sandbox o arquivo loja.css não existe de verdade, por isso a aparência não muda. No seu computador, com os dois arquivos na mesma pasta, o estilo seria aplicado."
+    }
+  ],
+
+  /* ------------------------------------------------------------------ */
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Seletor e propriedade do cardápio",
+      enunciado: `No cardápio da lanchonete, o título é um <code>&lt;h1&gt;</code> e a frase é um <code>&lt;p&gt;</code>.
+        Clique em cada retângulo e escreva o que falta para que:
+        <ul>
+          <li>o <b>seletor</b> da primeira regra pegue o título <code>&lt;h1&gt;</code>;</li>
+          <li>a <b>propriedade</b> da segunda regra mude a cor da letra do parágrafo.</li>
+        </ul>`,
+      dica: `O seletor de tag é o nome da tag sem os sinais <code>&lt; &gt;</code>. A propriedade da cor da letra é em inglês.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Cardápio da Lanchonete</h1>
+<p>Escolha seu lanche favorito.</p>`, c`____ { color: red; }
+
+p { ____: gray; }`),
+      solucao: W(c`<h1>Cardápio da Lanchonete</h1>
+<p>Escolha seu lanche favorito.</p>`, c`h1 { color: red; }
+
+p { color: gray; }`),
+      teste: c`
+var h = __css("h1", "color");
+__assert(h === "rgb(255, 0, 0)", "O título h1 deveria estar vermelho, mas está " + h + ". Confira o seletor da primeira regra.");
+var p = __css("p", "color");
+__assert(p === "rgb(128, 128, 128)", "O parágrafo deveria estar cinza (gray), mas está " + p + ". Confira a propriedade da segunda regra.");`
+    },
+    {
+      tipo: "completar",
+      titulo: "As chaves da lista de lanches",
+      enunciado: `A regra dos itens da lista (<code>&lt;li&gt;</code>) perdeu as chaves que abrem e fecham a “caixinha” de ordens.
+        Clique em cada retângulo e escreva o símbolo que falta para os itens ficarem verde-escuros.`,
+      dica: `A caixinha de ordens abre com <code>{</code> e fecha com <code>}</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<ul>
+  <li>X-salada</li>
+  <li>Misto quente</li>
+  <li>Pão de queijo</li>
+</ul>`, c`li ____
+  color: darkgreen;
+____`),
+      solucao: W(c`<ul>
+  <li>X-salada</li>
+  <li>Misto quente</li>
+  <li>Pão de queijo</li>
+</ul>`, c`li {
+  color: darkgreen;
+}`),
+      teste: c`
+var cor = __css("li", "color");
+__assert(cor === "rgb(0, 100, 0)", "Os itens da lista deveriam estar verde-escuros (darkgreen), mas estão " + cor + ". Confira se as chaves abrem { e fecham }.");`
+    },
+    {
+      tipo: "completar",
+      titulo: "Dois-pontos e ponto e vírgula",
+      enunciado: `O subtítulo <code>&lt;h2&gt;</code> deveria ter letra roxa e fundo amarelo, mas faltam sinais na regra.
+        Clique em cada retângulo e escreva o sinal que falta: um separa a propriedade do valor e o outro termina a ordem.`,
+      dica: `Entre a propriedade e o valor vão os dois-pontos; no fim de cada ordem, o ponto e vírgula.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h2>Promoção do dia</h2>
+<p>Suco natural pela metade do preço.</p>`, c`h2 {
+  color____ purple____
+  background-color: yellow;
+}`),
+      solucao: W(c`<h2>Promoção do dia</h2>
+<p>Suco natural pela metade do preço.</p>`, c`h2 {
+  color: purple;
+  background-color: yellow;
+}`),
+      teste: c`
+var cor = __css("h2", "color");
+__assert(cor === "rgb(128, 0, 128)", "A letra do h2 deveria estar roxa (purple), mas está " + cor + ". Confira os dois-pontos e o ponto e vírgula.");
+var f = __css("h2", "backgroundColor");
+__assert(f === "rgb(255, 255, 0)", "O fundo do h2 deveria estar amarelo (yellow), mas está " + f + ". Sem o ; a linha de cima se mistura com esta.");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Regras do cardápio do zero",
+      enunciado: `Na aba CSS, escreva <b>duas regras</b> para o cardápio:
+        <ul>
+          <li>o título <code>&lt;h1&gt;</code> com a letra <code>darkred</code>;</li>
+          <li>os itens da lista <code>&lt;li&gt;</code> com a letra <code>darkgreen</code>.</li>
+        </ul>`,
+      dica: `Cada regra é: seletor, chaves, e dentro <code>color: valor;</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Cardápio</h1>
+<ul>
+  <li>Coxinha</li>
+  <li>Pastel</li>
+</ul>`, c`/* escreva suas regras aqui */
+`),
+      solucao: W(c`<h1>Cardápio</h1>
+<ul>
+  <li>Coxinha</li>
+  <li>Pastel</li>
+</ul>`, c`h1 {
+  color: darkred;
+}
+
+li {
+  color: darkgreen;
+}`),
+      teste: c`
+var h = __css("h1", "color");
+__assert(h === "rgb(139, 0, 0)", "O título h1 deveria estar darkred, mas está " + h);
+var itens = document.querySelectorAll("li");
+for (var i = 0; i < itens.length; i++) {
+  var c1 = getComputedStyle(itens[i]).color;
+  __assert(c1 === "rgb(0, 100, 0)", "O item \"" + itens[i].textContent + "\" deveria estar darkgreen, mas está " + c1);
+}`
+    },
+    {
+      tipo: "criar",
+      titulo: "Três regras para a agenda",
+      enunciado: `A página da agenda tem um título <code>&lt;h1&gt;</code>, um parágrafo <code>&lt;p&gt;</code> e uma lista de compromissos <code>&lt;li&gt;</code>.
+        Na aba CSS, escreva uma regra para cada tag:
+        <ul>
+          <li><code>h1</code> com a letra <code>navy</code>;</li>
+          <li><code>p</code> com a letra <code>gray</code>;</li>
+          <li><code>li</code> com a letra <code>orange</code>.</li>
+        </ul>`,
+      dica: `Três seletores diferentes, cada um com suas chaves e um <code>color: ...;</code> dentro.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Minha agenda</h1>
+<p>Compromissos de segunda-feira:</p>
+<ul>
+  <li>9h — Dentista</li>
+  <li>14h — Reunião na escola</li>
+</ul>`, c`/* uma regra para h1, uma para p e uma para li */
+`),
+      solucao: W(c`<h1>Minha agenda</h1>
+<p>Compromissos de segunda-feira:</p>
+<ul>
+  <li>9h — Dentista</li>
+  <li>14h — Reunião na escola</li>
+</ul>`, c`h1 { color: navy; }
+p { color: gray; }
+li { color: orange; }`),
+      teste: c`
+var h = __css("h1", "color");
+__assert(h === "rgb(0, 0, 128)", "O h1 deveria estar navy, mas está " + h);
+var p = __css("p", "color");
+__assert(p === "rgb(128, 128, 128)", "O p deveria estar gray, mas está " + p);
+var li = __css("li", "color");
+__assert(li === "rgb(255, 165, 0)", "Os li deveriam estar orange, mas estão " + li);`
+    }
+  ],
+
+  /* ------------------------------------------------------------------ */
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Faixa azul do título",
+      enunciado: `A Escola Aprender quer o título com <b>letra branca</b> (<code>white</code>) em <b>fundo azul</b> (<code>blue</code>).
+        Clique em cada retângulo e escreva o nome da cor que falta.`,
+      dica: `<code>color</code> é a letra; <code>background-color</code> é o fundo. Os nomes das cores são em inglês.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Escola Aprender</h1>
+<p>Matrículas abertas.</p>`, c`h1 {
+  color: ____;
+  background-color: ____;
+}`),
+      solucao: W(c`<h1>Escola Aprender</h1>
+<p>Matrículas abertas.</p>`, c`h1 {
+  color: white;
+  background-color: blue;
+}`),
+      teste: c`
+var t = __css("h1", "color");
+__assert(t === "rgb(255, 255, 255)", "A letra do título deveria ser branca (white), mas está " + t);
+var f = __css("h1", "backgroundColor");
+__assert(f === "rgb(0, 0, 255)", "O fundo do título deveria ser azul (blue), mas está " + f);`
+    },
+    {
+      tipo: "completar",
+      titulo: "Fundo da página e cor em hex",
+      enunciado: `Na página da cafeteria:
+        <ul>
+          <li>complete a <b>propriedade</b> que pinta o fundo da página inteira (<code>body</code>);</li>
+          <li>complete o parágrafo com a cor da marca, o código hex <code>#7c2d12</code>.</li>
+        </ul>
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `<i>Background</i> é fundo. O código hex começa com <code>#</code>, copie igualzinho.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Cafeteria Grão Bom</h1>
+<p>Café coado na hora.</p>`, c`body { ____: lightyellow; }
+
+p { color: ____; }`),
+      solucao: W(c`<h1>Cafeteria Grão Bom</h1>
+<p>Café coado na hora.</p>`, c`body { background-color: lightyellow; }
+
+p { color: #7c2d12; }`),
+      teste: c`
+var f = __css("body", "backgroundColor");
+__assert(f === "rgb(255, 255, 224)", "O fundo da página deveria ser lightyellow, mas está " + f + ". Confira a propriedade do fundo.");
+var p = __css("p", "color");
+__assert(p === "rgb(124, 45, 18)", "O parágrafo deveria ter a cor #7c2d12, mas está " + p);`
+    },
+    {
+      tipo: "completar",
+      titulo: "Faixa de aviso vermelha",
+      enunciado: `A clínica quer um aviso (<code>&lt;h2&gt;</code>) com letra branca em fundo vermelho <code>#dc2626</code>.
+        Os valores já estão lá. Clique em cada retângulo e escreva a <b>propriedade</b> certa: uma para a cor da letra e outra para a cor do fundo.`,
+      dica: `Primeiro a letra (<code>white</code>), depois o fundo (<code>#dc2626</code>).`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h2>Atenção: traga sua carteirinha</h2>
+<p>Clínica Bem-Estar</p>`, c`h2 {
+  ____: white;
+  ____: #dc2626;
+}`),
+      solucao: W(c`<h2>Atenção: traga sua carteirinha</h2>
+<p>Clínica Bem-Estar</p>`, c`h2 {
+  color: white;
+  background-color: #dc2626;
+}`),
+      teste: c`
+var t = __css("h2", "color");
+__assert(t === "rgb(255, 255, 255)", "A letra do aviso deveria ser branca, mas está " + t + ". A primeira propriedade é a da cor da letra.");
+var f = __css("h2", "backgroundColor");
+__assert(f === "rgb(220, 38, 38)", "O fundo do aviso deveria ser #dc2626, mas está " + f + ". A segunda propriedade é a da cor do fundo.");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Cores da marca da loja",
+      enunciado: `O guia da marca da Loja Azul diz: fundo da página <code>#f1f5f9</code> e títulos <code>#1e3a8a</code>.
+        Na aba CSS, escreva:
+        <ul>
+          <li>uma regra para o <code>body</code> com a cor de fundo <code>#f1f5f9</code>;</li>
+          <li>uma regra para o <code>h1</code> com a cor da letra <code>#1e3a8a</code>.</li>
+        </ul>`,
+      dica: `Use <code>background-color</code> no <code>body</code> e <code>color</code> no <code>h1</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Loja Azul</h1>
+<p>Tudo para sua casa.</p>`, c`/* cores da marca */
+`),
+      solucao: W(c`<h1>Loja Azul</h1>
+<p>Tudo para sua casa.</p>`, c`body {
+  background-color: #f1f5f9;
+}
+
+h1 {
+  color: #1e3a8a;
+}`),
+      teste: c`
+var f = __css("body", "backgroundColor");
+__assert(f === "rgb(241, 245, 249)", "O fundo da página deveria ser #f1f5f9, mas está " + f);
+var t = __css("h1", "color");
+__assert(t === "rgb(30, 58, 138)", "O título deveria ter a cor #1e3a8a, mas está " + t);`
+    },
+    {
+      tipo: "criar",
+      titulo: "Pizzaria colorida",
+      enunciado: `Pinte a página da Pizzaria Forno a Lenha. Na aba CSS:
+        <ul>
+          <li>o <code>h1</code> com letra <code>white</code> e fundo <code>#c2410c</code>;</li>
+          <li>os parágrafos <code>p</code> com letra <code>#431407</code>.</li>
+        </ul>`,
+      dica: `O <code>h1</code> leva duas ordens dentro das mesmas chaves, cada uma terminando com <code>;</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Pizzaria Forno a Lenha</h1>
+<p>Mussarela: R$ 45,00</p>
+<p>Calabresa: R$ 48,00</p>`, c`/* pinte a pizzaria aqui */
+`),
+      solucao: W(c`<h1>Pizzaria Forno a Lenha</h1>
+<p>Mussarela: R$ 45,00</p>
+<p>Calabresa: R$ 48,00</p>`, c`h1 {
+  color: white;
+  background-color: #c2410c;
+}
+
+p {
+  color: #431407;
+}`),
+      teste: c`
+var t = __css("h1", "color");
+__assert(t === "rgb(255, 255, 255)", "A letra do h1 deveria ser white, mas está " + t);
+var f = __css("h1", "backgroundColor");
+__assert(f === "rgb(194, 65, 12)", "O fundo do h1 deveria ser #c2410c, mas está " + f);
+var ps = document.querySelectorAll("p");
+for (var i = 0; i < ps.length; i++) {
+  var c1 = getComputedStyle(ps[i]).color;
+  __assert(c1 === "rgb(67, 20, 7)", "Os parágrafos deveriam ter a cor #431407, mas um está " + c1);
+}`
+    }
+  ],
+
+  /* ------------------------------------------------------------------ */
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Tamanho das letras da promoção",
+      enunciado: `No cartaz de promoções:
+        <ul>
+          <li>o título <code>&lt;h1&gt;</code> deve ter letra de <code>40px</code>;</li>
+          <li>os parágrafos <code>&lt;p&gt;</code> devem ter letra de 18 pixels (falta só a unidade).</li>
+        </ul>
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Pixels se escrevem <code>px</code>, grudado no número, sem espaço.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Promoções da Semana</h1>
+<p>Arroz 5 kg — R$ 24,90</p>`, c`h1 { font-size: ____; }
+
+p { font-size: 18____; }`),
+      solucao: W(c`<h1>Promoções da Semana</h1>
+<p>Arroz 5 kg — R$ 24,90</p>`, c`h1 { font-size: 40px; }
+
+p { font-size: 18px; }`),
+      teste: c`
+var h = __css("h1", "fontSize");
+__assert(h === "40px", "O título deveria ter font-size 40px, mas está " + h);
+var p = __css("p", "fontSize");
+__assert(p === "18px", "O parágrafo deveria ter font-size 18px, mas está " + p + ". Lembre do px grudado no número.");`
+    },
+    {
+      tipo: "completar",
+      titulo: "Aviso que não fica espremido",
+      enunciado: `O aviso amarelo da farmácia está com o texto grudado na beirada do fundo.
+        Clique no retângulo e escreva a propriedade que cria <b>20px de espaço por dentro</b>, entre o texto e a beirada do fundo.`,
+      dica: `Espaço de dentro é como o enchimento da almofada.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Farmácia Saúde</h1>
+<p>Plantão 24 horas neste fim de semana.</p>`, c`p {
+  background-color: gold;
+  ____: 20px;
+}`),
+      solucao: W(c`<h1>Farmácia Saúde</h1>
+<p>Plantão 24 horas neste fim de semana.</p>`, c`p {
+  background-color: gold;
+  padding: 20px;
+}`),
+      teste: c`
+var lados = ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"];
+for (var i = 0; i < lados.length; i++) {
+  var v = __css("p", lados[i]);
+  __assert(v === "20px", "O aviso deveria ter 20px de espaço por dentro (padding), mas " + lados[i] + " está " + v + ".");
+}`
+    },
+    {
+      tipo: "completar",
+      titulo: "Dentro e fora dos produtos",
+      enunciado: `Cada produto (<code>&lt;p&gt;</code>) da vitrine tem fundo azul-claro. Clique em cada retângulo e escreva a propriedade certa para que:
+        <ul>
+          <li>a primeira ordem dê <code>10px</code> de espaço <b>por dentro</b> (o fundo cresce em volta do texto);</li>
+          <li>a segunda ordem dê <code>30px</code> de espaço <b>por fora</b> (afasta um produto do outro).</li>
+        </ul>`,
+      dica: `Dentro é <code>padding</code>; fora é <code>margin</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<p>Caderno — R$ 12,00</p>
+<p>Lápis — R$ 2,00</p>
+<p>Borracha — R$ 1,50</p>`, c`p {
+  background-color: lightblue;
+  ____: 10px;
+  ____: 30px;
+}`),
+      solucao: W(c`<p>Caderno — R$ 12,00</p>
+<p>Lápis — R$ 2,00</p>
+<p>Borracha — R$ 1,50</p>`, c`p {
+  background-color: lightblue;
+  padding: 10px;
+  margin: 30px;
+}`),
+      teste: c`
+var pd = __css("p", "paddingLeft");
+__assert(pd === "10px" && __css("p", "paddingTop") === "10px", "O espaço por dentro (padding) deveria ser 10px, mas está " + pd + ".");
+var mg = __css("p", "marginLeft");
+__assert(mg === "30px" && __css("p", "marginTop") === "30px", "O espaço por fora (margin) deveria ser 30px, mas está " + mg + ".");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Letras do cardápio",
+      enunciado: `No cardápio da sorveteria, escreva na aba CSS:
+        <ul>
+          <li>o título <code>h1</code> com letra de <code>36px</code>;</li>
+          <li>os parágrafos <code>p</code> com letra de <code>18px</code>.</li>
+        </ul>`,
+      dica: `A propriedade do tamanho da letra é <code>font-size</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Sorveteria Gelato</h1>
+<p>Casquinha — R$ 6,00</p>
+<p>Milk-shake — R$ 15,00</p>`, c`/* tamanhos das letras */
+`),
+      solucao: W(c`<h1>Sorveteria Gelato</h1>
+<p>Casquinha — R$ 6,00</p>
+<p>Milk-shake — R$ 15,00</p>`, c`h1 {
+  font-size: 36px;
+}
+
+p {
+  font-size: 18px;
+}`),
+      teste: c`
+var h = __css("h1", "fontSize");
+__assert(h === "36px", "O título deveria ter font-size 36px, mas está " + h);
+var p = __css("p", "fontSize");
+__assert(p === "18px", "Os parágrafos deveriam ter font-size 18px, mas estão " + p);`
+    },
+    {
+      tipo: "criar",
+      titulo: "Vitrine do mercado com respiro",
+      enunciado: `Arrume a vitrine do Mercado Central. Na aba CSS:
+        <ul>
+          <li>o título <code>h1</code> com letra de <code>30px</code>;</li>
+          <li>cada produto <code>p</code> com fundo <code>#e0f2fe</code>, <code>12px</code> de espaço por dentro e <code>20px</code> de espaço por fora.</li>
+        </ul>`,
+      dica: `No <code>p</code> vão três ordens: <code>background-color</code>, <code>padding</code> e <code>margin</code>.`,
+      lang: "web",
+      aba: "css",
+      inicial: W(c`<h1>Mercado Central</h1>
+<p>Arroz 5 kg — R$ 24,90</p>
+<p>Feijão 1 kg — R$ 7,50</p>
+<p>Café 500 g — R$ 16,90</p>`, c`/* arrume a vitrine aqui */
+`),
+      solucao: W(c`<h1>Mercado Central</h1>
+<p>Arroz 5 kg — R$ 24,90</p>
+<p>Feijão 1 kg — R$ 7,50</p>
+<p>Café 500 g — R$ 16,90</p>`, c`h1 {
+  font-size: 30px;
+}
+
+p {
+  background-color: #e0f2fe;
+  padding: 12px;
+  margin: 20px;
+}`),
+      teste: c`
+var h = __css("h1", "fontSize");
+__assert(h === "30px", "O título deveria ter font-size 30px, mas está " + h);
+var f = __css("p", "backgroundColor");
+__assert(f === "rgb(224, 242, 254)", "O fundo dos produtos deveria ser #e0f2fe, mas está " + f);
+__assert(__css("p", "paddingTop") === "12px" && __css("p", "paddingLeft") === "12px", "Os produtos deveriam ter padding de 12px, mas está " + __css("p", "paddingTop"));
+__assert(__css("p", "marginTop") === "20px" && __css("p", "marginLeft") === "20px", "Os produtos deveriam ter margin de 20px, mas está " + __css("p", "marginTop"));`
+    }
   ]
 };

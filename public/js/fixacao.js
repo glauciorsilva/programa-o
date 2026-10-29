@@ -3,7 +3,7 @@ import { $, $$, esc, fmt } from "./util.js";
 
 // Embaralha as opções sempre do mesmo jeito para a mesma pergunta (para a resposta
 // certa não ficar sempre na mesma posição). Verdadeiro/Falso mantém a ordem.
-function embaralhar(q) {
+export function embaralhar(q) {
   if (q.tipo !== "multipla" || q.fixa) return q;
   let h = 2166136261;
   for (const ch of q.pergunta) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
@@ -16,7 +16,7 @@ function embaralhar(q) {
   return { ...q, opcoes: ordem.map((i) => q.opcoes[i]), correta: ordem.indexOf(q.correta) };
 }
 
-const normalizar = (s, ci) => {
+export const normalizar = (s, ci) => {
   let v = String(s ?? "").trim().replace(/;+$/, "").replace(/\s+/g, " ");
   return ci ? v.toLowerCase() : v;
 };
@@ -25,7 +25,7 @@ const normalizar = (s, ci) => {
  * Desenha as questões em `host`.
  * opcoes: { questoes, salvo: () => {melhor,total}|null, ci, onConcluir(acertos,total) }
  */
-export function renderFixacao(host, { questoes: originais, salvo, ci, onConcluir }) {
+export function renderFixacao(host, { questoes: originais, salvo, ci, onConcluir, pontos }) {
   const questoes = (originais || []).map(embaralhar);
   if (!questoes.length) {
     host.innerHTML = "";
@@ -39,7 +39,7 @@ export function renderFixacao(host, { questoes: originais, salvo, ci, onConcluir
       <div class="fx-topo">
         <div>
           <h2 id="fx-titulo">✍️ Exercícios de fixação</h2>
-          <p class="muted">${questoes.length} questões rápidas sobre este nível. Responda, veja a explicação e siga em frente.</p>
+          <p class="muted">${questoes.length} questões rápidas sobre este nível. Responda, veja a explicação e siga em frente.${pontos ? ` ⭐ ${pontos} pts por acerto (vale o seu melhor resultado).` : ""}</p>
         </div>
         <div class="fx-placar" aria-live="polite">
           <strong id="fx-acertos">0/${questoes.length}</strong>
@@ -124,7 +124,7 @@ export function renderFixacao(host, { questoes: originais, salvo, ci, onConcluir
   });
 
   $("#fx-refazer", host).addEventListener("click", () => {
-    renderFixacao(host, { questoes: originais, salvo, ci, onConcluir });
+    renderFixacao(host, { questoes: originais, salvo, ci, onConcluir, pontos });
     $(".fixacao", host).scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }

@@ -1,6 +1,7 @@
 import { TRILHAS, NIVEIS } from "./content/index.js";
 import { LICOES as LICOES_SQLP, chaveLicao } from "./content/sqlpratica.js";
 import { TOTAL_CODIGO } from "./content/codigo/index.js";
+import { EXERCICIOS } from "./content/exercicios.js";
 
 export const $ = (sel, el = document) => el.querySelector(sel);
 export const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
@@ -76,7 +77,7 @@ export function progressoPorTrilha(progress = {}) {
   });
 }
 
-export const TOTAL_EXERCICIOS = TRILHAS.length * NIVEIS.length;
+export const TOTAL_EXERCICIOS = Object.keys(EXERCICIOS).length;
 
 export function progressoExercicios(progress = {}) {
   const feitos = Object.keys(progress).filter((k) => k.startsWith("ex_")).length;

@@ -2504,5 +2504,602 @@ public class CadastroService
         [/CadastroService\s*\(\s*IRepositorioClientes\s+\w+\s*\)/, "O construtor de CadastroService deve receber um IRepositorioClientes."]
       ]
     }
+  ],
+  // ───────── Nível Iniciante ─────────
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Placa da padaria",
+      enunciado: `A padaria Pão Quente quer um programa que mostre a placa da porta. Faltam o nome do comando e o texto da segunda linha.
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Padaria Pão Quente</code><br><code>Aberta das 6h às 20h</code>`,
+      dica: `O comando que mostra uma linha na tela é <code>Console.WriteLine</code>. Texto vai entre aspas duplas.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+Console.____("Padaria Pão Quente");
+Console.WriteLine(____);
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Padaria Pão Quente");
+Console.WriteLine("Aberta das 6h às 20h");`,
+      saidaEsperada: "Padaria Pão Quente\nAberta das 6h às 20h",
+      padroes: [
+        [/Console\.WriteLine\(\s*"Padaria Pão Quente"\s*\)\s*;/, 'A primeira linha deve ser Console.WriteLine("Padaria Pão Quente");'],
+        [/Console\.WriteLine\(\s*"Aberta das 6h às 20h"\s*\)\s*;/, 'Escreva o texto "Aberta das 6h às 20h" entre aspas duplas.']
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "O ponto e vírgula que faltou",
+      enunciado: `O entregador escreveu este programa, mas ele não roda: falta o sinal do fim da primeira instrução e o começo da segunda.
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Pedido recebido</code><br><code>Saiu para entrega</code>`,
+      dica: `Toda instrução em C# termina com <code>;</code>. E o “dono” do <code>WriteLine</code> é o <code>Console</code> (com C maiúsculo).`,
+      lang: "csharp",
+      inicial: c`using System;
+
+Console.WriteLine("Pedido recebido")____
+____.WriteLine("Saiu para entrega");
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Pedido recebido");
+Console.WriteLine("Saiu para entrega");`,
+      saidaEsperada: "Pedido recebido\nSaiu para entrega",
+      padroes: [
+        [/Console\.WriteLine\(\s*"Pedido recebido"\s*\)\s*;/, "Coloque o ; no fim da primeira instrução."],
+        [/Console\.WriteLine\(\s*"Saiu para entrega"\s*\)\s*;/, "A segunda linha deve começar com Console (C maiúsculo)."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Lista de compras",
+      enunciado: `Complete a lista de compras do mercado: falta o nome do “pacote” de ferramentas no <code>using</code> e a última linha, que deve mostrar <code>Café</code>.
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Lista de compras:</code><br><code>Arroz</code><br><code>Feijão</code><br><code>Café</code>`,
+      dica: `O <code>Console</code> mora em <code>System</code>. No último retângulo escreva a instrução inteira, igual às de cima, mas com o texto <code>"Café"</code>.`,
+      lang: "csharp",
+      inicial: c`using ____;
+
+Console.WriteLine("Lista de compras:");
+Console.WriteLine("Arroz");
+Console.WriteLine("Feijão");
+____
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Lista de compras:");
+Console.WriteLine("Arroz");
+Console.WriteLine("Feijão");
+Console.WriteLine("Café");`,
+      saidaEsperada: "Lista de compras:\nArroz\nFeijão\nCafé",
+      padroes: [
+        [/using\s+System\s*;/, "A primeira linha deve ser using System;"],
+        [/Console\.WriteLine\(\s*"Café"\s*\)\s*;/, 'Escreva Console.WriteLine("Café"); na última linha.'],
+        [/"Feijão"[\s\S]*"Café"/, "Café deve aparecer depois de Feijão."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Cartão de boas-vindas",
+      enunciado: `A Loja Bom Preço quer mostrar uma mensagem na tela do caixa. Escreva um programa que mostre exatamente estas três linhas, nesta ordem:<br>
+        <code>Bem-vindo à Loja Bom Preço</code><br><code>Hoje tem promoção</code><br><code>Volte sempre!</code>`,
+      dica: `Use um <code>Console.WriteLine("...");</code> para cada linha. Não esqueça as aspas e o <code>;</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// Mostre as três frases do enunciado, uma por linha
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Bem-vindo à Loja Bom Preço");
+Console.WriteLine("Hoje tem promoção");
+Console.WriteLine("Volte sempre!");`,
+      saidaEsperada: "Bem-vindo à Loja Bom Preço\nHoje tem promoção\nVolte sempre!",
+      padroes: [
+        [/Console\.WriteLine\(\s*"Bem-vindo à Loja Bom Preço"\s*\)\s*;/, 'Mostre "Bem-vindo à Loja Bom Preço" com Console.WriteLine (e termine com ;).'],
+        [/Console\.WriteLine\(\s*"Hoje tem promoção"\s*\)\s*;/, 'Mostre "Hoje tem promoção" com Console.WriteLine.'],
+        [/Console\.WriteLine\(\s*"Volte sempre!"\s*\)\s*;/, 'Mostre "Volte sempre!" com Console.WriteLine.'],
+        [/"Bem-vindo à Loja Bom Preço"[\s\S]*"Hoje tem promoção"[\s\S]*"Volte sempre!"/, "As três frases devem estar na ordem do enunciado."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Horário da clínica",
+      enunciado: `A recepção da Clínica Sorriso quer mostrar os horários de atendimento. Escreva um programa que mostre exatamente:<br>
+        <code>Clínica Sorriso</code><br><code>Segunda a sexta: 8h às 18h</code><br><code>Sábado: 8h às 12h</code><br><code>Domingo: fechado</code>`,
+      dica: `Quatro linhas na tela = quatro <code>Console.WriteLine</code>, um embaixo do outro.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// Mostre o nome da clínica e os três horários, uma linha cada
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Clínica Sorriso");
+Console.WriteLine("Segunda a sexta: 8h às 18h");
+Console.WriteLine("Sábado: 8h às 12h");
+Console.WriteLine("Domingo: fechado");`,
+      saidaEsperada: "Clínica Sorriso\nSegunda a sexta: 8h às 18h\nSábado: 8h às 12h\nDomingo: fechado",
+      padroes: [
+        [/Console\.WriteLine\(\s*"Clínica Sorriso"\s*\)\s*;/, 'A primeira linha deve mostrar "Clínica Sorriso".'],
+        [/Console\.WriteLine\(\s*"Segunda a sexta: 8h às 18h"\s*\)\s*;/, 'Mostre "Segunda a sexta: 8h às 18h".'],
+        [/Console\.WriteLine\(\s*"Sábado: 8h às 12h"\s*\)\s*;/, 'Mostre "Sábado: 8h às 12h".'],
+        [/"Clínica Sorriso"[\s\S]*"Segunda a sexta[\s\S]*"Sábado[\s\S]*Console\.WriteLine\(\s*"Domingo: fechado"\s*\)\s*;/, 'Termine com "Domingo: fechado", mantendo a ordem do enunciado.']
+      ]
+    }
+  ],
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Soma das vendas",
+      enunciado: `A sorveteria vendeu 120 picolés de manhã e 80 à tarde. Ela também recebeu 6 caixas com 4 potes cada.
+        Complete os sinais das contas. Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Total vendido: 200</code><br><code>Potes recebidos: 24</code>`,
+      dica: `Somar é <code>+</code> e multiplicar (“vezes”) é <code>*</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+Console.WriteLine("Total vendido: " + (120 ____ 80));
+Console.WriteLine("Potes recebidos: " + (6 ____ 4));
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Total vendido: " + (120 + 80));
+Console.WriteLine("Potes recebidos: " + (6 * 4));`,
+      saidaEsperada: "Total vendido: 200\nPotes recebidos: 24",
+      padroes: [
+        [/\(\s*120\s*\+\s*80\s*\)/, "O total vendido é 120 + 80."],
+        [/\(\s*6\s*\*\s*4\s*\)/, "Os potes recebidos são 6 * 4 (use o asterisco para multiplicar)."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Dividindo os pães",
+      enunciado: `Há 25 pães para dividir igualmente entre 4 pessoas. Mostre quantos pães inteiros cada pessoa leva e quantos sobram.
+        Clique em cada retângulo e escreva o sinal que falta. A saída deve ser exatamente:<br><code>Cada pessoa leva: 6</code><br><code>Sobram: 1</code>`,
+      dica: `Dividir inteiros com <code>/</code> joga fora o resto; o resto em si sai com <code>%</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+Console.WriteLine("Cada pessoa leva: " + (25 ____ 4));
+Console.WriteLine("Sobram: " + (25 ____ 4));
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Cada pessoa leva: " + (25 / 4));
+Console.WriteLine("Sobram: " + (25 % 4));`,
+      saidaEsperada: "Cada pessoa leva: 6\nSobram: 1",
+      padroes: [
+        [/"Cada pessoa leva: "\s*\+\s*\(\s*25\s*\/\s*4\s*\)/, "Quantos cada um leva: divida com / (25 / 4)."],
+        [/"Sobram: "\s*\+\s*\(\s*25\s*%\s*4\s*\)/, "O que sobra é o resto da divisão: use % (25 % 4)."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Parênteses no lugar certo",
+      enunciado: `Um cliente comprou um lanche de 30 reais e um suco de 15. O programa mostrou <code>Total: 3015</code>, porque juntou os números como texto!
+        Coloque parênteses em volta da conta para ela ser feita antes. Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Total: 45</code>`,
+      dica: `Um retângulo recebe <code>(</code> e o outro recebe <code>)</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+Console.WriteLine("Total: " + ____30 + 15____);
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Total: " + (30 + 15));`,
+      saidaEsperada: "Total: 45",
+      padroes: [
+        [/"Total: "\s*\+\s*\(\s*30\s*\+\s*15\s*\)\s*\)\s*;/, "A conta 30 + 15 deve ficar entre parênteses: (30 + 15)."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Conta do almoço",
+      enunciado: `Uma família pediu <b>3 pratos de 18 reais</b> e <b>2 sobremesas de 7 reais</b>. Faça o C# calcular (com <code>*</code> e <code>+</code>, sem fazer a conta de cabeça) e mostre exatamente:<br>
+        <code>Pratos: 54</code><br><code>Sobremesas: 14</code><br><code>Total: 68</code>`,
+      dica: `Junte o texto com a conta entre parênteses, por exemplo <code>"Pratos: " + (... * ...)</code>. No total, some as duas multiplicações.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// 1) Mostre o valor dos pratos (quantidade vezes preço)
+// 2) Mostre o valor das sobremesas
+// 3) Mostre o total da conta
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Pratos: " + (3 * 18));
+Console.WriteLine("Sobremesas: " + (2 * 7));
+Console.WriteLine("Total: " + (3 * 18 + 2 * 7));`,
+      saidaEsperada: "Pratos: 54\nSobremesas: 14\nTotal: 68",
+      padroes: [
+        [/3\s*\*\s*18|18\s*\*\s*3/, "Calcule os pratos com 3 * 18."],
+        [/2\s*\*\s*7|7\s*\*\s*2/, "Calcule as sobremesas com 2 * 7."],
+        [/"Total: "\s*\+\s*\(/, 'No total, coloque a conta entre parênteses depois de "Total: " + .'],
+        [/"Total: "\s*\+\s*\([^;]*\+[^;]*\)/, "O total deve somar (+) as duas partes."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Ovos em caixas",
+      enunciado: `A granja tem <b>50 ovos</b> e cada caixa leva <b>12</b>. Use <code>/</code> e <code>%</code> para mostrar exatamente:<br>
+        <code>Caixas cheias: 4</code><br><code>Ovos soltos: 2</code>`,
+      dica: `Caixas cheias é a divisão inteira; os ovos que sobram são o resto.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// Mostre quantas caixas ficam cheias e quantos ovos sobram
+`,
+      solucao: c`using System;
+
+Console.WriteLine("Caixas cheias: " + (50 / 12));
+Console.WriteLine("Ovos soltos: " + (50 % 12));`,
+      saidaEsperada: "Caixas cheias: 4\nOvos soltos: 2",
+      padroes: [
+        [/50\s*\/\s*12/, "Calcule as caixas cheias com 50 / 12."],
+        [/50\s*%\s*12/, "Calcule os ovos soltos com o resto: 50 % 12."],
+        [/"Caixas cheias: "/, 'Mostre o texto "Caixas cheias: " antes do número.'],
+        [/"Ovos soltos: "/, 'Mostre o texto "Ovos soltos: " antes do número.']
+      ]
+    }
+  ],
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Ficha do cliente",
+      enunciado: `O mercadinho guarda os dados de um cliente em variáveis. Falta o tipo da variável de texto e o valor de <code>vip</code>, que deve ser verdadeiro.
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Cliente: Carlos</code><br><code>Idade: 41</code><br><code>VIP: True</code>`,
+      dica: `Texto é <code>string</code>. Verdadeiro em C# é <code>true</code>, com letra minúscula (na tela ele aparece como <code>True</code>).`,
+      lang: "csharp",
+      inicial: c`using System;
+
+____ nome = "Carlos";
+int idade = 41;
+bool vip = ____;
+
+Console.WriteLine("Cliente: " + nome);
+Console.WriteLine("Idade: " + idade);
+Console.WriteLine("VIP: " + vip);
+`,
+      solucao: c`using System;
+
+string nome = "Carlos";
+int idade = 41;
+bool vip = true;
+
+Console.WriteLine("Cliente: " + nome);
+Console.WriteLine("Idade: " + idade);
+Console.WriteLine("VIP: " + vip);`,
+      saidaEsperada: "Cliente: Carlos\nIdade: 41\nVIP: True",
+      padroes: [
+        [/string\s+nome\s*=\s*"Carlos"\s*;/, "nome é um texto: o tipo é string."],
+        [/bool\s+vip\s*=\s*true\s*;/, "vip deve receber true (minúsculo)."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Total do pedido",
+      enunciado: `Na lanchonete, um cliente pediu 4 sanduíches de 9 reais. Calcule o total multiplicando as variáveis e mostre a variável <code>total</code>.
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Total: 36</code>`,
+      dica: `Multiplicar é <code>*</code>. Para mostrar o valor da variável, escreva o nome dela sem aspas.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+int quantidade = 4;
+int preco = 9;
+int total = quantidade ____ preco;
+Console.WriteLine("Total: " + ____);
+`,
+      solucao: c`using System;
+
+int quantidade = 4;
+int preco = 9;
+int total = quantidade * preco;
+Console.WriteLine("Total: " + total);`,
+      saidaEsperada: "Total: 36",
+      padroes: [
+        [/int\s+total\s*=\s*(quantidade\s*\*\s*preco|preco\s*\*\s*quantidade)\s*;/, "total deve ser quantidade * preco."],
+        [/"Total: "\s*\+\s*total\s*\)/, "Mostre a variável total (sem aspas) depois de \"Total: \" + ."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Estoque atualizado",
+      enunciado: `A loja tinha 20 camisetas e, depois das vendas, ficou com 15. Troque o valor da variável <code>estoque</code> (sem criar outra) e mostre o novo valor usando <code>$</code> e chaves.
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Antes: 20</code><br><code>Depois: 15</code>`,
+      dica: `Para trocar o valor, escreva só o nome da variável, sem repetir o <code>int</code>. Dentro do texto com <code>$</code>, a variável vai entre chaves: <code>{estoque}</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+int estoque = 20;
+Console.WriteLine("Antes: " + estoque);
+
+____ = 15;
+Console.WriteLine($"Depois: ____");
+`,
+      solucao: c`using System;
+
+int estoque = 20;
+Console.WriteLine("Antes: " + estoque);
+
+estoque = 15;
+Console.WriteLine($"Depois: {estoque}");`,
+      saidaEsperada: "Antes: 20\nDepois: 15",
+      padroes: [
+        [/^\s*estoque\s*=\s*15\s*;/m, "Troque o valor com estoque = 15; (sem repetir o tipo int)."],
+        [/\$"Depois: \{\s*estoque\s*\}"/, "Dentro do texto, escreva {estoque} para mostrar o valor."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Cadastro de pet",
+      enunciado: `O pet shop quer cadastrar um cachorro. Crie as variáveis com os tipos certos:
+        <ul>
+          <li><code>nomePet</code> (texto) com <code>"Rex"</code>;</li>
+          <li><code>idadePet</code> (inteiro) com <code>3</code>;</li>
+          <li><code>peso</code> (número com casas decimais, <code>double</code>) com <code>12.5</code>;</li>
+          <li><code>vacinado</code> (verdadeiro ou falso) com <code>true</code>.</li>
+        </ul>
+        Depois mostre exatamente (o peso não precisa aparecer):<br><code>Pet: Rex</code><br><code>Idade: 3 anos</code><br><code>Vacinado: True</code>`,
+      dica: `Os tipos são <code>string</code>, <code>int</code>, <code>double</code> e <code>bool</code>. Para mostrar, junte o texto com a variável usando <code>+</code> ou use <code>$"..."</code> com chaves.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// 1) Crie as quatro variáveis do enunciado
+// 2) Mostre as três linhas pedidas
+`,
+      solucao: c`using System;
+
+string nomePet = "Rex";
+int idadePet = 3;
+double peso = 12.5;
+bool vacinado = true;
+
+Console.WriteLine("Pet: " + nomePet);
+Console.WriteLine($"Idade: {idadePet} anos");
+Console.WriteLine("Vacinado: " + vacinado);`,
+      saidaEsperada: "Pet: Rex\nIdade: 3 anos\nVacinado: True",
+      padroes: [
+        [/string\s+nomePet\s*=\s*"Rex"\s*;/, 'Crie string nomePet = "Rex";'],
+        [/int\s+idadePet\s*=\s*3\s*;/, "Crie int idadePet = 3;"],
+        [/double\s+peso\s*=\s*12\.5\s*;/, "Crie double peso = 12.5; (com ponto)."],
+        [/bool\s+vacinado\s*=\s*true\s*;/, "Crie bool vacinado = true;"],
+        [/Console\.WriteLine\([^;]*vacinado/, "Mostre a variável vacinado na última linha."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Mesada da semana",
+      enunciado: `A Júlia ganha <b>5 reais por dia</b> de mesada. Crie <code>int mesadaDia = 5;</code> e <code>int dias = 7;</code>, calcule <code>total</code> multiplicando as duas variáveis
+        e mostre as linhas usando <code>$</code> e chaves. A saída deve ser exatamente:<br><code>Por dia: 5 reais</code><br><code>Total da semana: 35 reais</code>`,
+      dica: `<code>int total = mesadaDia * dias;</code> e depois algo como <code>$"Total da semana: {total} reais"</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// 1) Crie as variáveis da mesada por dia e da quantidade de dias
+// 2) Calcule o total da semana numa terceira variável
+// 3) Mostre as duas linhas pedidas
+`,
+      solucao: c`using System;
+
+int mesadaDia = 5;
+int dias = 7;
+int total = mesadaDia * dias;
+
+Console.WriteLine($"Por dia: {mesadaDia} reais");
+Console.WriteLine($"Total da semana: {total} reais");`,
+      saidaEsperada: "Por dia: 5 reais\nTotal da semana: 35 reais",
+      padroes: [
+        [/int\s+mesadaDia\s*=\s*5\s*;/, "Crie int mesadaDia = 5;"],
+        [/int\s+dias\s*=\s*7\s*;/, "Crie int dias = 7;"],
+        [/int\s+total\s*=\s*(mesadaDia\s*\*\s*dias|dias\s*\*\s*mesadaDia)\s*;/, "Calcule int total = mesadaDia * dias;"],
+        [/\$"Total da semana: \{\s*total\s*\} reais"/, 'Mostre o total com $"Total da semana: {total} reais".']
+      ]
+    }
+  ],
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Frete grátis",
+      enunciado: `A loja virtual dá frete grátis para compras de <b>100 reais ou mais</b>. Senão, o frete custa 15 reais.
+        Clique em cada retângulo e escreva o que falta. Com <code>total = 150</code>, a saída deve ser exatamente:<br><code>Frete grátis</code>`,
+      dica: `“100 ou mais” é maior ou igual: <code>&gt;=</code>. A palavra do “senão” é <code>else</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+int total = 150;
+if (total ____ 100)
+{
+    Console.WriteLine("Frete grátis");
+}
+____
+{
+    Console.WriteLine("Frete: 15 reais");
+}
+`,
+      solucao: c`using System;
+
+int total = 150;
+if (total >= 100)
+{
+    Console.WriteLine("Frete grátis");
+}
+else
+{
+    Console.WriteLine("Frete: 15 reais");
+}`,
+      saidaEsperada: "Frete grátis",
+      padroes: [
+        [/if\s*\(\s*total\s*>=\s*100\s*\)/, "A condição deve ser total >= 100."],
+        [/\}\s*else\s*\{/, "Use else para o caso contrário."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Senha do cofre",
+      enunciado: `O cofre abre quando a senha é igual a 1234. O alarme deve começar desligado (falso).
+        Clique em cada retângulo e escreva o que falta. A saída deve ser exatamente:<br><code>Cofre aberto</code><br><code>Tudo tranquilo</code>`,
+      dica: `Para comparar se é igual use dois sinais: <code>==</code>. Falso em C# é <code>false</code>.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+int senha = 1234;
+bool alarmeLigado = ____;
+
+if (senha ____ 1234)
+{
+    Console.WriteLine("Cofre aberto");
+}
+else
+{
+    Console.WriteLine("Senha errada");
+}
+
+if (alarmeLigado)
+{
+    Console.WriteLine("Alarme tocando");
+}
+else
+{
+    Console.WriteLine("Tudo tranquilo");
+}
+`,
+      solucao: c`using System;
+
+int senha = 1234;
+bool alarmeLigado = false;
+
+if (senha == 1234)
+{
+    Console.WriteLine("Cofre aberto");
+}
+else
+{
+    Console.WriteLine("Senha errada");
+}
+
+if (alarmeLigado)
+{
+    Console.WriteLine("Alarme tocando");
+}
+else
+{
+    Console.WriteLine("Tudo tranquilo");
+}`,
+      saidaEsperada: "Cofre aberto\nTudo tranquilo",
+      padroes: [
+        [/bool\s+alarmeLigado\s*=\s*false\s*;/, "alarmeLigado deve começar com false."],
+        [/if\s*\(\s*senha\s*==\s*1234\s*\)/, "Compare a senha com == (dois sinais de igual)."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Faixa de nota",
+      enunciado: `Na escola: nota 7 ou mais é <b>Aprovado</b>; de 5 a 6 é <b>Recuperação</b>; abaixo de 5 é <b>Reprovado</b>. Falta a palavra que testa a segunda faixa.
+        Clique no retângulo e escreva o que falta. Com <code>nota = 6</code>, a saída deve ser exatamente:<br><code>Recuperação</code>`,
+      dica: `Para uma segunda pergunta depois do <code>if</code>, use “senão, se” em inglês: duas palavras.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+int nota = 6;
+if (nota >= 7)
+{
+    Console.WriteLine("Aprovado");
+}
+____ (nota >= 5)
+{
+    Console.WriteLine("Recuperação");
+}
+else
+{
+    Console.WriteLine("Reprovado");
+}
+`,
+      solucao: c`using System;
+
+int nota = 6;
+if (nota >= 7)
+{
+    Console.WriteLine("Aprovado");
+}
+else if (nota >= 5)
+{
+    Console.WriteLine("Recuperação");
+}
+else
+{
+    Console.WriteLine("Reprovado");
+}`,
+      saidaEsperada: "Recuperação",
+      padroes: [
+        [/\}\s*else\s+if\s*\(\s*nota\s*>=\s*5\s*\)/, "Escreva else if antes de (nota >= 5)."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Estoque baixo",
+      enunciado: `O almoxarifado precisa de um aviso. Crie <code>int estoque = 3;</code>. Se o estoque for <b>menor que 5</b>, mostre <code>Repor estoque</code>; senão, mostre <code>Estoque ok</code>.
+        Com o valor 3, a saída deve ser exatamente:<br><code>Repor estoque</code>`,
+      dica: `Use <code>if (estoque &lt; 5) { ... }</code> e depois o bloco do “senão”.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// 1) Crie a variável do estoque com o valor 3
+// 2) Decida qual aviso mostrar (menor que 5: repor; senão: ok)
+`,
+      solucao: c`using System;
+
+int estoque = 3;
+if (estoque < 5)
+{
+    Console.WriteLine("Repor estoque");
+}
+else
+{
+    Console.WriteLine("Estoque ok");
+}`,
+      saidaEsperada: "Repor estoque",
+      padroes: [
+        [/int\s+estoque\s*=\s*3\s*;/, "Crie int estoque = 3;"],
+        [/if\s*\(\s*estoque\s*(<\s*5|<=\s*4)\s*\)/, "A condição deve ser estoque < 5."],
+        [/\belse\b/, "Use else para mostrar Estoque ok no caso contrário."],
+        [/"Repor estoque"[\s\S]*"Estoque ok"/, 'Mostre "Repor estoque" no if e "Estoque ok" no else.']
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Entrada no cinema",
+      enunciado: `O cinema tem uma regra para um filme: <b>14 anos ou mais</b> pode entrar; <b>de 10 a 13</b>, só com um adulto; <b>menos de 10</b>, o filme não é recomendado.
+        Crie <code>int idade = 12;</code> e use <code>if</code>, <code>else if</code> e <code>else</code> para mostrar uma destas frases: <code>Pode entrar</code>, <code>Só com um adulto</code> ou <code>Filme não recomendado</code>.
+        Com 12 anos, a saída deve ser exatamente:<br><code>Só com um adulto</code>`,
+      dica: `Teste primeiro a faixa mais alta: <code>idade &gt;= 14</code>, depois <code>idade &gt;= 10</code>. O que sobrar vai para o último bloco.`,
+      lang: "csharp",
+      inicial: c`using System;
+
+// 1) Crie a variável da idade com o valor 12
+// 2) Teste as três faixas, da maior para a menor
+`,
+      solucao: c`using System;
+
+int idade = 12;
+if (idade >= 14)
+{
+    Console.WriteLine("Pode entrar");
+}
+else if (idade >= 10)
+{
+    Console.WriteLine("Só com um adulto");
+}
+else
+{
+    Console.WriteLine("Filme não recomendado");
+}`,
+      saidaEsperada: "Só com um adulto",
+      padroes: [
+        [/int\s+idade\s*=\s*12\s*;/, "Crie int idade = 12;"],
+        [/if\s*\(\s*idade\s*>=\s*14\s*\)/, "A primeira condição deve ser idade >= 14."],
+        [/else\s+if\s*\(\s*idade\s*>=\s*10\s*\)/, "Use else if (idade >= 10) para a segunda faixa."],
+        [/else\s*\{\s*Console\.WriteLine\(\s*"Filme não recomendado"\s*\)/, 'O else final deve mostrar "Filme não recomendado".']
+      ]
+    }
   ]
 };

@@ -16,6 +16,8 @@ import { sandboxDoTopico } from "./content/sandbox-topicos.js";
 import { LANGS, EXEMPLOS } from "./sandbox/langs.js";
 import { renderSandbox } from "./sandbox/view.js";
 import { renderFixacao } from "./fixacao.js";
+import { renderPratica } from "./pratica.js";
+import { calcularPontos, patente, fmtPts, PTS, REGRAS, PATENTES, ptsCodigo } from "./pontos.js";
 import { renderSQLPratica } from "./sqlpratica/view.js";
 import { chaveLicao } from "./content/sqlpratica.js";
 import {
@@ -160,6 +162,8 @@ onAuthStateChanged(auth, async (user) => {
   $("#u-email").textContent = user.email;
   $("#u-avatar").textContent = (state.profile.name || "?").trim().charAt(0).toUpperCase();
   $("#nav-admin").hidden = !isAdminEmail(user);
+  state.ultimoTotal = null;
+  atualizarPontos();
 
   state.timer = new StudyTimer(user.uid, state.profile.totalSeconds, ({ session, total, paused }) => {
     $("#t-session").textContent = clock(session);
@@ -271,12 +275,13 @@ function viewInicio(view) {
     ${verifyBanner}
     <section class="hero">
       <h1>Olá, ${nome}! 👋</h1>
-      <p>Este é o seu mapa. Comece pelo topo (mais fácil, resultado rápido) e desça até as linguagens mais complexas. Em cada uma, siga <b>Básico → Intermediário → Avançado</b>.</p>
+      <p>Este é o seu mapa. Comece pelo topo (mais fácil, resultado rápido) e desça até as linguagens mais complexas. Em cada uma, siga <b>🐣 Iniciante → Básico → Intermediário → Avançado</b>. Nunca programou? Comece pelo <b>Iniciante</b>: é bem devagar, com prática no meio da explicação.</p>
       <div class="stat-row">
         <div class="stat"><small>Progresso geral</small><strong>${g.pct}%</strong>${progressBar(g.pct, true)}</div>
         <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
         <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(state.profile.progress).feitos}/${progressoExercicios(state.profile.progress).total}</strong></div>
         <div class="stat"><small>Exercícios de código</small><strong>${progressoCodigo(state.profile.progress).feitos}/${progressoCodigo(state.profile.progress).total}</strong></div>
+        <div class="stat"><small>Pontuação</small><strong>⭐ ${fmtPts(calcularPontos(state.profile.progress, state.profile.fixacao).total)}</strong><a class="small" href="#/progresso">ver detalhes</a></div>
         <div class="stat"><small>Tempo total</small><strong id="home-total">${human(state.profile.totalSeconds)}</strong></div>
       </div>
     </section>
@@ -297,6 +302,8 @@ function viewInicio(view) {
     <section class="tip">
       <h2>🧭 Como usar este roadmap</h2>
       <ul>
+        <li><b>Começando do zero?</b> Abra o nível <b>🐣 Iniciante</b> de cada linguagem: tutoriais curtinhos, passo a passo, com perguntas <b>✋ Pare e pratique</b> no meio da explicação.</li>
+        <li><b>⭐ Cada atividade vale pontos:</b> tópico concluído, pergunta acertada, exercício resolvido… Veja sua pontuação e sua patente no topo da tela.</li>
         <li><b>Não precisa decorar tudo.</b> A meta é você saber fazer as tarefas mais comuns e saber <a href="#/pesquisar">procurar</a> o resto.</li>
         <li>Em cada tópico: leia a explicação, veja <b>o código parte por parte</b>, clique em <b>▶ Testar no sandbox</b> para mexer no código, leia o caso real e treine a pergunta de entrevista.</li>
         <li>Cada tópico tem <b>🧩 exercícios de código</b>: alguns para <b>completar</b> o que falta, outros para <b>criar do zero</b>. A correção é automática.</li>
@@ -353,7 +360,7 @@ function cardSQLPratica() {
   </a>`;
 }
 
-function viewTrilha(id, nivelId = "basico") {
+function viewTrilha(id, nivelId = "iniciante") {
   const t = TRILHAS.find((x) => x.id === id);
   if (!t) return viewInicio($("#view"));
   const nivel = NIVEIS.find((n) => n.id === nivelId) || NIVEIS[0];
@@ -408,6 +415,7 @@ function viewTrilha(id, nivelId = "basico") {
     </nav>`;
 
   montarFixacao(t, nivel, fxAnterior);
+  montarPraticas($("#view"), t);
 
   $$(".topic").forEach((el) => {
     const tpId = el.dataset.id;
@@ -452,6 +460,7 @@ function listaCodigo(tp) {
         <span class="cx-ok" aria-hidden="true">${ok ? "✅" : "⬜"}</span>
         <span class="cx-tag ${ex.tipo === "completar" ? "completar" : "criar"}">${ex.tipo === "completar" ? "✏️ Completar" : "🛠️ Do zero"}</span>
         <span class="grow">${esc(ex.titulo)}</span>
+        <span class="cx-pts">⭐ ${ptsCodigo(id)}</span>
         <span class="sr-only">${ok ? "(resolvido)" : ""}</span>
       </a></li>`;
     }).join("")}</ol>
@@ -475,6 +484,16 @@ function topicoHTML(tp, num, feito) {
         <p class="dica-pesquisa">💡 Em caso de ainda haver dúvida, pesquise o termo na internet.</p>
       </div>
 
+      ${tp.passos?.length ? `<div class="box passos">
+        <h4>🪜 Tutorial passo a passo</h4>
+        <ol class="passos-lista">${tp.passos.map((p, i) => `<li>
+          <h5>${esc(p.titulo)}</h5>
+          <div class="passo-texto">${p.html}</div>
+          ${p.codigo ? `<pre><code>${esc(p.codigo.trim())}</code></pre>` : ""}
+          ${hostPratica(tp, i)}
+        </li>`).join("")}</ol>
+      </div>` : hostPratica(tp, 0)}
+
       <div class="box code">
         <div class="code-head"><h4>💻 Na prática</h4>
           <div class="code-actions">
@@ -492,6 +511,15 @@ function topicoHTML(tp, num, feito) {
         <dl>${tp.partes.map(([trecho, expl]) => `<div class="parte"><dt><code>${esc(trecho.trim())}</code></dt><dd>${fmt(expl)}</dd></div>`).join("")}</dl>
       </div>` : ""}
 
+      ${tp.noCss ? `<div class="box nocss">
+        <h4>🎨 E no CSS? Configurações deste assunto</h4>
+        <div>${tp.noCss.texto}</div>
+        ${tp.noCss.codigo ? `<pre><code>${esc(tp.noCss.codigo.trim())}</code></pre>` : ""}
+        <p class="muted small">Lembre: o HTML monta a <b>estrutura</b>; a <b>aparência</b> (cores, tamanhos, espaços, posição) é configurada no CSS. Veja a trilha <a href="#/trilha/css">🎨 CSS</a>.</p>
+      </div>` : ""}
+
+      ${tp.passos?.length ? "" : hostPratica(tp, 1)}
+
       ${listaCodigo(tp)}
 
       <div class="box work"><h4>💼 Caso real no trabalho</h4><p>${tp.trabalho}</p></div>
@@ -505,9 +533,89 @@ function topicoHTML(tp, num, feito) {
 
       <div class="box search"><h4>🔎 Em caso de ainda haver dúvida, pesquise o termo na internet</h4><p class="muted small">Sugestões de busca (abrem o Google em outra aba):</p><div class="chips">${busca}</div></div>
 
-      <button class="done-btn btn ${feito ? "success" : "primary"}">${feito ? "✓ Concluído (desmarcar)" : "Marcar como concluído"}</button>
+      <button class="done-btn btn ${feito ? "success" : "primary"}">${feito ? "✓ Concluído (desmarcar)" : `Marcar como concluído <small>(+${PTS.topico} pts)</small>`}</button>
     </div>
   </details>`;
+}
+
+/* =================== Pontuação =================== */
+
+// Recalcula os pontos e atualiza o topo. Se subiu, mostra "+N pts".
+function atualizarPontos() {
+  if (!state.profile) return;
+  const { total } = calcularPontos(state.profile.progress, state.profile.fixacao);
+  const p = patente(total);
+  $("#pts").textContent = fmtPts(total);
+  $("#pts-patente").textContent = p.atual.icone + " " + p.atual.nome;
+  $("#pontos").title = p.prox ? `Faltam ${fmtPts(p.faltam)} pts para ${p.prox.nome}` : "Patente máxima!";
+  const antes = state.ultimoTotal;
+  state.ultimoTotal = total;
+  if (antes == null || total <= antes) return;
+  const subiu = patente(antes).atual !== p.atual;
+  aviso(`⭐ +${fmtPts(total - antes)} pts${subiu ? ` · Nova patente: ${p.atual.icone} ${p.atual.nome}!` : ""}`);
+  const el = $("#pontos");
+  el.classList.remove("pulou");
+  void el.offsetWidth;
+  el.classList.add("pulou");
+}
+
+let avisoTimer = null;
+function aviso(texto) {
+  const t = $("#toast");
+  t.textContent = texto;
+  t.hidden = false;
+  t.classList.add("on");
+  clearTimeout(avisoTimer);
+  avisoTimer = setTimeout(() => {
+    t.classList.remove("on");
+    setTimeout(() => (t.hidden = true), 300);
+  }, 2600);
+}
+
+async function salvarPratica(k) {
+  const prog = (state.profile.progress ||= {});
+  if (prog[k]) return;
+  prog[k] = new Date();
+  atualizarPontos();
+  try {
+    await updateDoc(doc(db, "users", state.user.uid), { ["progress." + k]: serverTimestamp() });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// Perguntas "pare e pratique" de um tópico, divididas em grupos (cada grupo aparece num ponto da explicação)
+function gruposPratica(tp) {
+  if (tp.passos?.length) {
+    let base = 0;
+    return tp.passos.map((p) => {
+      const g = { qs: p.pratica || [], base };
+      base += g.qs.length;
+      return g;
+    });
+  }
+  const qs = tp.pratica || [];
+  const meio = Math.ceil(qs.length / 2);
+  return [{ qs: qs.slice(0, meio), base: 0 }, { qs: qs.slice(meio), base: meio }];
+}
+
+const hostPratica = (tp, g) => `<div class="pratica-host" data-topico="${tp.id}" data-grupo="${g}"></div>`;
+
+function montarPraticas(view, t) {
+  const prog = state.profile.progress || {};
+  $$(".pratica-host", view).forEach((host) => {
+    const tp = TRILHAS.flatMap((tr) => NIVEIS.flatMap((n) => tr.niveis[n.id].topicos)).find((x) => x.id === host.dataset.topico);
+    const g = gruposPratica(tp)[+host.dataset.grupo];
+    if (!g?.qs.length) return;
+    renderPratica(host, {
+      questoes: g.qs, base: g.base,
+      chave: (n) => `ck_${tp.id}_${n}`,
+      feito: (k) => !!prog[k],
+      ci: ["html", "css", "sql", "mysql"].includes(t.id),
+      pontos: PTS.pratica,
+      onAcerto: salvarPratica
+    });
+  });
 }
 
 async function toggleTopico(id, el) {
@@ -521,6 +629,7 @@ async function toggleTopico(id, el) {
     });
     if (feito) delete prog[id];
     else prog[id] = new Date();
+    atualizarPontos();
     const scrollY = window.scrollY;
     const [, , tid, nid] = location.hash.split("/");
     viewTrilha(tid, nid);
@@ -565,6 +674,7 @@ function viewProgresso(view) {
       <div class="stat"><small>Fixação (acertos)</small><strong>${resumoFixacao(state.profile.fixacao).acertos}/${resumoFixacao(state.profile.fixacao).total}</strong></div>
       <div class="stat"><small>Sessões</small><strong>${(state.profile.sessionsCount || 0) + 1}</strong></div>
     </div>
+    ${secaoPontos(prog, state.profile.fixacao)}
     <section class="box">
       <h2>Tempo de estudo — últimos 14 dias</h2>
       ${barChart(serieDiaria(state.profile.daily, 14))}
@@ -583,6 +693,32 @@ function viewProgresso(view) {
     </section>`;
 }
 
+function secaoPontos(prog, fixacao) {
+  const pts = calcularPontos(prog, fixacao);
+  const p = patente(pts.total);
+  return `<section class="box">
+    <h2>⭐ Pontuação</h2>
+    <div class="pts-hero">
+      <span class="big" aria-hidden="true">${p.atual.icone}</span>
+      <div>
+        <strong class="total">${fmtPts(pts.total)} pts</strong>
+        <span>Patente: <b>${p.atual.nome}</b>${p.prox ? ` · faltam <b>${fmtPts(p.faltam)} pts</b> para ${p.prox.icone} ${p.prox.nome}` : " · patente máxima! 🏆"}</span>
+        ${progressBar(p.pct, true)}
+      </div>
+    </div>
+    <ul class="patentes">${PATENTES.map((x) => `<li class="${pts.total >= x.min ? "ok" : ""}">${x.icone} ${x.nome} · ${fmtPts(x.min)}</li>`).join("")}</ul>
+    <div class="table-wrap" style="margin-top:12px"><table class="table">
+      <thead><tr><th>Atividade</th><th>Vale</th><th>Feitas</th><th>Pontos</th></tr></thead>
+      <tbody>${pts.partes.map((r) => `<tr>
+        <td data-label="Atividade">${r.icone} ${r.nome}</td>
+        <td data-label="Vale">${r.pts} pts</td>
+        <td data-label="Feitas">${fmtPts(r.qtd)}</td>
+        <td data-label="Pontos"><b>${fmtPts(r.total)}</b></td>
+      </tr>`).join("")}</tbody>
+    </table></div>
+  </section>`;
+}
+
 /* =================== Sandbox e exercícios =================== */
 
 const chaveExercicio = (exId) => "ex_" + exId;
@@ -596,7 +732,7 @@ function cardExercicio(t, nivel, prog) {
     <div class="grow">
       <small class="muted">🏋️ Exercício prático — ${nivel.nome}</small>
       <h3>${esc(ex.titulo)}</h3>
-      <p class="muted small">${feito ? "✅ Você já resolveu este exercício." : "Coloque a mão na massa e verifique sua resposta automaticamente."}</p>
+      <p class="muted small">${feito ? "✅ Você já resolveu este exercício." : `Coloque a mão na massa e verifique sua resposta automaticamente. ⭐ Vale ${PTS.pratico} pts.`}</p>
     </div>
     <a class="btn ${feito ? "ghost" : "primary"}" href="#/exercicio/${exId}">${feito ? "Rever" : "Resolver"} →</a>
   </section>`;
@@ -614,11 +750,13 @@ function montarFixacao(t, nivel, anterior) {
   renderFixacao(host, {
     questoes: t.niveis[nivel.id].fixacao,
     ci: ["html", "css", "sql", "mysql"].includes(t.id),
+    pontos: PTS.fixacao,
     salvo: () => state.profile.fixacao?.[chave] || null,
     onConcluir: async (acertos, total) => {
       const atual = (state.profile.fixacao ||= {})[chave];
       const novo = { melhor: Math.max(acertos, atual?.melhor || 0), ultimo: acertos, total, tentativas: (atual?.tentativas || 0) + 1 };
       state.profile.fixacao[chave] = novo;
+      atualizarPontos();
       try {
         await updateDoc(doc(db, "users", state.user.uid), { ["fixacao." + chave]: { ...novo, em: serverTimestamp() } });
       } catch (e) {
@@ -635,6 +773,7 @@ const ctxSandbox = () => ({
     const prog = (state.profile.progress ||= {});
     if (prog[k]) return;
     prog[k] = new Date();
+    atualizarPontos();
     try {
       await updateDoc(doc(db, "users", state.user.uid), { ["progress." + k]: serverTimestamp() });
     } catch (e) {
@@ -746,6 +885,7 @@ function viewSQLPratica(view, licaoId) {
       const prog = (state.profile.progress ||= {});
       if (prog[k]) return;
       prog[k] = new Date();
+      atualizarPontos();
       try {
         await updateDoc(doc(db, "users", state.user.uid), { ["progress." + k]: serverTimestamp() });
       } catch (e) {

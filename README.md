@@ -43,6 +43,27 @@ O aluno programa **dentro do app**, sem instalar nada:
 - **Segurança:** o código do aluno roda em um `iframe` isolado (origem opaca), sem acesso ao login. Loops infinitos são interrompidos depois de 10 a 20 segundos.
 - O **Admin/TI** vê, por aluno, quais exercícios foram resolvidos, quantas tentativas e o último código enviado.
 
+## 🐣 Nível Iniciante, "Pare e pratique" e pontuação
+
+- **Nível Iniciante** antes do Básico em todas as trilhas. São tutoriais bem fáceis, divididos em passos pequenos, e cada passo termina com perguntas rápidas. Os ids dos tópicos são `<trilha>_p<n>`, e o conteúdo fica em `js/content/iniciante/<trilha>.js`.
+- **✋ Pare e pratique:** perguntas rápidas no meio da explicação dos tópicos dos outros níveis (`checkpoints` no mesmo arquivo).
+  - Cada acerto fica salvo em `progress.ck_<topico>_<n>`.
+- **🎨 E no CSS?** Os tópicos de HTML lembram as configurações de CSS correspondentes (campo `noCss`).
+- **⭐ Pontuação** (`js/pontos.js`): é calculada a partir do progresso salvo.
+
+  | Atividade | Pontos |
+  |---|---|
+  | Tópico concluído | 10 |
+  | Parada para praticar acertada | 2 |
+  | Fixação | 3 por acerto (vale o melhor resultado) |
+  | Exercício de código "completar" | 10 |
+  | Exercício de código "do zero" | 15 |
+  | Exercício prático do nível | 25 |
+  | Lição do SQL na Prática | 10 |
+
+  - Patentes: Semente, Broto, Aprendiz, Praticante, Desenvolvedor(a), Especialista e Mestre.
+  - A pontuação aparece no topo, em Meu progresso, no Admin/TI e no CSV.
+
 ## 🧩 Exercícios de código por tópico
 
 Cada um dos 90 tópicos tem **pelo menos 5 exercícios de código** (lista “🧩 Exercícios de código” dentro do tópico):
@@ -108,7 +129,7 @@ firebase.json
 ```
 users/{uid}
   name, email, createdAt, lastAccess, totalSeconds, sessionsCount
-  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício), cx_python_b1_3 (exercício de código), sqlp_7 (lição do SQL na Prática)
+  progress: { "<topicoId>": timestamp }      ex.: python_b1, sql_a3, ex_python_basico (exercício), cx_python_b1_3 (exercício de código), ck_python_p1_2 (pare e pratique), sqlp_7 (lição do SQL na Prática)
   daily:    { "dAAAAMMDD": segundos }
   fixacao:  { "<trilha>_<nivel>": { melhor, ultimo, total, tentativas, em } }
 users/{uid}/sessions/{id}

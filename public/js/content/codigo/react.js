@@ -3199,5 +3199,665 @@ __assert(n() === 2, 'Buscando "MO" (maiúsculo), deveriam aparecer Mouse e Mochi
         [/clearTimeout\s*\(/, "Cancele o timer anterior com clearTimeout na limpeza."]
       ]
     }
+  ],
+  /* ======================= p1: O que é React (Iniciante) ======================= */
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Dois botões de pedido",
+      enunciado: c`A lanchonete quer um botão <b>Pedir</b> embaixo de cada lanche. O componente <code>Botao</code> já está pronto: use-o embaixo do X-Burguer e embaixo do X-Salada.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`Para usar um componente, escreva o nome dele como tag: <code>&lt;NomeDoComponente /&gt;</code>.`,
+      lang: "react",
+      inicial: c`function Botao() {
+  return <button>Pedir</button>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <p>X-Burguer</p>
+      <____ />
+      <p>X-Salada</p>
+      <____ />
+    </div>
+  );
+}`,
+      solucao: c`function Botao() {
+  return <button>Pedir</button>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <p>X-Burguer</p>
+      <Botao />
+      <p>X-Salada</p>
+      <Botao />
+    </div>
+  );
+}`,
+      teste: c`
+var bs = document.querySelectorAll("button");
+__assert(bs.length === 2, "Deveriam aparecer 2 botões, mas apareceram " + bs.length + ". Use <Botao /> nos dois lugares.");
+__assert(bs[0].textContent.trim() === "Pedir" && bs[1].textContent.trim() === "Pedir", 'Os dois botões deveriam ter o texto "Pedir".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Selo de novidade",
+      enunciado: c`A loja quer o selo <b>Novo!</b> ao lado de dois produtos. Complete o componente <code>Selo</code> (falta a palavra que devolve o conteúdo) e use o selo no segundo produto também.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`A palavra que “devolve” o que aparece na tela é a mesma das funções do JavaScript. O segundo uso é igual ao primeiro.`,
+      lang: "react",
+      inicial: c`function Selo() {
+  ____ <span>Novo!</span>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <p>Caneca térmica <Selo /></p>
+      <p>Garrafa de vidro <____ /></p>
+    </div>
+  );
+}`,
+      solucao: c`function Selo() {
+  return <span>Novo!</span>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <p>Caneca térmica <Selo /></p>
+      <p>Garrafa de vidro <Selo /></p>
+    </div>
+  );
+}`,
+      teste: c`
+var s = document.querySelectorAll("span");
+__assert(s.length === 2, "Deveriam aparecer 2 selos, mas apareceram " + s.length + ".");
+var ps = document.querySelectorAll("p");
+__assert(ps.length === 2 && /Novo!/.test(ps[0].textContent) && /Novo!/.test(ps[1].textContent), 'Os dois produtos deveriam mostrar o selo "Novo!".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Montando a página com peças",
+      enunciado: c`A página da clínica tem três peças: <code>Cabecalho</code>, o conteúdo e <code>Rodape</code>. Encaixe o cabeçalho no começo e o rodapé no final.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`Use o nome exato de cada componente, com a primeira letra maiúscula.`,
+      lang: "react",
+      inicial: c`function Cabecalho() {
+  return <header><h1>Clínica Sorriso</h1></header>;
+}
+
+function Rodape() {
+  return <footer>Atendimento de segunda a sexta</footer>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <____ />
+      <main><p>Marque sua consulta pelo telefone.</p></main>
+      <____ />
+    </div>
+  );
+}`,
+      solucao: c`function Cabecalho() {
+  return <header><h1>Clínica Sorriso</h1></header>;
+}
+
+function Rodape() {
+  return <footer>Atendimento de segunda a sexta</footer>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <Cabecalho />
+      <main><p>Marque sua consulta pelo telefone.</p></main>
+      <Rodape />
+    </div>
+  );
+}`,
+      teste: c`
+var h = document.querySelector("header"), f = document.querySelector("footer"), m = document.querySelector("main");
+__assert(h, "O cabeçalho não apareceu. Use <Cabecalho /> no primeiro retângulo.");
+__assert(f, "O rodapé não apareceu. Use <Rodape /> no último retângulo.");
+var filhos = [].slice.call(m.parentNode.children);
+__assert(filhos.indexOf(h) < filhos.indexOf(m) && filhos.indexOf(m) < filhos.indexOf(f), "A ordem deveria ser: cabeçalho, conteúdo e rodapé.");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Três estrelas de avaliação",
+      enunciado: c`O restaurante quer mostrar a nota <b>3 estrelas</b>. Crie um componente chamado <code>Estrela</code> que devolve <code>&lt;span&gt;⭐&lt;/span&gt;</code>. Depois, no <code>App</code>, devolva uma <code>&lt;div&gt;</code> com <b>três</b> <code>&lt;Estrela /&gt;</code> dentro.`,
+      dica: c`Primeiro escreva <code>function Estrela() { return ... }</code>. Depois use <code>&lt;Estrela /&gt;</code> três vezes dentro da div do App.`,
+      lang: "react",
+      inicial: c`// 1) Crie o componente Estrela, que devolve <span>⭐</span>
+
+// 2) Use a Estrela três vezes dentro de uma <div>
+export default function App() {
+  return <div></div>;
+}`,
+      solucao: c`function Estrela() {
+  return <span>⭐</span>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <Estrela />
+      <Estrela />
+      <Estrela />
+    </div>
+  );
+}`,
+      teste: c`
+var s = document.querySelectorAll("span");
+__assert(s.length === 3, "Deveriam aparecer 3 estrelas, mas apareceram " + s.length + ".");
+for (var i = 0; i < s.length; i++) __assert(s[i].textContent.trim() === "⭐", "Cada span deveria ter só a estrela ⭐.");`,
+      padroes: [
+        [/function\s+Estrela\s*\(/, "Crie o componente com function Estrela()."],
+        [/<Estrela\s*\/>/, "Use o componente como tag: <Estrela />."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Botão de carrinho reaproveitado",
+      enunciado: c`Crie um componente <code>Botao</code> que devolve um botão com o texto <b>Adicionar ao carrinho</b>. No <code>App</code>, devolva uma <code>&lt;div&gt;</code> com:
+        <ul>
+          <li>um <code>&lt;h2&gt;</code> com <b>Pão de queijo</b> e, logo depois, o <code>&lt;Botao /&gt;</code>;</li>
+          <li>um <code>&lt;h2&gt;</code> com <b>Café</b> e, logo depois, outro <code>&lt;Botao /&gt;</code>.</li>
+        </ul>`,
+      dica: c`Escreva o botão uma vez só, dentro de <code>function Botao()</code>, e use <code>&lt;Botao /&gt;</code> duas vezes.`,
+      lang: "react",
+      inicial: c`// Crie o componente Botao aqui
+
+export default function App() {
+  // devolva a div com os dois produtos e um Botao embaixo de cada um
+  return <div></div>;
+}`,
+      solucao: c`function Botao() {
+  return <button>Adicionar ao carrinho</button>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <h2>Pão de queijo</h2>
+      <Botao />
+      <h2>Café</h2>
+      <Botao />
+    </div>
+  );
+}`,
+      teste: c`
+var hs = document.querySelectorAll("h2"), bs = document.querySelectorAll("button");
+__assert(hs.length === 2, "Deveriam existir 2 títulos h2, mas existem " + hs.length + ".");
+__assert(hs[0].textContent.trim() === "Pão de queijo" && hs[1].textContent.trim() === "Café", 'Os títulos deveriam ser "Pão de queijo" e "Café", nessa ordem.');
+__assert(bs.length === 2, "Deveriam existir 2 botões, mas existem " + bs.length + ".");
+__assert(bs[0].textContent.trim() === "Adicionar ao carrinho" && bs[1].textContent.trim() === "Adicionar ao carrinho", 'Os botões deveriam ter o texto "Adicionar ao carrinho".');
+__assert(hs[0].nextElementSibling === bs[0] && hs[1].nextElementSibling === bs[1], "Cada botão deveria vir logo depois do título do seu produto.");`,
+      padroes: [
+        [/function\s+Botao\s*\(/, "Crie o componente com function Botao()."],
+        [/<Botao\s*\/>[\s\S]*<Botao\s*\/>/, "Use <Botao /> duas vezes (não escreva o <button> repetido no App)."]
+      ]
+    }
+  ],
+
+  /* ======================= p2: Seu primeiro componente (Iniciante) ======================= */
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "O primeiro olá",
+      enunciado: c`Seu primeiro componente deve mostrar o título <b>Olá, mundo!</b>. Falta a palavra que devolve o conteúdo.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`É a palavra que quer dizer “devolva”.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  ____ <h1>Olá, mundo!</h1>;
+}`,
+      solucao: c`export default function App() {
+  return <h1>Olá, mundo!</h1>;
+}`,
+      teste: c`
+var h = document.querySelector("h1");
+__assert(h, "O título h1 não apareceu. O componente está devolvendo o JSX com return?");
+__assert(h.textContent.trim() === "Olá, mundo!", 'O título deveria ser "Olá, mundo!", mas é "' + h.textContent.trim() + '".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Saudação da loja",
+      enunciado: c`O componente principal precisa ser marcado para aparecer na tela, e ele deve mostrar o componente <code>Saudacao</code>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`O componente principal começa com <code>... default function App()</code>. Componentes são usados como tags.`,
+      lang: "react",
+      inicial: c`function Saudacao() {
+  return <h2>Bom dia, cliente!</h2>;
+}
+
+____ default function App() {
+  return (
+    <div>
+      <h1>Loja da Esquina</h1>
+      <____ />
+    </div>
+  );
+}`,
+      solucao: c`function Saudacao() {
+  return <h2>Bom dia, cliente!</h2>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>Loja da Esquina</h1>
+      <Saudacao />
+    </div>
+  );
+}`,
+      teste: c`
+__assert(document.querySelector("h1") && /Loja da Esquina/.test(document.querySelector("h1").textContent), 'O título "Loja da Esquina" deveria aparecer.');
+var h2 = document.querySelector("h2");
+__assert(h2 && h2.textContent.trim() === "Bom dia, cliente!", 'A saudação "Bom dia, cliente!" deveria aparecer. Use <Saudacao />.');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Horário da padaria",
+      enunciado: c`O componente que mostra o horário ficou sem nome. Dê a ele o nome <code>Horario</code> (o mesmo que o App já usa).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`Olhe como o componente é usado dentro do App. O nome precisa ser exatamente igual, com a primeira letra maiúscula.`,
+      lang: "react",
+      inicial: c`function ____() {
+  return <p>Aberto das 6h às 20h</p>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>Padaria Trigo Bom</h1>
+      <Horario />
+    </div>
+  );
+}`,
+      solucao: c`function Horario() {
+  return <p>Aberto das 6h às 20h</p>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>Padaria Trigo Bom</h1>
+      <Horario />
+    </div>
+  );
+}`,
+      teste: c`
+var p = document.querySelector("p");
+__assert(p && p.textContent.trim() === "Aberto das 6h às 20h", 'O horário "Aberto das 6h às 20h" deveria aparecer.');`,
+      padroes: [[/function\s+Horario\s*\(/, "O componente deve se chamar Horario (com H maiúsculo)."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Título da padaria",
+      enunciado: c`Escreva do zero o componente principal <code>App</code> (com <code>export default</code>) que devolve um <code>&lt;h1&gt;</code> com o texto <b>Padaria Pão Quente</b>.`,
+      dica: c`São só três linhas: <code>export default function App() {</code>, o <code>return</code> com o h1, e a chave que fecha.`,
+      lang: "react",
+      inicial: c`// Escreva aqui o componente App com export default
+// Ele deve devolver um h1 com: Padaria Pão Quente
+`,
+      solucao: c`export default function App() {
+  return <h1>Padaria Pão Quente</h1>;
+}`,
+      teste: c`
+var h = document.querySelector("h1");
+__assert(h, "Não apareceu nenhum h1 na tela.");
+__assert(h.textContent.trim() === "Padaria Pão Quente", 'O h1 deveria ter o texto "Padaria Pão Quente", mas tem "' + h.textContent.trim() + '".');`,
+      padroes: [[/export\s+default\s+function\s+App\s*\(/, "Crie o componente com export default function App()."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Componente de boas-vindas",
+      enunciado: c`Crie um componente <code>Saudacao</code> que devolve <code>&lt;p&gt;Seja bem-vindo!&lt;/p&gt;</code>. Depois crie o <code>App</code> (com <code>export default</code>) que devolve uma <code>&lt;div&gt;</code> com um <code>&lt;h1&gt;</code> <b>Minha Loja</b> e, embaixo, o <code>&lt;Saudacao /&gt;</code>.`,
+      dica: c`Escreva primeiro a função <code>Saudacao</code>. No App, use <code>return ( &lt;div&gt; ... &lt;/div&gt; );</code> com o h1 e a Saudacao dentro.`,
+      lang: "react",
+      inicial: c`// 1) Crie o componente Saudacao
+
+// 2) Crie o App com export default usando a Saudacao
+`,
+      solucao: c`function Saudacao() {
+  return <p>Seja bem-vindo!</p>;
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>Minha Loja</h1>
+      <Saudacao />
+    </div>
+  );
+}`,
+      teste: c`
+var h = document.querySelector("h1"), p = document.querySelector("p");
+__assert(h && h.textContent.trim() === "Minha Loja", 'Deveria aparecer o h1 "Minha Loja".');
+__assert(p && p.textContent.trim() === "Seja bem-vindo!", 'Deveria aparecer o parágrafo "Seja bem-vindo!".');
+__assert(h.compareDocumentPosition(p) & 4, "A saudação deveria vir depois do título.");`,
+      padroes: [
+        [/function\s+Saudacao\s*\(/, "Crie o componente com function Saudacao()."],
+        [/<Saudacao\s*\/>/, "Use a saudação no App como tag: <Saudacao />."],
+        [/export\s+default\s+function\s+App\s*\(/, "Crie o componente principal com export default function App()."]
+      ]
+    }
+  ],
+
+  /* ======================= p3: JSX (Iniciante) ======================= */
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Classes no JSX",
+      enunciado: c`O título deve ter a classe CSS <code>titulo</code> e o preço a classe <code>preco</code>. Lembre que no JSX o atributo de classe tem outro nome.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`No JSX, <code>class</code> vira outra palavra que começa com <code>class</code>...`,
+      lang: "react",
+      inicial: c`export default function App() {
+  return (
+    <div>
+      <h1 ____="titulo">Sorveteria Gelada</h1>
+      <p ____="preco">Casquinha: R$ 6</p>
+    </div>
+  );
+}`,
+      solucao: c`export default function App() {
+  return (
+    <div>
+      <h1 className="titulo">Sorveteria Gelada</h1>
+      <p className="preco">Casquinha: R$ 6</p>
+    </div>
+  );
+}`,
+      teste: c`
+var h = document.querySelector("h1"), p = document.querySelector("p");
+__assert(h && h.className === "titulo", 'O h1 deveria ter a classe "titulo" (use className).');
+__assert(p && p.className === "preco", 'O parágrafo deveria ter a classe "preco" (use className).');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Olá com o nome do cliente",
+      enunciado: c`Mostre o nome e os pontos do cliente usando as variáveis <code>nome</code> e <code>pontos</code>. A tela deve ficar: <b>Olá, Carla! Você tem 120 pontos.</b>
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`Para mostrar uma variável no JSX, coloque o nome dela entre chaves.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const nome = "Carla";
+  const pontos = 120;
+  return <p>Olá, ____! Você tem ____ pontos.</p>;
+}`,
+      solucao: c`export default function App() {
+  const nome = "Carla";
+  const pontos = 120;
+  return <p>Olá, {nome}! Você tem {pontos} pontos.</p>;
+}`,
+      teste: c`
+var p = document.querySelector("p");
+__assert(p && p.textContent.trim() === "Olá, Carla! Você tem 120 pontos.", 'O texto deveria ser "Olá, Carla! Você tem 120 pontos.", mas é "' + (p ? p.textContent.trim() : "") + '".');`,
+      padroes: [
+        [/\{\s*nome\s*\}/, "Use a variável nome entre chaves: {nome}."],
+        [/\{\s*pontos\s*\}/, "Use a variável pontos entre chaves: {pontos}."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Um pai para o cardápio",
+      enunciado: c`Este componente devolve um título e um parágrafo, mas eles precisam de um elemento pai em volta. Use o fragmento (a “caixa invisível”): abra antes do título e feche depois do parágrafo.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`O fragmento abre com <code>&lt;&gt;</code> e fecha com <code>&lt;/&gt;</code>. (Uma <code>&lt;div&gt;</code> e <code>&lt;/div&gt;</code> também funcionam.)`,
+      lang: "react",
+      inicial: c`export default function App() {
+  return (
+    ____
+      <h1>Cardápio</h1>
+      <p>Pão, bolo e café</p>
+    ____
+  );
+}`,
+      solucao: c`export default function App() {
+  return (
+    <>
+      <h1>Cardápio</h1>
+      <p>Pão, bolo e café</p>
+    </>
+  );
+}`,
+      teste: c`
+var h = document.querySelector("h1"), p = document.querySelector("p");
+__assert(h && h.textContent.trim() === "Cardápio", 'O título "Cardápio" deveria aparecer.');
+__assert(p && p.textContent.trim() === "Pão, bolo e café", 'O parágrafo "Pão, bolo e café" deveria aparecer.');`
+    },
+    {
+      tipo: "criar",
+      titulo: "Card do bolo",
+      enunciado: c`Dentro do <code>App</code> já existem as variáveis <code>produto</code> e <code>preco</code>. Devolva uma <code>&lt;div&gt;</code> com a classe <code>card</code> contendo:
+        <ul>
+          <li>um <code>&lt;h2&gt;</code> mostrando o <code>produto</code>;</li>
+          <li>um <code>&lt;p&gt;</code> com o texto <b>Preço: R$ 12</b>, usando a variável <code>preco</code>.</li>
+        </ul>`,
+      dica: c`Lembre: <code>className</code> para a classe e chaves <code>{ }</code> para as variáveis. Ex.: <code>&lt;p&gt;Preço: R$ {preco}&lt;/p&gt;</code>.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const produto = "Bolo de cenoura";
+  const preco = 12;
+  // devolva a div com classe card, o h2 e o p
+  return <div></div>;
+}`,
+      solucao: c`export default function App() {
+  const produto = "Bolo de cenoura";
+  const preco = 12;
+  return (
+    <div className="card">
+      <h2>{produto}</h2>
+      <p>Preço: R$ {preco}</p>
+    </div>
+  );
+}`,
+      teste: c`
+var d = document.querySelector(".card");
+__assert(d, 'Crie a div com className="card".');
+var h = d.querySelector("h2"), p = d.querySelector("p");
+__assert(h && h.textContent.trim() === "Bolo de cenoura", 'O h2 dentro do card deveria mostrar "Bolo de cenoura".');
+__assert(p && p.textContent.trim() === "Preço: R$ 12", 'O parágrafo deveria mostrar "Preço: R$ 12".');`,
+      padroes: [
+        [/className\s*=\s*["']card["']/, 'Use className="card" na div.'],
+        [/\{\s*produto\s*\}/, "Mostre o produto com {produto}."],
+        [/\{\s*preco\s*\}/, "Mostre o preço com {preco}."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Conta dentro das chaves",
+      enunciado: c`Na padaria, o cliente levou <code>quantidade = 3</code> pães de <code>preco = 2</code> reais. Crie as duas variáveis dentro do <code>App</code> e devolva um <code>&lt;p&gt;</code> que mostre <b>Total: R$ 6</b>, fazendo a conta <b>dentro das chaves</b> (não escreva o 6 direto).`,
+      dica: c`Dentro das chaves dá para fazer conta: <code>{quantidade * preco}</code>.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  // crie as variáveis quantidade e preco
+  // devolva um p com Total: R$ e a conta entre chaves
+  return <p></p>;
+}`,
+      solucao: c`export default function App() {
+  const quantidade = 3;
+  const preco = 2;
+  return <p>Total: R$ {quantidade * preco}</p>;
+}`,
+      teste: c`
+var p = document.querySelector("p");
+__assert(p && p.textContent.trim() === "Total: R$ 6", 'O parágrafo deveria mostrar "Total: R$ 6", mas mostra "' + (p ? p.textContent.trim() : "") + '".');`,
+      padroes: [
+        [/quantidade\s*=\s*3/, "Crie a variável quantidade valendo 3."],
+        [/preco\s*=\s*2/, "Crie a variável preco valendo 2."],
+        [/\{\s*(quantidade\s*\*\s*preco|preco\s*\*\s*quantidade)\s*\}/, "Faça a conta dentro das chaves: {quantidade * preco}."]
+      ]
+    }
+  ],
+
+  /* ======================= p4: Mostrando uma lista simples (Iniciante) ======================= */
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Lista de frutas",
+      enunciado: c`A quitanda quer mostrar as frutas do dia. O <code>map</code> já cria um <code>&lt;li&gt;</code> para cada fruta, mas falta dizer o que aparece dentro dele.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`Dentro do <code>map</code>, a variável <code>fruta</code> é o item da vez.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const frutas = ["Maçã", "Banana", "Uva"];
+  return (
+    <ul>
+      {frutas.map((fruta) => <li key={fruta}>{____}</li>)}
+    </ul>
+  );
+}`,
+      solucao: c`export default function App() {
+  const frutas = ["Maçã", "Banana", "Uva"];
+  return (
+    <ul>
+      {frutas.map((fruta) => <li key={fruta}>{fruta}</li>)}
+    </ul>
+  );
+}`,
+      teste: c`
+var li = [].map.call(document.querySelectorAll("li"), function (x) { return x.textContent.trim(); });
+__assert(li.length === 3, "Deveriam aparecer 3 itens, mas apareceram " + li.length + ".");
+__assert(li.join(",") === "Maçã,Banana,Uva", "Os itens deveriam ser Maçã, Banana e Uva, mas são: " + li.join(", ") + ".");`
+    },
+    {
+      tipo: "completar",
+      titulo: "Fila de atendimento",
+      enunciado: c`A clínica quer listar os pacientes da fila. Complete o método que passa por cada nome e o atributo do “crachá” de cada item.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`O método que faz algo com cada item do array é o <code>m...</code>. O crachá de cada item da lista é o atributo <code>k...</code>.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const pacientes = ["Ana", "Bruno", "Carla", "Diego"];
+  return (
+    <ul>
+      {pacientes.____((nome) => <li ____={nome}>{nome}</li>)}
+    </ul>
+  );
+}`,
+      solucao: c`export default function App() {
+  const pacientes = ["Ana", "Bruno", "Carla", "Diego"];
+  return (
+    <ul>
+      {pacientes.map((nome) => <li key={nome}>{nome}</li>)}
+    </ul>
+  );
+}`,
+      teste: c`
+var li = [].map.call(document.querySelectorAll("li"), function (x) { return x.textContent.trim(); });
+__assert(li.join(",") === "Ana,Bruno,Carla,Diego", "A lista deveria mostrar Ana, Bruno, Carla e Diego, mas mostra: " + li.join(", ") + ".");`,
+      padroes: [[/key\s*=\s*\{\s*nome\s*\}/, "Dê a cada li o crachá key={nome}."]]
+    },
+    {
+      tipo: "completar",
+      titulo: "Produtos com id",
+      enunciado: c`Cada produto é um objeto com <code>id</code> e <code>nome</code>. Use o <b>id</b> como key e mostre o <b>nome</b> dentro de cada item.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: c`Pegue as informações do objeto com ponto: <code>produto.id</code> e <code>produto.nome</code>.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const produtos = [
+    { id: 1, nome: "Arroz" },
+    { id: 2, nome: "Feijão" },
+    { id: 3, nome: "Macarrão" }
+  ];
+  return (
+    <ul>
+      {produtos.map((produto) => <li key={produto.____}>{produto.____}</li>)}
+    </ul>
+  );
+}`,
+      solucao: c`export default function App() {
+  const produtos = [
+    { id: 1, nome: "Arroz" },
+    { id: 2, nome: "Feijão" },
+    { id: 3, nome: "Macarrão" }
+  ];
+  return (
+    <ul>
+      {produtos.map((produto) => <li key={produto.id}>{produto.nome}</li>)}
+    </ul>
+  );
+}`,
+      teste: c`
+var li = [].map.call(document.querySelectorAll("li"), function (x) { return x.textContent.trim(); });
+__assert(li.join(",") === "Arroz,Feijão,Macarrão", "A lista deveria mostrar Arroz, Feijão e Macarrão, mas mostra: " + li.join(", ") + ".");`,
+      padroes: [[/key\s*=\s*\{\s*produto\.id\s*\}/, "Use o id como crachá: key={produto.id}."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Tarefas do dia",
+      enunciado: c`O array <code>tarefas</code> já existe. Devolva uma <code>&lt;ul&gt;</code> com um <code>&lt;li&gt;</code> para cada tarefa, usando <code>map</code>, e dê a cada <code>&lt;li&gt;</code> uma <code>key</code> (a própria tarefa serve).`,
+      dica: c`Modelo: <code>{lista.map((item) =&gt; &lt;li key={item}&gt;{item}&lt;/li&gt;)}</code> dentro da <code>&lt;ul&gt;</code>.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const tarefas = ["Comprar pão", "Pagar a conta de luz", "Ligar para o cliente"];
+  // devolva uma ul com um li para cada tarefa (use map e key)
+  return <ul></ul>;
+}`,
+      solucao: c`export default function App() {
+  const tarefas = ["Comprar pão", "Pagar a conta de luz", "Ligar para o cliente"];
+  return (
+    <ul>
+      {tarefas.map((tarefa) => <li key={tarefa}>{tarefa}</li>)}
+    </ul>
+  );
+}`,
+      teste: c`
+var li = [].map.call(document.querySelectorAll("ul li"), function (x) { return x.textContent.trim(); });
+__assert(li.length === 3, "Deveriam aparecer 3 tarefas dentro da ul, mas apareceram " + li.length + ".");
+__assert(li.join("|") === "Comprar pão|Pagar a conta de luz|Ligar para o cliente", "As tarefas deveriam aparecer na ordem do array, mas aparecem: " + li.join(", ") + ".");`,
+      padroes: [
+        [/tarefas\s*\.\s*map\s*\(/, "Use tarefas.map(...) para criar os itens."],
+        [/key\s*=\s*\{/, "Dê uma key para cada li: key={...}."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Cardápio com preços",
+      enunciado: c`O array <code>produtos</code> já existe. Mostre uma <code>&lt;ul&gt;</code> com um <code>&lt;li&gt;</code> por produto, usando o <code>id</code> como <code>key</code>. Cada item deve ficar assim: <b>Pão francês - R$ 1</b> (nome, um traço e o preço).`,
+      dica: c`Dentro do <code>&lt;li&gt;</code>: <code>{produto.nome} - R$ {produto.preco}</code>.`,
+      lang: "react",
+      inicial: c`export default function App() {
+  const produtos = [
+    { id: 1, nome: "Pão francês", preco: 1 },
+    { id: 2, nome: "Bolo de cenoura", preco: 12 },
+    { id: 3, nome: "Café", preco: 5 }
+  ];
+  // devolva a ul com um li por produto: nome - R$ preco
+  return <ul></ul>;
+}`,
+      solucao: c`export default function App() {
+  const produtos = [
+    { id: 1, nome: "Pão francês", preco: 1 },
+    { id: 2, nome: "Bolo de cenoura", preco: 12 },
+    { id: 3, nome: "Café", preco: 5 }
+  ];
+  return (
+    <ul>
+      {produtos.map((produto) => (
+        <li key={produto.id}>{produto.nome} - R$ {produto.preco}</li>
+      ))}
+    </ul>
+  );
+}`,
+      teste: c`
+var li = [].map.call(document.querySelectorAll("ul li"), function (x) { return x.textContent.replace(/\s+/g, " ").trim(); });
+__assert(li.length === 3, "Deveriam aparecer 3 produtos, mas apareceram " + li.length + ".");
+var esperado = ["Pão francês - R$ 1", "Bolo de cenoura - R$ 12", "Café - R$ 5"];
+for (var i = 0; i < 3; i++) __assert(li[i] === esperado[i], 'O item ' + (i + 1) + ' deveria ser "' + esperado[i] + '", mas é "' + li[i] + '".');`,
+      padroes: [
+        [/\.map\s*\(/, "Use map para criar os itens."],
+        [/key\s*=\s*\{[^}]*\.id\s*\}/, "Use o id do produto como key."]
+      ]
+    }
   ]
 };

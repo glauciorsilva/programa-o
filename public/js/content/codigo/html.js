@@ -2043,5 +2043,828 @@ __botao("Pão de queijo").click();
 await __esperar(50);
 __assert(t.textContent.trim() === "22.25", 'Somando 1 pão de queijo, o total deveria ser "22.25", mas é "' + t.textContent.trim() + '".');`
     }
+  ],
+
+  // ================================================================ Nível Iniciante
+  // ---------------------------------------------------------------- p1: O que é HTML e sua primeira página
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Fechando as tags da padaria",
+      enunciado: `A primeira página da Padaria do Zé está com as tags de fechar incompletas. Toda tag que abre precisa fechar com uma barra e o mesmo nome.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A tag de fechar repete o nome da tag que abriu: <code>&lt;h1&gt;</code> fecha com <code>&lt;/h1&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Padaria do Zé</____>
+<p>Pão quentinho todos os dias.</____>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Padaria do Zé</h1>
+<p>Pão quentinho todos os dias.</p>`,
+        css: "",
+        js: ""
+      },
+      padroes: [
+        [/<h1>Padaria do Zé<\/h1>/i, "O título deve fechar com </h1>."],
+        [/<p>Pão quentinho todos os dias\.<\/p>/i, "O parágrafo deve fechar com </p>."]
+      ],
+      teste: c`
+var h = document.querySelector("h1");
+__assert(h && h.textContent.trim() === "Padaria do Zé", 'Falta o <h1> com o texto "Padaria do Zé".');
+var p = document.querySelector("p");
+__assert(p && p.textContent.trim() === "Pão quentinho todos os dias.", "Falta o parágrafo <p> com o texto da padaria.");`
+    },
+    {
+      tipo: "completar",
+      titulo: "O texto da aba e o corpo",
+      enunciado: `A Loja da Ana quer que a aba do navegador mostre exatamente <code>Loja da Ana</code>, e que o título apareça na parte visível da página.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `O texto da aba fica dentro de <code>&lt;title&gt;</code>. A parte visível da página é o <code>&lt;body&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>____</title>
+  </head>
+  <____>
+    <h1>Loja da Ana</h1>
+  </body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Loja da Ana</title>
+  </head>
+  <body>
+    <h1>Loja da Ana</h1>
+  </body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      padroes: [[/<body>/i, "Abra a parte visível com <body>."]],
+      teste: c`
+__assert(document.title === "Loja da Ana", 'O texto da aba (<title>) deveria ser "Loja da Ana", mas é "' + document.title + '".');
+var h = document.body.querySelector("h1");
+__assert(h && h.textContent.trim() === "Loja da Ana", "O <h1> deve ficar dentro do <body>.");`
+    },
+    {
+      tipo: "completar",
+      titulo: "Primeira linha e idioma",
+      enunciado: `A página do Mercadinho Bom Preço precisa avisar ao navegador que é HTML moderno (primeira linha) e que o idioma é português do Brasil (<code>pt-BR</code>).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A primeira linha é <code>&lt;!doctype html&gt;</code>. O idioma vai no atributo <code>lang</code> da tag <code>&lt;html&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!____ html>
+<html lang="____">
+  <head>
+    <meta charset="utf-8">
+    <title>Mercadinho Bom Preço</title>
+  </head>
+  <body>
+    <h1>Mercadinho Bom Preço</h1>
+  </body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Mercadinho Bom Preço</title>
+  </head>
+  <body>
+    <h1>Mercadinho Bom Preço</h1>
+  </body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      padroes: [[/<!doctype\s+html>/i, "A primeira linha deve ser <!doctype html>."]],
+      teste: c`
+__assert(document.documentElement.getAttribute("lang") === "pt-BR", 'O lang da tag <html> deveria ser "pt-BR", mas é "' + document.documentElement.getAttribute("lang") + '".');`
+    },
+    {
+      tipo: "criar",
+      titulo: "Olá, mundo!",
+      enunciado: `Crie sua primeira página: um título <code>&lt;h1&gt;</code> com o texto exato <code>Olá, mundo!</code> e, embaixo, um parágrafo <code>&lt;p&gt;</code> com qualquer frase sobre você.`,
+      dica: `Abra e feche cada tag: <code>&lt;h1&gt;...&lt;/h1&gt;</code> e <code>&lt;p&gt;...&lt;/p&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!-- Escreva aqui o seu h1 e o seu parágrafo -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Olá, mundo!</h1>
+<p>Meu nome é Ana e estou aprendendo HTML.</p>`,
+        css: "",
+        js: ""
+      },
+      padroes: [[/<\/h1>/i, "Feche o título com </h1>."], [/<\/p>/i, "Feche o parágrafo com </p>."]],
+      teste: c`
+var h = document.querySelector("h1");
+__assert(h, "Falta o título <h1>.");
+__assert(h.textContent.trim() === "Olá, mundo!", 'O <h1> deveria ter o texto "Olá, mundo!", mas tem "' + h.textContent.trim() + '".');
+var p = document.querySelector("p");
+__assert(p && p.textContent.trim().length > 0, "Falta um parágrafo <p> com uma frase.");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Cartão de visita do eletricista",
+      enunciado: `O João é eletricista e quer uma página simples. Crie uma página completa (com <code>&lt;!doctype html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code> e <code>&lt;body&gt;</code>) em que:
+        <ul>
+          <li>o texto da aba seja <code>Cartão do João</code>;</li>
+          <li>apareça um <code>&lt;h1&gt;</code> com <code>João Silva</code>;</li>
+          <li>e um <code>&lt;p&gt;</code> com <code>Eletricista</code>.</li>
+        </ul>`,
+      dica: `O <code>&lt;title&gt;</code> fica no <code>&lt;head&gt;</code>; o <code>&lt;h1&gt;</code> e o <code>&lt;p&gt;</code> ficam no <code>&lt;body&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!-- Monte aqui o esqueleto completo da página do João -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Cartão do João</title>
+  </head>
+  <body>
+    <h1>João Silva</h1>
+    <p>Eletricista</p>
+  </body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      padroes: [
+        [/<!doctype\s+html>/i, "Comece com <!doctype html>."],
+        [/<head>[\s\S]*<title>[\s\S]*<\/head>/i, "O <title> precisa ficar dentro do <head>."],
+        [/<body>[\s\S]*<h1>[\s\S]*<\/body>/i, "O <h1> precisa ficar dentro do <body>."]
+      ],
+      teste: c`
+__assert(document.title === "Cartão do João", 'O texto da aba deveria ser "Cartão do João", mas é "' + document.title + '".');
+var h = document.querySelector("h1");
+__assert(h && h.textContent.trim() === "João Silva", 'Falta o <h1> com "João Silva".');
+var p = document.querySelector("p");
+__assert(p && p.textContent.trim() === "Eletricista", 'Falta o <p> com "Eletricista".');`
+    }
+  ],
+
+  // ---------------------------------------------------------------- p2: Textos e títulos
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Títulos do cardápio",
+      enunciado: `O cardápio da Lanchonete da Praça tem um título principal e um subtítulo para as bebidas.
+        Clique em cada retângulo e escreva o nome da tag que falta.`,
+      dica: `O título principal é o <code>h1</code>; o subtítulo logo abaixo dele é o <code>h2</code>. Olhe a tag de fechar de cada linha.`,
+      lang: "web",
+      inicial: {
+        html: c`<____>Cardápio</h1>
+<____>Bebidas</h2>
+<p>Suco de laranja, café e chá.</p>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Cardápio</h1>
+<h2>Bebidas</h2>
+<p>Suco de laranja, café e chá.</p>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var h1 = document.querySelector("h1");
+__assert(h1 && h1.textContent.trim() === "Cardápio", 'O <h1> deveria ser "Cardápio".');
+var h2 = document.querySelector("h2");
+__assert(h2 && h2.textContent.trim() === "Bebidas", 'O <h2> deveria ser "Bebidas".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Destaque da promoção",
+      enunciado: `No aviso do Café Aroma, o trecho <code>pão de queijo grátis</code> é a parte mais importante e deve ficar destacado com a tag de importância.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A tag de importância (negrito) é a <code>strong</code>. Ela abre antes e fecha depois do trecho.`,
+      lang: "web",
+      inicial: {
+        html: c`<p>Hoje tem <____>pão de queijo grátis</____> no café da manhã!</p>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<p>Hoje tem <strong>pão de queijo grátis</strong> no café da manhã!</p>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var s = document.querySelector("p strong");
+__assert(s, "Falta a tag <strong> dentro do parágrafo.");
+__assert(s.textContent.trim() === "pão de queijo grátis", 'O <strong> deveria destacar "pão de queijo grátis", mas destaca "' + s.textContent.trim() + '".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Endereço em duas linhas",
+      enunciado: `O endereço da Clínica Sorriso precisa aparecer em duas linhas no mesmo parágrafo, e a palavra <code>novo</code> deve ter ênfase (itálico).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A quebra de linha é uma tag sozinha, de duas letras. A ênfase é a tag <code>em</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Clínica Sorriso</h1>
+<p>Nosso <____>novo</em> endereço:</p>
+<p>Rua das Palmeiras, 200<____>Centro - Belo Horizonte</p>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Clínica Sorriso</h1>
+<p>Nosso <em>novo</em> endereço:</p>
+<p>Rua das Palmeiras, 200<br>Centro - Belo Horizonte</p>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var e = document.querySelector("p em");
+__assert(e && e.textContent.trim() === "novo", 'A palavra "novo" deve ficar dentro de <em>.');
+__assert(document.querySelector("p br"), "Falta a quebra de linha <br> dentro do parágrafo do endereço.");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Página de receita",
+      enunciado: `Crie a página de uma receita:
+        <ul>
+          <li>um único <code>&lt;h1&gt;</code> com <code>Bolo de cenoura</code>;</li>
+          <li>um <code>&lt;h2&gt;</code> com <code>Ingredientes</code> seguido de um parágrafo;</li>
+          <li>um <code>&lt;h2&gt;</code> com <code>Modo de preparo</code> seguido de outro parágrafo.</li>
+        </ul>`,
+      dica: `Use a ordem: h1, h2, p, h2, p. Cada parágrafo é um <code>&lt;p&gt;</code> separado.`,
+      lang: "web",
+      inicial: {
+        html: c`<!-- Escreva a receita: h1, h2 + p, h2 + p -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Bolo de cenoura</h1>
+<h2>Ingredientes</h2>
+<p>3 cenouras, 3 ovos, 2 xícaras de farinha e 1 xícara de açúcar.</p>
+<h2>Modo de preparo</h2>
+<p>Bata tudo no liquidificador e asse por 40 minutos.</p>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var h1s = document.querySelectorAll("h1");
+__assert(h1s.length === 1, "A página deve ter exatamente um <h1> (tem " + h1s.length + ").");
+__assert(h1s[0].textContent.trim() === "Bolo de cenoura", 'O <h1> deveria ser "Bolo de cenoura".');
+var h2s = Array.prototype.map.call(document.querySelectorAll("h2"), function (h) { return h.textContent.trim(); });
+__assert(h2s.indexOf("Ingredientes") >= 0, 'Falta o <h2> "Ingredientes".');
+__assert(h2s.indexOf("Modo de preparo") >= 0, 'Falta o <h2> "Modo de preparo".');
+__assert(document.querySelectorAll("p").length >= 2, "Coloque um parágrafo <p> depois de cada <h2>.");
+document.querySelectorAll("h2").forEach(function (h) {
+  var prox = h.nextElementSibling;
+  __assert(prox && prox.tagName === "P", 'Depois do <h2> "' + h.textContent.trim() + '" deveria vir um <p>.');
+});`
+    },
+    {
+      tipo: "criar",
+      titulo: "Aviso importante da clínica",
+      enunciado: `Crie o aviso da Clínica Vida: um <code>&lt;h1&gt;</code> com <code>Clínica Vida</code> e um parágrafo que contenha o trecho <code>Traga seu documento</code> destacado com <code>&lt;strong&gt;</code>. Coloque também um comentário HTML (que não aparece na tela) com qualquer lembrete.`,
+      dica: `Comentário: <code>&lt;!-- lembrete --&gt;</code>. O <code>&lt;strong&gt;</code> fica dentro do <code>&lt;p&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!-- Escreva aqui o aviso da clínica e um comentário com um lembrete -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<!-- aviso atualizado em outubro -->
+<h1>Clínica Vida</h1>
+<p><strong>Traga seu documento</strong> no dia da consulta.</p>`,
+        css: "",
+        js: ""
+      },
+      padroes: [[/<!--[\s\S]*?-->/, "Falta um comentário <!-- ... --> no código."]],
+      teste: c`
+var h = document.querySelector("h1");
+__assert(h && h.textContent.trim() === "Clínica Vida", 'Falta o <h1> com "Clínica Vida".');
+var s = document.querySelector("p strong");
+__assert(s && s.textContent.trim() === "Traga seu documento", 'Dentro do <p>, destaque "Traga seu documento" com <strong>.');`
+    }
+  ],
+
+  // ---------------------------------------------------------------- p3: Links
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Link para o mapa",
+      enunciado: `A Pizzaria Bella quer um link <code>Como chegar</code> que leve ao Google Maps (outro site, endereço absoluto).
+        Clique em cada retângulo e escreva o que falta: o nome do atributo do destino e o começo do endereço seguro.`,
+      dica: `O destino do link vai no atributo <code>href</code>. Endereço de outro site começa com <code>https</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Pizzaria Bella</h1>
+<a ____="____://www.google.com/maps">Como chegar</a>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Pizzaria Bella</h1>
+<a href="https://www.google.com/maps">Como chegar</a>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var a = document.querySelector('a[href^="https://"]');
+__assert(a, 'Falta um link <a> com href começando por "https://".');
+__assert(a.getAttribute("href") === "https://www.google.com/maps", 'O href deveria ser "https://www.google.com/maps", mas é "' + a.getAttribute("href") + '".');
+__assert(a.textContent.trim() === "Como chegar", 'O texto do link deveria ser "Como chegar".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Links entre as páginas do site",
+      enunciado: `O site da Doceria Mel tem estas pastas:
+        <pre>index.html
+contato.html
+produtos/
+  bolos.html</pre>
+        Você está editando o <code>index.html</code>. Complete os endereços <b>relativos</b>: <code>Fale conosco</code> vai para <code>contato.html</code> (mesma pasta) e <code>Nossos bolos</code> vai para <code>bolos.html</code> (dentro da pasta <code>produtos</code>).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Mesma pasta: só o nome do arquivo. Dentro de uma pasta: <code>pasta/arquivo.html</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<nav>
+  <a href="____">Fale conosco</a>
+  <a href="____/bolos.html">Nossos bolos</a>
+</nav>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<nav>
+  <a href="contato.html">Fale conosco</a>
+  <a href="produtos/bolos.html">Nossos bolos</a>
+</nav>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var links = document.querySelectorAll("nav a");
+__assert(links.length === 2, "O menu deve ter os 2 links.");
+var h1 = links[0].getAttribute("href"), h2 = links[1].getAttribute("href");
+__assert(h1 === "contato.html" || h1 === "./contato.html", 'O link "Fale conosco" deveria ter href="contato.html", mas tem "' + h1 + '".');
+__assert(h2 === "produtos/bolos.html", 'O link "Nossos bolos" deveria ter href="produtos/bolos.html", mas tem "' + h2 + '".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Instagram em nova aba",
+      enunciado: `O link do Instagram da Padaria do Zé deve abrir em uma <b>nova aba</b>, com a proteção que impede a página nova de mexer na aba do site.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Nova aba: <code>target="_blank"</code>. Proteção: <code>rel="noopener"</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<a href="https://www.instagram.com/padariadoze" target="____" rel="____">Siga no Instagram</a>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<a href="https://www.instagram.com/padariadoze" target="_blank" rel="noopener">Siga no Instagram</a>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var a = document.querySelector('a[href^="https://www.instagram.com"]');
+__assert(a, "Falta o link do Instagram.");
+__assert(a.getAttribute("target") === "_blank", 'O target deveria ser "_blank", mas é "' + a.getAttribute("target") + '".');
+__assert((" " + (a.getAttribute("rel") || "") + " ").indexOf(" noopener ") >= 0, 'O rel deveria ter "noopener".');`
+    },
+    {
+      tipo: "criar",
+      titulo: "Contatos da padaria",
+      enunciado: `Crie os 3 links de contato da Padaria do Zé:
+        <ul>
+          <li><code>Mande um e-mail</code>, que abre o e-mail para <code>contato@padariadoze.com</code> (use <code>mailto:</code>);</li>
+          <li><code>Ligue para nós</code>, que abre o discador com <code>+5511999999999</code> (use <code>tel:</code>);</li>
+          <li><code>Peça pelo WhatsApp</code>, que vai para <code>https://wa.me/5511999999999</code> e abre em nova aba com <code>rel="noopener"</code>.</li>
+        </ul>`,
+      dica: `Exemplo de formato: <code>&lt;a href="tel:+55..."&gt;texto&lt;/a&gt;</code>. Links externos em nova aba levam <code>target="_blank"</code> e <code>rel="noopener"</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Padaria do Zé</h1>
+<!-- Crie aqui os links de e-mail, telefone e WhatsApp -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Padaria do Zé</h1>
+<a href="mailto:contato@padariadoze.com">Mande um e-mail</a>
+<a href="tel:+5511999999999">Ligue para nós</a>
+<a href="https://wa.me/5511999999999" target="_blank" rel="noopener">Peça pelo WhatsApp</a>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var mail = document.querySelector('a[href^="mailto:"]');
+__assert(mail && mail.getAttribute("href") === "mailto:contato@padariadoze.com", 'Falta o link com href="mailto:contato@padariadoze.com".');
+var tel = document.querySelector('a[href^="tel:"]');
+__assert(tel && tel.getAttribute("href").replace(/\s/g, "") === "tel:+5511999999999", 'Falta o link com href="tel:+5511999999999".');
+var w = document.querySelector('a[href^="https://wa.me/"]');
+__assert(w && w.getAttribute("href") === "https://wa.me/5511999999999", 'Falta o link do WhatsApp com href="https://wa.me/5511999999999".');
+__assert(w.getAttribute("target") === "_blank", 'O link do WhatsApp deve ter target="_blank".');
+__assert((" " + (w.getAttribute("rel") || "") + " ").indexOf(" noopener ") >= 0, 'O link do WhatsApp deve ter rel="noopener".');`
+    },
+    {
+      tipo: "criar",
+      titulo: "Âncora e volta ao início",
+      enunciado: `Esta página fica em <code>produtos/bolos.html</code>. Crie:
+        <ul>
+          <li>um link <code>Ver horários</code> que pula para a seção da mesma página com <code>id="horarios"</code>;</li>
+          <li>um <code>&lt;h2&gt;</code> com o texto <code>Horários</code> e o <code>id="horarios"</code>;</li>
+          <li>um link <code>Voltar ao início</code> que leva ao <code>index.html</code> da pasta de cima (endereço relativo com <code>../</code>).</li>
+        </ul>`,
+      dica: `Âncora: <code>href="#horarios"</code>. Subir uma pasta: <code>../</code> antes do nome do arquivo.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Nossos bolos</h1>
+<!-- Crie os links e a seção de horários -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Nossos bolos</h1>
+<a href="#horarios">Ver horários</a>
+<a href="../index.html">Voltar ao início</a>
+
+<h2 id="horarios">Horários</h2>
+<p>Todos os dias, das 8h às 18h.</p>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var ancora = document.querySelector('a[href="#horarios"]');
+__assert(ancora, 'Falta o link com href="#horarios".');
+var alvo = document.getElementById("horarios");
+__assert(alvo && alvo.tagName === "H2", 'Falta o <h2 id="horarios">.');
+__assert(alvo.textContent.trim() === "Horários", 'O <h2> deveria ter o texto "Horários".');
+var volta = document.querySelector('a[href="../index.html"]');
+__assert(volta, 'Falta o link "Voltar ao início" com href="../index.html".');`
+    }
+  ],
+
+  // ---------------------------------------------------------------- p4: Imagens
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Foto do pão",
+      enunciado: `A foto do pão francês está na pasta <code>img</code> do site. Complete a imagem: o atributo do endereço (que faz o navegador pedir o arquivo) e o atributo do texto alternativo.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `O endereço vai no <code>src</code>; o texto que aparece se a imagem quebrar vai no <code>alt</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Padaria do Zé</h1>
+<img ____="img/pao.jpg" ____="Pão francês quentinho">`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Padaria do Zé</h1>
+<img src="img/pao.jpg" alt="Pão francês quentinho">`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var i = document.querySelector("img");
+__assert(i, "Falta a imagem <img>.");
+__assert(i.getAttribute("src") === "img/pao.jpg", 'O src deveria ser "img/pao.jpg", mas é "' + i.getAttribute("src") + '".');
+__assert(i.getAttribute("alt") === "Pão francês quentinho", 'O alt deveria ser "Pão francês quentinho".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Subindo uma pasta",
+      enunciado: `Você está editando <code>produtos/bolos.html</code>, e a foto fica em <code>img/bolo.jpg</code>, na pasta de cima:
+        <pre>index.html
+img/
+  bolo.jpg
+produtos/
+  bolos.html   ← você está aqui</pre>
+        Clique no retângulo e escreva o que falta para o caminho relativo encontrar a foto.`,
+      dica: `Para voltar uma pasta, use dois pontos seguidos.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Nossos bolos</h1>
+<img src="____/img/bolo.jpg" alt="Bolo de chocolate">`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Nossos bolos</h1>
+<img src="../img/bolo.jpg" alt="Bolo de chocolate">`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var i = document.querySelector("img");
+__assert(i && i.getAttribute("src") === "../img/bolo.jpg", 'O src deveria ser "../img/bolo.jpg", mas é "' + (i && i.getAttribute("src")) + '".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Foto de outro site, segura e preguiçosa",
+      enunciado: `A Loja Verde usa uma foto de um banco de imagens (outro site). A página é segura (<code>https</code>), então a imagem também deve ser. E ela fica no fim da página, então só deve ser pedida quando a pessoa rolar até ela.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Endereço seguro começa com <code>https</code>. O carregamento “preguiçoso” é <code>loading="lazy"</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Loja Verde</h1>
+<p>Plantas para todos os cantos da casa.</p>
+<img src="____://picsum.photos/400/300" alt="Vaso com planta na janela" width="400" height="300" loading="____">`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Loja Verde</h1>
+<p>Plantas para todos os cantos da casa.</p>
+<img src="https://picsum.photos/400/300" alt="Vaso com planta na janela" width="400" height="300" loading="lazy">`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var i = document.querySelector('img[src^="https://"]');
+__assert(i, 'O src da imagem deveria começar com "https://".');
+__assert(i.getAttribute("loading") === "lazy", 'O loading deveria ser "lazy", mas é "' + i.getAttribute("loading") + '".');`
+    },
+    {
+      tipo: "criar",
+      titulo: "Vitrine com duas fotos",
+      enunciado: `Monte a vitrine do Café Aroma com 2 imagens:
+        <ul>
+          <li>uma do <b>seu site</b>: <code>src="img/cafe.jpg"</code>, com <code>alt</code>, <code>width="300"</code> e <code>height="200"</code>;</li>
+          <li>uma de <b>outro site</b>: <code>src</code> começando com <code>https://</code> (pode usar <code>https://picsum.photos/300/200</code>), com <code>alt</code> e <code>loading="lazy"</code>.</li>
+        </ul>
+        Todas as imagens devem ter um <code>alt</code> descrevendo a foto (não pode ficar vazio).`,
+      dica: `Cada imagem é uma tag <code>&lt;img&gt;</code> sozinha, sem fechamento, com os atributos no formato <code>nome="valor"</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Café Aroma</h1>
+<!-- Coloque aqui as duas imagens -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Café Aroma</h1>
+<img src="img/cafe.jpg" alt="Xícara de café com espuma" width="300" height="200">
+<img src="https://picsum.photos/300/200" alt="Mesa do café com pães" loading="lazy">`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var imgs = document.querySelectorAll("img");
+__assert(imgs.length >= 2, "Coloque 2 imagens <img> (há " + imgs.length + ").");
+var local = document.querySelector('img[src="img/cafe.jpg"]');
+__assert(local, 'Falta a imagem do seu site com src="img/cafe.jpg".');
+__assert(local.getAttribute("width") === "300" && local.getAttribute("height") === "200", 'A imagem img/cafe.jpg deve ter width="300" e height="200".');
+var ext = document.querySelector('img[src^="https://"]');
+__assert(ext, 'Falta a imagem de outro site (src começando com "https://").');
+__assert(ext.getAttribute("loading") === "lazy", 'A imagem de outro site deve ter loading="lazy".');
+imgs.forEach(function (i) {
+  __assert((i.getAttribute("alt") || "").trim().length > 0, 'A imagem "' + i.getAttribute("src") + '" está sem alt (ou com alt vazio).');
+});`
+    },
+    {
+      tipo: "criar",
+      titulo: "Logo que leva ao início",
+      enunciado: `É comum o logo do site ser um link para a página inicial. Crie um link <code>&lt;a&gt;</code> com <code>href="index.html"</code> e, <b>dentro</b> dele (no lugar do texto), a imagem <code>img/logo.png</code> com <code>alt="Padaria do Zé - página inicial"</code>.`,
+      dica: `A imagem fica entre <code>&lt;a ...&gt;</code> e <code>&lt;/a&gt;</code>. Quando a imagem é o link, o <code>alt</code> diz para onde ele leva.`,
+      lang: "web",
+      inicial: {
+        html: c`<!-- Crie o link com o logo dentro -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<a href="index.html">
+  <img src="img/logo.png" alt="Padaria do Zé - página inicial" width="120" height="120">
+</a>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var i = document.querySelector('a[href="index.html"] img');
+__assert(i, 'Falta a imagem dentro de um link <a href="index.html">.');
+__assert(i.getAttribute("src") === "img/logo.png", 'O src da imagem deveria ser "img/logo.png".');
+__assert(i.getAttribute("alt") === "Padaria do Zé - página inicial", 'O alt deveria ser "Padaria do Zé - página inicial".');`
+    }
+  ],
+
+  // ---------------------------------------------------------------- p5: Trazendo conteúdo de outros sites
+  p5: [
+    {
+      tipo: "completar",
+      titulo: "Vídeo da receita no YouTube",
+      enunciado: `A Doceria Mel quer mostrar um vídeo do YouTube na página. O código veio do botão <b>Compartilhar → Incorporar</b>, mas algumas partes sumiram: o nome da tag da “janela”, o pedaço do endereço de incorporar e o atributo que descreve o vídeo para leitores de tela.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A janela para outra página é o <code>iframe</code>. O endereço de incorporar do YouTube tem <code>/embed/</code>. A descrição vai em <code>title</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Bolo de pote</h1>
+<____ width="560" height="315"
+  src="https://www.youtube.com/____/M7lc1UVf-VE"
+  ____="Vídeo da receita de bolo de pote"
+  allowfullscreen></iframe>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Bolo de pote</h1>
+<iframe width="560" height="315"
+  src="https://www.youtube.com/embed/M7lc1UVf-VE"
+  title="Vídeo da receita de bolo de pote"
+  allowfullscreen></iframe>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var f = document.querySelector("iframe");
+__assert(f, "Falta o <iframe>.");
+__assert(f.getAttribute("src") === "https://www.youtube.com/embed/M7lc1UVf-VE", 'O src deveria ser "https://www.youtube.com/embed/M7lc1UVf-VE", mas é "' + f.getAttribute("src") + '".');
+__assert((f.getAttribute("title") || "").trim().length > 0, "Falta o title do iframe.");`
+    },
+    {
+      tipo: "completar",
+      titulo: "Mapa de “Como chegar”",
+      enunciado: `A Clínica Sorriso colou o mapa do Google Maps (Compartilhar → Incorporar um mapa), mas faltam partes: o caminho de incorporar no endereço e o carregamento preguiçoso (só buscar o mapa quando a pessoa rolar até ele).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `O endereço de incorporar do Google Maps é <code>https://www.google.com/maps/embed?pb=...</code>. Carregamento preguiçoso: <code>lazy</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<h2>Como chegar</h2>
+<iframe
+  src="https://www.google.com/maps/____?pb=CODIGO_DO_MAPA"
+  width="400" height="300"
+  title="Mapa da Clínica Sorriso"
+  loading="____"></iframe>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h2>Como chegar</h2>
+<iframe
+  src="https://www.google.com/maps/embed?pb=CODIGO_DO_MAPA"
+  width="400" height="300"
+  title="Mapa da Clínica Sorriso"
+  loading="lazy"></iframe>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var f = document.querySelector('iframe[src^="https://www.google.com/maps/embed"]');
+__assert(f, 'O src do iframe deveria começar com "https://www.google.com/maps/embed".');
+__assert(f.getAttribute("loading") === "lazy", 'O loading deveria ser "lazy", mas é "' + f.getAttribute("loading") + '".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Fonte do Google e script do site",
+      enunciado: `A Loja da Ana vai usar a fonte Poppins do Google Fonts (um arquivo de CSS que vem de outro site) e o arquivo de JavaScript do próprio site, <code>js/app.js</code>.
+        Clique em cada retângulo e escreva o que falta para o navegador pedir os dois arquivos.`,
+      dica: `Arquivo de estilo: <code>&lt;link rel="stylesheet" href="..."&gt;</code>. Arquivo de JavaScript: <code>&lt;script src="..."&gt;&lt;/script&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Loja da Ana</title>
+  <link rel="____" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
+</head>
+<body>
+  <h1>Loja da Ana</h1>
+  <script ____="js/app.js"></script>
+</body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Loja da Ana</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
+</head>
+<body>
+  <h1>Loja da Ana</h1>
+  <script src="js/app.js"></script>
+</body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+__assert(document.querySelector('link[rel="stylesheet"][href^="https://fonts.googleapis.com"]'), 'Falta o <link rel="stylesheet"> do Google Fonts.');
+__assert(document.querySelector('script[src="js/app.js"]'), 'Falta o <script src="js/app.js">.');`
+    },
+    {
+      tipo: "criar",
+      titulo: "Vídeo institucional",
+      enunciado: `Coloque na página da Academia Forte o vídeo do YouTube de código <code>M7lc1UVf-VE</code> usando um <code>&lt;iframe&gt;</code>:
+        <ul>
+          <li>com o endereço de <b>incorporar</b> (<code>https://www.youtube.com/embed/...</code>), não o de assistir;</li>
+          <li>com um <code>title</code> descrevendo o vídeo;</li>
+          <li>com <code>allowfullscreen</code> (tela cheia).</li>
+        </ul>`,
+      dica: `O formato é <code>&lt;iframe src="..." title="..." allowfullscreen&gt;&lt;/iframe&gt;</code>. O iframe precisa da tag de fechar.`,
+      lang: "web",
+      inicial: {
+        html: c`<h1>Academia Forte</h1>
+<!-- Coloque aqui o vídeo do YouTube -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<h1>Academia Forte</h1>
+<iframe width="560" height="315"
+  src="https://www.youtube.com/embed/M7lc1UVf-VE"
+  title="Conheça a Academia Forte"
+  allowfullscreen></iframe>`,
+        css: "",
+        js: ""
+      },
+      teste: c`
+var f = document.querySelector("iframe");
+__assert(f, "Falta o <iframe>.");
+var s = f.getAttribute("src") || "";
+__assert(s.indexOf("watch?v=") < 0, 'Use o endereço de incorporar (/embed/), não o de assistir (watch?v=).');
+__assert(s.indexOf("https://www.youtube.com/embed/M7lc1UVf-VE") === 0, 'O src deveria começar com "https://www.youtube.com/embed/M7lc1UVf-VE".');
+__assert((f.getAttribute("title") || "").trim().length > 0, "Falta o title do iframe.");
+__assert(f.hasAttribute("allowfullscreen"), "Falta o atributo allowfullscreen.");`
+    },
+    {
+      tipo: "criar",
+      titulo: "Página que pede CSS e JS",
+      enunciado: `Crie a página completa da Floricultura Rosa, que busca dois arquivos do próprio site:
+        <ul>
+          <li>no <code>&lt;head&gt;</code>: o texto da aba <code>Floricultura Rosa</code> e o arquivo de estilos <code>css/estilo.css</code> (com <code>&lt;link rel="stylesheet"&gt;</code>);</li>
+          <li>no <code>&lt;body&gt;</code>: um <code>&lt;h1&gt;</code> com <code>Floricultura Rosa</code> e, no final, o arquivo <code>js/app.js</code> (com <code>&lt;script src&gt;</code>).</li>
+        </ul>`,
+      dica: `O <code>&lt;link&gt;</code> não tem fechamento; o <code>&lt;script&gt;</code> precisa de <code>&lt;/script&gt;</code>.`,
+      lang: "web",
+      inicial: {
+        html: c`<!-- Crie a página completa: head com title e link, body com h1 e script -->
+`,
+        css: "",
+        js: ""
+      },
+      solucao: {
+        html: c`<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Floricultura Rosa</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <h1>Floricultura Rosa</h1>
+  <script src="js/app.js"></script>
+</body>
+</html>`,
+        css: "",
+        js: ""
+      },
+      padroes: [
+        [/<head>[\s\S]*<link[^>]+rel=["']?stylesheet[\s\S]*<\/head>/i, 'O <link rel="stylesheet"> deve ficar dentro do <head>.'],
+        [/<script[^>]+src=["']js\/app\.js["'][^>]*>\s*<\/script>/i, 'Escreva <script src="js/app.js"></script> (com a tag de fechar).']
+      ],
+      teste: c`
+__assert(document.title === "Floricultura Rosa", 'O texto da aba deveria ser "Floricultura Rosa", mas é "' + document.title + '".');
+__assert(document.querySelector('link[rel="stylesheet"][href="css/estilo.css"]'), 'Falta <link rel="stylesheet" href="css/estilo.css">.');
+var h = document.querySelector("h1");
+__assert(h && h.textContent.trim() === "Floricultura Rosa", 'Falta o <h1> com "Floricultura Rosa".');
+__assert(document.querySelector('script[src="js/app.js"]'), 'Falta o <script src="js/app.js">.');`
+    }
   ]
 };

@@ -2061,5 +2061,469 @@ __assert(a.quantidade() === 0 && a.total() === 0, "Depois de limpar(), o carrinh
 a.adicionar("Borracha", 3);
 __assert(a.quantidade() === 1 && a.total() === 3, "Depois de limpar, ainda deve dar para adicionar itens.");`
     }
+  ],
+
+  /* ============ p1: O que é JavaScript e o console.log (Iniciante) ============ */
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Bom dia da padaria",
+      enunciado: `A padaria quer mostrar no console a mensagem <code>Bom dia, padaria!</code>. Falta o nome do comando que mostra mensagens. Clique em cada retângulo e escreva o que falta.`,
+      dica: `O comando é <code>console.</code> seguido de três letras.`,
+      lang: "js",
+      inicial: c`console.____("Bom dia, padaria!");
+`,
+      solucao: c`console.log("Bom dia, padaria!");`,
+      teste: c`
+__assert(__saida[0] === "Bom dia, padaria!", 'Deveria aparecer "Bom dia, padaria!", mas apareceu ' + JSON.stringify(__saida[0]));`
+    },
+    {
+      tipo: "completar",
+      titulo: "Cardápio do café",
+      enunciado: `O cardápio tem dois itens. A primeira linha deve mostrar <code>Café com leite</code> e a segunda já mostra <code>Pão de queijo</code>. Clique em cada retângulo e escreva o que falta (lembre: texto vai entre aspas).`,
+      dica: `Escreva o texto entre aspas duplas, exatamente: <code>"Café com leite"</code>.`,
+      lang: "js",
+      inicial: c`console.log(____);
+console.log("Pão de queijo");
+`,
+      solucao: c`console.log("Café com leite");
+console.log("Pão de queijo");`,
+      teste: c`
+__assert(__saida[0] === "Café com leite", 'A primeira linha deveria ser "Café com leite", mas é ' + JSON.stringify(__saida[0]));
+__assert(__saida[1] === "Pão de queijo", 'A segunda linha deveria continuar "Pão de queijo".');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Lista de compras em ordem",
+      enunciado: `Mostre a lista de compras, uma linha de cada vez e nesta ordem:<br>
+        <code>1. Arroz</code><br><code>2. Feijão</code><br><code>3. Leite</code><br>
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `O comando das três linhas é o mesmo. Na última, o texto vai entre aspas.`,
+      lang: "js",
+      inicial: c`// Lista de compras
+console.log("1. Arroz");
+console.____("2. Feijão");
+console.log(____);
+`,
+      solucao: c`// Lista de compras
+console.log("1. Arroz");
+console.log("2. Feijão");
+console.log("3. Leite");`,
+      teste: c`
+__assert(__saida.length === 3, "Deveriam aparecer 3 linhas, mas apareceram " + __saida.length);
+__assert(__saida[0] === "1. Arroz" && __saida[1] === "2. Feijão", "As duas primeiras linhas deveriam ser 1. Arroz e 2. Feijão.");
+__assert(__saida[2] === "3. Leite", 'A terceira linha deveria ser "3. Leite", mas é ' + JSON.stringify(__saida[2]));`
+    },
+    {
+      tipo: "criar",
+      titulo: "Olá, mundo!",
+      enunciado: `Escreva seu primeiro programa: mostre no console exatamente <code>Olá, mundo!</code>.`,
+      dica: `Use <code>console.log(...)</code> com o texto entre aspas.`,
+      lang: "js",
+      inicial: c`// Escreva aqui o seu primeiro console.log
+`,
+      solucao: c`console.log("Olá, mundo!");`,
+      teste: c`
+__assert(__saida.length > 0, "Nada apareceu no console. Use console.log.");
+__assert(__saida[0] === "Olá, mundo!", 'Deveria aparecer "Olá, mundo!", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [[/console\.log\s*\(/, "Use console.log para mostrar a mensagem."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Placa da loja",
+      enunciado: `A Loja da Ana quer uma placa no console com três linhas, nesta ordem:<br>
+        <code>Loja da Ana</code><br><code>Aberto das 8h às 18h</code><br><code>Volte sempre!</code><br>
+        Use um <code>console.log</code> para cada linha. Se quiser, coloque um comentário com <code>//</code> no começo.`,
+      dica: `Três linhas de <code>console.log("...")</code>, uma embaixo da outra.`,
+      lang: "js",
+      inicial: c`// Mostre as 3 linhas da placa
+`,
+      solucao: c`// Placa da loja
+console.log("Loja da Ana");
+console.log("Aberto das 8h às 18h");
+console.log("Volte sempre!");`,
+      teste: c`
+var esperado = ["Loja da Ana", "Aberto das 8h às 18h", "Volte sempre!"];
+__assert(__saida.length === 3, "Deveriam aparecer 3 linhas, mas apareceram " + __saida.length);
+for (var i = 0; i < 3; i++) {
+  __assert(__saida[i] === esperado[i], "A linha " + (i + 1) + ' deveria ser "' + esperado[i] + '", mas é ' + JSON.stringify(__saida[i]));
+}`
+    }
+  ],
+
+  /* ============ p2: Contas e textos (Iniciante) ============ */
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Doze pães de R$ 3",
+      enunciado: `Um cliente comprou 12 pães doces de R$ 3 cada. Faça o JavaScript calcular o total (12 <b>vezes</b> 3) e mostrar <code>36</code>. Clique em cada retângulo e escreva o que falta.`,
+      dica: `O sinal de “vezes” em programação é o asterisco.`,
+      lang: "js",
+      inicial: c`console.log(12 ____ 3);
+`,
+      solucao: c`console.log(12 * 3);`,
+      teste: c`
+__assert(__saida[0] === "36", "Deveria aparecer 36, mas apareceu " + JSON.stringify(__saida[0]));`,
+      padroes: [[/12\s*\*\s*3/, "Deixe o JavaScript fazer a conta 12 * 3."]]
+    },
+    {
+      tipo: "completar",
+      titulo: "Pão de queijo",
+      enunciado: `Junte os dois textos para aparecer <code>Pão de queijo</code> no console. Clique em cada retângulo e escreva o que falta.`,
+      dica: `O mesmo sinal que soma números também junta textos. O espaço já está dentro das aspas de <code>" de queijo"</code>.`,
+      lang: "js",
+      inicial: c`console.log("Pão" ____ " de queijo");
+`,
+      solucao: c`console.log("Pão" + " de queijo");`,
+      teste: c`
+__assert(__saida[0] === "Pão de queijo", 'Deveria aparecer "Pão de queijo", mas apareceu ' + JSON.stringify(__saida[0]));`
+    },
+    {
+      tipo: "completar",
+      titulo: "Total dos cafés",
+      enunciado: `Cinco cafés de R$ 3 cada. Complete com a conta <code>5 * 3</code> para a mensagem ficar exatamente <code>Total: R$ 15</code>. Clique em cada retângulo e escreva o que falta.`,
+      dica: `Escreva a conta (sem aspas) no lugar do retângulo. O JavaScript faz a multiplicação e cola o resultado no texto.`,
+      lang: "js",
+      inicial: c`console.log("Total: R$ " + ____);
+`,
+      solucao: c`console.log("Total: R$ " + 5 * 3);`,
+      teste: c`
+__assert(__saida[0] === "Total: R$ 15", 'Deveria aparecer "Total: R$ 15", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [[/5\s*\*\s*3/, "Use a conta 5 * 3 dentro do console.log (não escreva o 15 pronto)."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Soma do caixa",
+      enunciado: `De manhã o caixa vendeu R$ 25 e à tarde R$ 17. Mostre no console o total do dia: o JavaScript deve fazer a conta <code>25 + 17</code> e aparecer <code>42</code>.`,
+      dica: `Dentro de <code>console.log( )</code>, escreva a conta com números sem aspas.`,
+      lang: "js",
+      inicial: c`// Mostre o total do dia (25 + 17)
+`,
+      solucao: c`console.log(25 + 17);`,
+      teste: c`
+__assert(__saida[0] === "42", "Deveria aparecer 42, mas apareceu " + JSON.stringify(__saida[0]) + '. Os números estão sem aspas?');`,
+      padroes: [[/25\s*\+\s*17/, "Faça a conta 25 + 17 no código (não escreva o 42 pronto)."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Etiqueta do bolo",
+      enunciado: `Três fatias de bolo de cenoura custam 3 vezes R$ 10. Mostre no console exatamente <code>Bolo de cenoura: R$ 30</code>, juntando o texto <code>"Bolo de cenoura: R$ "</code> com a conta <code>3 * 10</code>.`,
+      dica: `Junte o texto e a conta com <code>+</code>. O espaço depois de <code>R$</code> fica dentro das aspas.`,
+      lang: "js",
+      inicial: c`// Mostre a etiqueta do bolo
+`,
+      solucao: c`console.log("Bolo de cenoura: R$ " + 3 * 10);`,
+      teste: c`
+__assert(__saida[0] === "Bolo de cenoura: R$ 30", 'Deveria aparecer "Bolo de cenoura: R$ 30", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [
+        [/3\s*\*\s*10|10\s*\*\s*3/, "Faça a conta 3 * 10 no código (não escreva o 30 pronto)."],
+        [/"\s*\+|'\s*\+/, "Junte o texto com a conta usando +."]
+      ]
+    }
+  ],
+
+  /* ============ p3: Variáveis com let e const (Iniciante) ============ */
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Estoque da padaria",
+      enunciado: `O nome da loja nunca muda; o estoque de pães muda a cada venda. Complete:
+        <ul>
+          <li><code>loja</code> deve ser criada com <b>const</b>;</li>
+          <li><code>paes</code> deve ser criada com <b>let</b>.</li>
+        </ul>
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Caixa lacrada: <code>const</code>. Caixa com tampa (o valor muda): <code>let</code>.`,
+      lang: "js",
+      inicial: c`____ loja = "Padaria do Zé";
+____ paes = 20;
+
+paes = paes - 5;
+console.log(loja + ": " + paes + " pães");
+`,
+      solucao: c`const loja = "Padaria do Zé";
+let paes = 20;
+
+paes = paes - 5;
+console.log(loja + ": " + paes + " pães");`,
+      teste: c`
+__assert(loja === "Padaria do Zé", "loja deveria continuar sendo Padaria do Zé.");
+__assert(paes === 15, "paes deveria terminar em 15 (20 - 5), mas é " + JSON.stringify(paes));
+__assert(__saida[0] === "Padaria do Zé: 15 pães", 'Deveria aparecer "Padaria do Zé: 15 pães", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [
+        [/const\s+loja\s*=/, "O nome da loja não muda: use const em loja."],
+        [/let\s+paes\s*=/, "O estoque muda: use let em paes."]
+      ]
+    },
+    {
+      tipo: "completar",
+      titulo: "Saldo do cofrinho",
+      enunciado: `O cofrinho tinha R$ 50 e ganhou mais R$ 20. Complete para o <code>saldo</code> virar <code>70</code> e mostre o valor da variável no console. Clique em cada retângulo e escreva o que falta.`,
+      dica: `Para aumentar, some. Para mostrar uma variável, escreva o nome dela <b>sem aspas</b>.`,
+      lang: "js",
+      inicial: c`let saldo = 50;
+saldo = saldo ____ 20;
+console.log(____);
+`,
+      solucao: c`let saldo = 50;
+saldo = saldo + 20;
+console.log(saldo);`,
+      teste: c`
+__assert(saldo === 70, "saldo deveria ser 70 (50 + 20), mas é " + JSON.stringify(saldo));
+__assert(__saida[0] === "70", "Deveria aparecer 70 no console, mas apareceu " + JSON.stringify(__saida[0]) + ". Você colocou o nome entre aspas?");`
+    },
+    {
+      tipo: "completar",
+      titulo: "Saudação da cliente",
+      enunciado: `A variável <code>nome</code> guarda o nome da cliente. Complete para aparecer <code>Olá, Bia!</code> usando a variável (não escreva Bia de novo). Clique em cada retângulo e escreva o que falta.`,
+      dica: `O nome da variável vai sem aspas, entre os dois <code>+</code>.`,
+      lang: "js",
+      inicial: c`const nome = "Bia";
+console.log("Olá, " + ____ + "!");
+`,
+      solucao: c`const nome = "Bia";
+console.log("Olá, " + nome + "!");`,
+      teste: c`
+__assert(__saida[0] === "Olá, Bia!", 'Deveria aparecer "Olá, Bia!", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [[/\+\s*nome\s*\+/, "Use a variável nome entre os dois +."]]
+    },
+    {
+      tipo: "criar",
+      titulo: "Ficha do produto",
+      enunciado: `Crie duas variáveis:
+        <ul>
+          <li><code>produto</code>: <b>const</b> com o texto <code>"Café"</code>;</li>
+          <li><code>quantidade</code>: <b>let</b> com o número <code>3</code>.</li>
+        </ul>
+        Depois mostre no console exatamente <code>Café: 3</code>, juntando as variáveis com o texto <code>": "</code>.`,
+      dica: `Algo como <code>console.log(produto + ": " + quantidade);</code>.`,
+      lang: "js",
+      inicial: c`// Crie produto e quantidade e mostre a ficha
+`,
+      solucao: c`const produto = "Café";
+let quantidade = 3;
+console.log(produto + ": " + quantidade);`,
+      teste: c`
+__assert(produto === "Café", 'produto deveria ser "Café", mas é ' + JSON.stringify(produto));
+__assert(quantidade === 3, "quantidade deveria ser o número 3 (sem aspas), mas é " + JSON.stringify(quantidade));
+__assert(__saida[0] === "Café: 3", 'Deveria aparecer "Café: 3", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [
+        [/const\s+produto\s*=/, "Crie produto com const."],
+        [/let\s+quantidade\s*=/, "Crie quantidade com let."],
+        [/produto\s*\+/, "Monte a mensagem usando as variáveis (produto + ...)."]
+      ]
+    },
+    {
+      tipo: "criar",
+      titulo: "Venda de ovos",
+      enunciado: `A mercearia tem 12 ovos. Crie <code>let ovos = 12;</code>, depois registre a venda de 4 ovos <b>trocando o valor</b> da variável (o novo valor é o antigo menos 4). Por fim, mostre no console exatamente <code>Sobraram 8 ovos</code> usando a variável.`,
+      dica: `Para trocar o valor: <code>ovos = ovos - 4;</code>. Para a mensagem: <code>"Sobraram " + ovos + " ovos"</code>.`,
+      lang: "js",
+      inicial: c`// Crie ovos, registre a venda de 4 e mostre quantos sobraram
+`,
+      solucao: c`let ovos = 12;
+ovos = ovos - 4;
+console.log("Sobraram " + ovos + " ovos");`,
+      teste: c`
+__assert(ovos === 8, "ovos deveria terminar em 8 (12 - 4), mas é " + JSON.stringify(ovos));
+__assert(__saida[0] === "Sobraram 8 ovos", 'Deveria aparecer "Sobraram 8 ovos", mas apareceu ' + JSON.stringify(__saida[0]));`,
+      padroes: [
+        [/let\s+ovos\s*=\s*12/, "Comece com let ovos = 12;"],
+        [/ovos\s*(=\s*ovos\s*-|-=)\s*4/, "Troque o valor da variável: ovos = ovos - 4;"],
+        [/\+\s*ovos\s*\+/, "Use a variável ovos na mensagem."]
+      ]
+    }
+  ],
+
+  /* ============ p4: Um botão que faz algo (Iniciante) ============ */
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Encontre o botão",
+      enunciado: `A página tem um botão com <code>id="ola"</code>. Quando ele é clicado, o parágrafo mostra <code>Olá!</code>. Falta dizer ao <code>querySelector</code> qual botão procurar. Clique em cada retângulo e escreva o que falta.`,
+      dica: `Para procurar pelo id, use <code>#</code> seguido do nome do id.`,
+      lang: "web",
+      aba: "js",
+      inicial: {
+        html: c`<button id="ola">Dizer olá</button>
+<p id="msg"></p>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }`,
+        js: c`const botao = document.querySelector("____");
+
+botao.addEventListener("click", function () {
+  document.querySelector("#msg").textContent = "Olá!";
+});
+`
+      },
+      solucao: {
+        html: c`<button id="ola">Dizer olá</button>
+<p id="msg"></p>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }`,
+        js: c`const botao = document.querySelector("#ola");
+
+botao.addEventListener("click", function () {
+  document.querySelector("#msg").textContent = "Olá!";
+});`
+      },
+      teste: c`
+__assert(document.querySelector("#msg").textContent === "", "Antes do clique, o parágrafo deveria estar vazio.");
+document.querySelector("#ola").click();
+await __esperar();
+__assert(document.querySelector("#msg").textContent === "Olá!", 'Depois do clique, o parágrafo deveria mostrar "Olá!". O querySelector achou o botão #ola?');`
+    },
+    {
+      tipo: "completar",
+      titulo: "Escute o clique",
+      enunciado: `Na lanchonete, o botão <b>Fazer pedido</b> deve trocar o texto do parágrafo para <code>Pedido feito!</code> quando for <b>clicado</b>. Falta o nome do evento. Clique em cada retângulo e escreva o que falta.`,
+      dica: `O evento de clique tem o nome em inglês, entre aspas.`,
+      lang: "web",
+      aba: "js",
+      inicial: {
+        html: c`<button id="pedido">Fazer pedido</button>
+<p id="status">Aguardando pedido...</p>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }`,
+        js: c`const botao = document.querySelector("#pedido");
+const status = document.querySelector("#status");
+
+botao.addEventListener("____", function () {
+  status.textContent = "Pedido feito!";
+});
+`
+      },
+      solucao: {
+        html: c`<button id="pedido">Fazer pedido</button>
+<p id="status">Aguardando pedido...</p>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }`,
+        js: c`const botao = document.querySelector("#pedido");
+const status = document.querySelector("#status");
+
+botao.addEventListener("click", function () {
+  status.textContent = "Pedido feito!";
+});`
+      },
+      teste: c`
+var s = document.querySelector("#status");
+__assert(s.textContent === "Aguardando pedido...", "Antes do clique, o texto deveria continuar Aguardando pedido...");
+document.querySelector("#pedido").click();
+await __esperar();
+__assert(s.textContent === "Pedido feito!", 'Depois do clique, deveria aparecer "Pedido feito!", mas aparece ' + JSON.stringify(s.textContent));`
+    },
+    {
+      tipo: "completar",
+      titulo: "Troque o texto da placa",
+      enunciado: `A placa da loja diz <code>Fechado</code>. Quando o botão <b>Abrir loja</b> for clicado, ela deve mostrar <code>Loja aberta!</code>. Falta a propriedade que guarda o texto do elemento. Clique em cada retângulo e escreva o que falta.`,
+      dica: `É a propriedade que tem o texto de dentro do elemento: <code>text...</code>.`,
+      lang: "web",
+      aba: "js",
+      inicial: {
+        html: c`<p id="placa">Fechado</p>
+<button id="abrir">Abrir loja</button>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }
+#placa { font-size: 24px; font-weight: bold; }`,
+        js: c`const placa = document.querySelector("#placa");
+const botao = document.querySelector("#abrir");
+
+botao.addEventListener("click", function () {
+  placa.____ = "Loja aberta!";
+});
+`
+      },
+      solucao: {
+        html: c`<p id="placa">Fechado</p>
+<button id="abrir">Abrir loja</button>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }
+#placa { font-size: 24px; font-weight: bold; }`,
+        js: c`const placa = document.querySelector("#placa");
+const botao = document.querySelector("#abrir");
+
+botao.addEventListener("click", function () {
+  placa.textContent = "Loja aberta!";
+});`
+      },
+      teste: c`
+var p = document.querySelector("#placa");
+__assert(p.textContent === "Fechado", "Antes do clique, a placa deveria mostrar Fechado.");
+document.querySelector("#abrir").click();
+await __esperar();
+__assert(p.textContent === "Loja aberta!", 'Depois do clique, a placa deveria mostrar "Loja aberta!", mas mostra ' + JSON.stringify(p.textContent));`
+    },
+    {
+      tipo: "criar",
+      titulo: "Aviso de promoção",
+      enunciado: `A página já tem o botão <code>&lt;button id="avisar"&gt;Ver promoção&lt;/button&gt;</code>. Na aba JS, escreva o código para que, ao clicar nele, apareça um <code>alert</code> com exatamente: <code>Promoção: pão de queijo em dobro!</code>`,
+      dica: `Três passos: <code>document.querySelector("#avisar")</code>, <code>addEventListener("click", function () { ... })</code> e, dentro, <code>alert("...")</code>.`,
+      lang: "web",
+      aba: "js",
+      inicial: {
+        html: c`<h1>Padaria do Zé</h1>
+<button id="avisar">Ver promoção</button>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }`,
+        js: c`// 1. Encontre o botão #avisar
+// 2. Escute o clique
+// 3. Mostre o alert com a promoção
+`
+      },
+      solucao: {
+        html: c`<h1>Padaria do Zé</h1>
+<button id="avisar">Ver promoção</button>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }`,
+        js: c`const botao = document.querySelector("#avisar");
+
+botao.addEventListener("click", function () {
+  alert("Promoção: pão de queijo em dobro!");
+});`
+      },
+      teste: c`
+var avisos = [];
+window.alert = function (m) { avisos.push(String(m)); };
+__assert(avisos.length === 0, "O alert só deve aparecer depois do clique.");
+document.querySelector("#avisar").click();
+await __esperar();
+__assert(avisos.length === 1, "Ao clicar no botão, deveria aparecer 1 alert, mas apareceram " + avisos.length + ".");
+__assert(avisos[0] === "Promoção: pão de queijo em dobro!", 'O alert deveria dizer "Promoção: pão de queijo em dobro!", mas disse ' + JSON.stringify(avisos[0]));`,
+      padroes: [[/addEventListener\s*\(\s*["']click["']/, 'Use addEventListener("click", ...) no botão.']]
+    },
+    {
+      tipo: "criar",
+      titulo: "Contador de senha da fila",
+      enunciado: `Na padaria, o painel mostra <code>Senha: 0</code>. Escreva o JavaScript para que, a cada clique no botão <b>Chamar próxima</b> (<code>id="chamar"</code>), a senha aumente 1 e o texto do <code>&lt;p id="painel"&gt;</code> mostre <code>Senha: 1</code>, depois <code>Senha: 2</code>, e assim por diante.`,
+      dica: `Crie <code>let senha = 0;</code> fora da função. Dentro do clique: <code>senha = senha + 1;</code> e depois <code>painel.textContent = "Senha: " + senha;</code>.`,
+      lang: "web",
+      aba: "js",
+      inicial: {
+        html: c`<p id="painel">Senha: 0</p>
+<button id="chamar">Chamar próxima</button>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }
+#painel { font-size: 28px; font-weight: bold; }`,
+        js: c`// Crie a variável senha começando em 0
+// A cada clique em #chamar: some 1 e mostre "Senha: " + senha no #painel
+`
+      },
+      solucao: {
+        html: c`<p id="painel">Senha: 0</p>
+<button id="chamar">Chamar próxima</button>`,
+        css: c`body { font-family: system-ui, sans-serif; padding: 16px; }
+#painel { font-size: 28px; font-weight: bold; }`,
+        js: c`const painel = document.querySelector("#painel");
+const botao = document.querySelector("#chamar");
+let senha = 0;
+
+botao.addEventListener("click", function () {
+  senha = senha + 1;
+  painel.textContent = "Senha: " + senha;
+});`
+      },
+      teste: c`
+var p = document.querySelector("#painel");
+var b = document.querySelector("#chamar");
+__assert(p.textContent === "Senha: 0", "Antes de clicar, o painel deveria mostrar Senha: 0.");
+b.click();
+await __esperar();
+__assert(p.textContent === "Senha: 1", 'Depois de 1 clique, deveria aparecer "Senha: 1", mas aparece ' + JSON.stringify(p.textContent));
+b.click();
+b.click();
+await __esperar();
+__assert(p.textContent === "Senha: 3", 'Depois de 3 cliques, deveria aparecer "Senha: 3", mas aparece ' + JSON.stringify(p.textContent) + ". A variável senha está fora da função?");`
+    }
   ]
 };

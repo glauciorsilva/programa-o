@@ -7,6 +7,7 @@ import {
   progressoExercicios, resumoFixacao, progressoSQLP, progressoCodigo
 } from "./util.js";
 import { EXERCICIOS } from "./content/exercicios.js";
+import { calcularPontos, patente, fmtPts } from "./pontos.js";
 import { TRILHAS, NIVEIS } from "./content/index.js";
 
 let cache = null;
@@ -60,6 +61,7 @@ async function renderLista(view, force = false) {
       <select id="ordem" aria-label="Ordenar">
         <option value="lastAccess">Último acesso</option>
         <option value="totalSeconds">Tempo de estudo</option>
+        <option value="pontos">Pontuação</option>
         <option value="progress">Progresso</option>
         <option value="createdAt">Data de cadastro</option>
         <option value="name">Nome</option>
@@ -67,7 +69,7 @@ async function renderLista(view, force = false) {
     </div>
     <div class="table-wrap"><table class="table">
       <thead><tr>
-        <th>Aluno</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Código</th><th>Fixação</th><th>SQL na Prática</th><th>Progresso</th><th></th>
+        <th>Aluno</th><th>Pontos</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Código</th><th>Fixação</th><th>SQL na Prática</th><th>Progresso</th><th></th>
       </tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>`;
@@ -80,6 +82,7 @@ async function renderLista(view, force = false) {
       createdAt: (a) => toDate(a.createdAt)?.getTime() || 0,
       totalSeconds: (a) => a.totalSeconds || 0,
       progress: (a) => progressoGeral(a.progress).feitos,
+      pontos: (a) => calcularPontos(a.progress, a.fixacao).total,
       name: (a) => (a.name || "").toLowerCase()
     }[ord];
     const lista = alunos
@@ -89,6 +92,7 @@ async function renderLista(view, force = false) {
       const g = progressoGeral(a.progress);
       return `<tr>
         <td data-label="Aluno"><strong>${esc(a.name)}</strong><br><small class="muted">${esc(a.email)}</small></td>
+        <td data-label="Pontos"><b>⭐ ${fmtPts(calcularPontos(a.progress, a.fixacao).total)}</b><br><small class="muted">${patente(calcularPontos(a.progress, a.fixacao).total).atual.nome}</small></td>
         <td data-label="Cadastro">${fmtDate(a.createdAt, false)}</td>
         <td data-label="Último acesso">${fmtDate(a.lastAccess)}</td>
         <td data-label="Tempo total">${human(a.totalSeconds)}</td>
@@ -100,7 +104,7 @@ async function renderLista(view, force = false) {
         <td data-label="Progresso"><div class="cell-progress">${progressBar(g.pct, true)}<small>${g.feitos}/${g.total} (${g.pct}%)</small></div></td>
         <td><a class="btn tiny primary" href="#/admin/${a.uid}">Ver evolução</a></td>
       </tr>`;
-    }).join("") || `<tr><td colspan="11" class="muted">Nenhum aluno encontrado.</td></tr>`;
+    }).join("") || `<tr><td colspan="12" class="muted">Nenhum aluno encontrado.</td></tr>`;
   };
   $("#filtro").addEventListener("input", desenhar);
   $("#ordem").addEventListener("change", desenhar);
@@ -132,6 +136,7 @@ async function renderAluno(view, uid) {
       <div class="stat"><small>Tópicos concluídos</small><strong>${g.feitos}/${g.total}</strong></div>
       <div class="stat"><small>Tempo total</small><strong>${human(a.totalSeconds)}</strong></div>
       <div class="stat"><small>Exercícios resolvidos</small><strong>${ex.feitos}/${ex.total}</strong></div>
+      <div class="stat"><small>Pontuação</small><strong>⭐ ${fmtPts(calcularPontos(a.progress, a.fixacao).total)}</strong><small>${patente(calcularPontos(a.progress, a.fixacao).total).atual.icone} ${patente(calcularPontos(a.progress, a.fixacao).total).atual.nome}</small></div>
       <div class="stat"><small>Exercícios de código</small><strong>${progressoCodigo(a.progress).feitos}/${progressoCodigo(a.progress).total}</strong></div>
       <div class="stat"><small>SQL na Prática</small><strong>${progressoSQLP(a.progress).feitos}/${progressoSQLP(a.progress).total} lições</strong></div>
       <div class="stat"><small>Último acesso</small><strong class="smaller">${fmtDate(a.lastAccess)}</strong></div>
@@ -204,12 +209,13 @@ function formatarCodigo(c) {
 
 function exportarCSV(alunos) {
   const trilhas = progressoPorTrilha({}).map((p) => p.trilha);
-  const cab = ["nome", "email", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "fixacao_pct", "exercicios_codigo", "sql_pratica_licoes", "topicos_concluidos", "progresso_pct",
+  const cab = ["nome", "email", "pontos", "patente", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "fixacao_pct", "exercicios_codigo", "sql_pratica_licoes", "topicos_concluidos", "progresso_pct",
     ...trilhas.map((t) => t.id + "_concluidos")];
   const linhas = alunos.map((a) => {
     const g = progressoGeral(a.progress);
     const pt = progressoPorTrilha(a.progress);
-    return [a.name, a.email, fmtDate(a.createdAt, false), fmtDate(a.lastAccess),
+    const pts = calcularPontos(a.progress, a.fixacao).total;
+    return [a.name, a.email, pts, patente(pts).atual.nome, fmtDate(a.createdAt, false), fmtDate(a.lastAccess),
       Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, progressoExercicios(a.progress).feitos, resumoFixacao(a.fixacao).pct, progressoCodigo(a.progress).feitos, progressoSQLP(a.progress).feitos, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
   });
   const csv = [cab, ...linhas]
