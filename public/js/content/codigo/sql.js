@@ -1053,5 +1053,248 @@ SELECT * FROM contas;`,
       verificacao: c`SELECT id, saldo FROM contas ORDER BY id`,
       ordem: true
     }
+  ],
+
+  /* ================= p1: O que é um banco de dados (Iniciante) ================= */
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Espiando a tabela de produtos",
+      enunciado: `Você acabou de chegar na loja e quer ver <b>tudo</b> o que está guardado na tabela <code>produtos</code>: todas as linhas e todas as colunas.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Depois do <code>FROM</code> vem o nome da tabela.`,
+      lang: "sql",
+      inicial: c`SELECT * FROM ____;
+`,
+      solucao: c`SELECT * FROM produtos;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Todas as colunas dos clientes",
+      enunciado: `A atendente quer ver a ficha completa de todos os clientes, com <b>todas as colunas</b> da tabela <code>clientes</code>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Existe um símbolo que quer dizer “todas as colunas”.`,
+      lang: "sql",
+      inicial: c`SELECT ____ FROM clientes;
+`,
+      solucao: c`SELECT * FROM clientes;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Quem trabalha na empresa",
+      enunciado: `O RH quer ver a tabela <code>funcionarios</code> inteira. Falta a palavra que começa a consulta.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Toda consulta começa com a palavra que quer dizer “selecione”.`,
+      lang: "sql",
+      inicial: c`____ * FROM funcionarios;
+`,
+      solucao: c`SELECT * FROM funcionarios;`
+    },
+    {
+      tipo: "criar",
+      titulo: "Olhando os pedidos",
+      enunciado: `Escreva uma consulta que mostre <b>todas as linhas e colunas</b> da tabela <code>pedidos</code>.`,
+      dica: `Use <code>SELECT * FROM</code> e o nome da tabela. Termine com <code>;</code>.`,
+      lang: "sql",
+      inicial: c`-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT * FROM pedidos;`
+    },
+    {
+      tipo: "criar",
+      titulo: "Contas do banco",
+      enunciado: `No banco de exemplo existe a tabela <code>contas</code>, com o saldo de alguns clientes. Escreva uma consulta que mostre a tabela <code>contas</code> <b>inteira</b>.`,
+      dica: `É o mesmo formato do exercício anterior, trocando só o nome da tabela.`,
+      lang: "sql",
+      inicial: c`-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT * FROM contas;`
+    }
+  ],
+
+  /* ================= p2: SELECT ... FROM (Iniciante) ================= */
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Etiquetas de preço",
+      enunciado: `Para imprimir as etiquetas, a loja precisa do <b>nome</b> e do <b>preco</b> de cada produto, nessa ordem.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A coluna que guarda o preço se chama <code>preco</code> (sem acento).`,
+      lang: "sql",
+      inicial: c`SELECT nome, ____ FROM produtos;
+`,
+      solucao: c`SELECT nome, preco FROM produtos;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Lista de e-mails",
+      enunciado: `O marketing quer o <b>nome</b> e o <b>email</b> de todos os clientes. Falta a palavra que diz de qual tabela os dados vêm.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Ela quer dizer “de” e vem antes do nome da tabela.`,
+      lang: "sql",
+      inicial: c`SELECT nome, email ____ clientes;
+`,
+      solucao: c`SELECT nome, email FROM clientes;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Crachás da equipe",
+      enunciado: `Para fazer os crachás, mostre o <b>nome</b> e o <b>cargo</b> de cada funcionário, <b>nessa ordem</b>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Escreva uma coluna em cada retângulo. A vírgula já está lá.`,
+      lang: "sql",
+      inicial: c`SELECT ____, ____ FROM funcionarios;
+`,
+      solucao: c`SELECT nome, cargo FROM funcionarios;`
+    },
+    {
+      tipo: "criar",
+      titulo: "De onde são os clientes",
+      enunciado: `Mostre o <b>nome</b> e a <b>cidade</b> de todos os clientes (tabela <code>clientes</code>), nessa ordem de colunas.`,
+      dica: `<code>SELECT coluna1, coluna2 FROM tabela;</code>`,
+      lang: "sql",
+      inicial: c`-- Tabela: clientes (id, nome, email, cidade, uf, ...)
+-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT nome, cidade FROM clientes;`
+    },
+    {
+      tipo: "criar",
+      titulo: "Resumo dos pedidos",
+      enunciado: `O financeiro quer uma lista com o <b>id</b>, o <b>valor</b> e o <b>status</b> de todos os pedidos (tabela <code>pedidos</code>), nessa ordem de colunas.`,
+      dica: `São três colunas separadas por vírgula.`,
+      lang: "sql",
+      inicial: c`-- Tabela: pedidos (id, cliente_id, valor, status, data, uf)
+-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT id, valor, status FROM pedidos;`
+    }
+  ],
+
+  /* ================= p3: Filtrando com WHERE (Iniciante) ================= */
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Clientes de São Paulo",
+      enunciado: `A filial de São Paulo quer o <b>nome</b> dos clientes do estado <b>SP</b> (coluna <code>uf</code>).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Texto vai entre aspas simples.`,
+      lang: "sql",
+      inicial: c`SELECT nome FROM clientes WHERE uf = ____;
+`,
+      solucao: c`SELECT nome FROM clientes WHERE uf = 'SP';`
+    },
+    {
+      tipo: "completar",
+      titulo: "Produtos acima de 100 reais",
+      enunciado: `Mostre <b>nome</b> e <b>preco</b> dos produtos que custam <b>mais de 100</b> reais.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Falta a palavra que começa o filtro, logo depois do nome da tabela.`,
+      lang: "sql",
+      inicial: c`SELECT nome, preco FROM produtos ____ preco > 100;
+`,
+      solucao: c`SELECT nome, preco FROM produtos WHERE preco > 100;`
+    },
+    {
+      tipo: "completar",
+      titulo: "Estoque acabando",
+      enunciado: `O estoquista quer saber quais produtos têm <b>menos de 30</b> unidades. Mostre <b>nome</b> e <b>estoque</b>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Falta o sinal de “menor que”.`,
+      lang: "sql",
+      inicial: c`SELECT nome, estoque FROM produtos WHERE estoque ____ 30;
+`,
+      solucao: c`SELECT nome, estoque FROM produtos WHERE estoque < 30;`
+    },
+    {
+      tipo: "criar",
+      titulo: "Clientes de Curitiba",
+      enunciado: `Mostre só o <b>nome</b> dos clientes cuja <b>cidade</b> é <code>'Curitiba'</code>.`,
+      dica: `<code>WHERE cidade = 'Curitiba'</code>, com aspas simples.`,
+      lang: "sql",
+      inicial: c`-- Tabela: clientes (id, nome, cidade, uf, ...)
+-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT nome FROM clientes WHERE cidade = 'Curitiba';`
+    },
+    {
+      tipo: "criar",
+      titulo: "Pedidos pendentes",
+      enunciado: `O gerente quer saber quais pedidos ainda estão com <b>status</b> <code>'pendente'</code>. Mostre o <b>id</b> e o <b>valor</b> desses pedidos.`,
+      dica: `Escolha as colunas no <code>SELECT</code> e filtre o status no <code>WHERE</code>.`,
+      lang: "sql",
+      inicial: c`-- Tabela: pedidos (id, cliente_id, valor, status, data, uf)
+-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT id, valor FROM pedidos WHERE status = 'pendente';`
+    }
+  ],
+
+  /* ================= p4: ORDER BY e LIMIT (Iniciante) ================= */
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Catálogo em ordem alfabética",
+      enunciado: `Mostre o <b>nome</b> dos produtos em <b>ordem alfabética</b> (de A a Z).
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Escreva a coluna pela qual a lista deve ser ordenada.`,
+      lang: "sql",
+      inicial: c`SELECT nome FROM produtos ORDER BY ____;
+`,
+      solucao: c`SELECT nome FROM produtos ORDER BY nome;`,
+      ordem: true
+    },
+    {
+      tipo: "completar",
+      titulo: "Do mais caro para o mais barato",
+      enunciado: `Mostre <b>nome</b> e <b>preco</b> dos produtos, do <b>mais caro para o mais barato</b>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A palavra que inverte a ordem é o contrário de <code>ASC</code>.`,
+      lang: "sql",
+      inicial: c`SELECT nome, preco FROM produtos ORDER BY preco ____;
+`,
+      solucao: c`SELECT nome, preco FROM produtos ORDER BY preco DESC;`,
+      ordem: true
+    },
+    {
+      tipo: "completar",
+      titulo: "Os 3 maiores pedidos",
+      enunciado: `Mostre <b>id</b> e <b>valor</b> dos <b>3 pedidos de maior valor</b>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `O primeiro retângulo é a ordem (do maior para o menor) e o segundo é a quantidade de linhas.`,
+      lang: "sql",
+      inicial: c`SELECT id, valor FROM pedidos
+ORDER BY valor ____
+LIMIT ____;
+`,
+      solucao: c`SELECT id, valor FROM pedidos
+ORDER BY valor DESC
+LIMIT 3;`,
+      ordem: true
+    },
+    {
+      tipo: "criar",
+      titulo: "Ranking de limite de crédito",
+      enunciado: `Mostre <b>nome</b> e <b>limite</b> de todos os clientes, do <b>maior limite para o menor</b>.`,
+      dica: `Use <code>ORDER BY limite DESC</code>.`,
+      lang: "sql",
+      inicial: c`-- Tabela: clientes (id, nome, cidade, limite, ...)
+-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT nome, limite FROM clientes ORDER BY limite DESC;`,
+      ordem: true
+    },
+    {
+      tipo: "criar",
+      titulo: "Os 5 mais baratos",
+      enunciado: `Um cliente quer uma lembrancinha barata. Mostre <b>nome</b> e <b>preco</b> dos <b>5 produtos mais baratos</b>, do mais barato para o mais caro.`,
+      dica: `Ordene pelo preço (crescente) e use <code>LIMIT</code>.`,
+      lang: "sql",
+      inicial: c`-- Tabela: produtos (id, nome, categoria, preco, estoque)
+-- Escreva sua consulta abaixo.
+`,
+      solucao: c`SELECT nome, preco FROM produtos ORDER BY preco LIMIT 5;`,
+      ordem: true
+    }
   ]
 };
