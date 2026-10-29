@@ -1335,6 +1335,189 @@ COMMIT;
 SELECT * FROM contas;`,
     verificacao: "SELECT id, saldo FROM contas ORDER BY id",
     ordem: true
+  },
+
+  /* ======================= C++ ======================= */
+  cpp_basico: {
+    titulo: "Boletim da turma com funções",
+    enunciado: `Escreva a função <code>bool aprovado(double nota)</code>, que devolve <code>true</code> para nota ≥ 6. No <code>main</code>, percorra o array <code>notas</code> com um <code>for</code>, conte os aprovados usando a função e calcule a média da turma. Imprima a média com <b>duas casas decimais</b> (<code>fixed &lt;&lt; setprecision(2)</code>), como na saída esperada.`,
+    dica: `Declare a função antes do <code>main</code>. A média é <code>soma / 6</code>; para o tamanho do array, você também pode usar <code>size(notas)</code> (C++17).`,
+    lang: "cpp",
+    inicial: c`#include <iostream>
+#include <iomanip>
+using namespace std;
+
+// escreva a função aprovado aqui
+
+int main() {
+    double notas[] = {8, 5, 10, 3, 7, 6};
+    int aprovados = 0;
+    double soma = 0;
+
+    // percorra as notas aqui
+
+    cout << "Aprovados: " << aprovados << '\n';
+    return 0;
+}
+`,
+    solucao: c`#include <iostream>
+#include <iomanip>
+using namespace std;
+
+bool aprovado(double nota) {
+    return nota >= 6;
+}
+
+int main() {
+    double notas[] = {8, 5, 10, 3, 7, 6};
+    int aprovados = 0;
+    double soma = 0;
+
+    for (double n : notas) {
+        soma += n;
+        if (aprovado(n)) aprovados++;
+    }
+    double media = soma / 6;
+
+    cout << "Aprovados: " << aprovados << '\n';
+    cout << fixed << setprecision(2) << "Média: " << media << '\n';
+    return 0;
+}`,
+    padroes: [
+      [/bool\s+aprovado\s*\(\s*double\s+\w+\s*\)/, "Crie a função bool aprovado(double nota)."],
+      [/for\s*\(/, "Percorra as notas com um laço for."],
+      [/aprovado\s*\(\s*\w+(\[\s*\w+\s*\])?\s*\)/, "Use a função aprovado(...) dentro do laço para contar os aprovados."],
+      [/setprecision\s*\(\s*2\s*\)/, "Mostre a média com duas casas: fixed << setprecision(2)."]
+    ],
+    saidaEsperada: "Aprovados: 4\nMédia: 6.50"
+  },
+
+  cpp_intermediario: {
+    titulo: "Estoque com classe e vector",
+    enunciado: `Crie a classe <code>Produto</code> com os atributos <b>privados</b> <code>nome</code>, <code>quantidade</code> e <code>preco</code>, um construtor e os métodos <code>const</code> <code>getNome()</code> e <code>valorTotal()</code> (quantidade × preço). No <code>main</code>, guarde os três produtos em um <code>vector&lt;Produto&gt;</code>, imprima o valor de cada um e o valor total do estoque, com duas casas decimais.`,
+    dica: `Construtor com lista de inicialização: <code>Produto(const string&amp; n, int q, double p) : nome(n), quantidade(q), preco(p) {}</code>. Adicione no vector com <code>push_back(Produto("Caneta", 120, 2.5))</code> ou <code>emplace_back("Caneta", 120, 2.5)</code>.`,
+    lang: "cpp",
+    inicial: c`#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+using namespace std;
+
+// crie a classe Produto aqui
+
+int main() {
+    // Caneta: 120 x 2.50 | Caderno: 35 x 18.90 | Mochila: 8 x 129.99
+    double total = 0;
+
+    cout << fixed << setprecision(2);
+    // imprima cada produto e o total aqui
+    return 0;
+}
+`,
+    solucao: c`#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+using namespace std;
+
+class Produto {
+private:
+    string nome;
+    int quantidade;
+    double preco;
+
+public:
+    Produto(const string& n, int q, double p) : nome(n), quantidade(q), preco(p) {}
+
+    const string& getNome() const { return nome; }
+    double valorTotal() const { return quantidade * preco; }
+};
+
+int main() {
+    vector<Produto> estoque;
+    estoque.push_back(Produto("Caneta", 120, 2.50));
+    estoque.push_back(Produto("Caderno", 35, 18.90));
+    estoque.push_back(Produto("Mochila", 8, 129.99));
+    double total = 0;
+
+    cout << fixed << setprecision(2);
+    for (const Produto& p : estoque) {
+        cout << p.getNome() << ": R$ " << p.valorTotal() << '\n';
+        total += p.valorTotal();
+    }
+    cout << "Total do estoque: R$ " << total << '\n';
+    return 0;
+}`,
+    padroes: [
+      [/class\s+Produto/, "Crie a classe Produto."],
+      [/private\s*:/, "Deixe os atributos da classe em uma seção private:."],
+      [/valorTotal\s*\(\s*\)\s*const/, "Crie o método double valorTotal() const."],
+      [/vector\s*<\s*Produto\s*>/, "Guarde os produtos em um vector<Produto>."]
+    ],
+    saidaEsperada: "Caneta: R$ 300.00\nCaderno: R$ 661.50\nMochila: R$ 1039.92\nTotal do estoque: R$ 2001.42"
+  },
+
+  cpp_avancado: {
+    titulo: "Ranking de vendedores com map e sort",
+    enunciado: `Some as vendas de cada vendedor em um <code>map&lt;string, double&gt;</code>. Depois copie os pares para um <code>vector</code>, ordene com <code>sort</code> e uma <b>lambda</b> do maior total para o menor e imprima o ranking com duas casas decimais.`,
+    dica: `<code>total[v.first] += v.second;</code> soma no map. Depois: <code>vector&lt;pair&lt;string, double&gt;&gt; ranking(total.begin(), total.end());</code> e <code>sort(ranking.begin(), ranking.end(), [](const auto&amp; a, const auto&amp; b) { return a.second &gt; b.second; });</code>`,
+    lang: "cpp",
+    inicial: c`#include <iostream>
+#include <iomanip>
+#include <map>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<pair<string, double>> vendas = {
+        {"Caio", 980.00}, {"Ana", 1200.00}, {"Beto", 300.00},
+        {"Ana", 450.00}, {"Beto", 1500.50}, {"Caio", 120.00}
+    };
+
+    // 1) some por vendedor em um map
+    // 2) copie para um vector e ordene do maior para o menor
+    // 3) imprima: 1. Nome: R$ 0.00
+    return 0;
+}
+`,
+    solucao: c`#include <iostream>
+#include <iomanip>
+#include <map>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<pair<string, double>> vendas = {
+        {"Caio", 980.00}, {"Ana", 1200.00}, {"Beto", 300.00},
+        {"Ana", 450.00}, {"Beto", 1500.50}, {"Caio", 120.00}
+    };
+
+    map<string, double> total;
+    for (const auto& v : vendas) total[v.first] += v.second;
+
+    vector<pair<string, double>> ranking(total.begin(), total.end());
+    sort(ranking.begin(), ranking.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second;
+    });
+
+    cout << fixed << setprecision(2);
+    int posicao = 1;
+    for (const auto& [nome, valor] : ranking) {
+        cout << posicao++ << ". " << nome << ": R$ " << valor << '\n';
+    }
+    return 0;
+}`,
+    padroes: [
+      [/map\s*<\s*(std::)?string\s*,\s*double\s*>/, "Some os totais em um map<string, double>."],
+      [/sort\s*\(/, "Ordene o ranking com sort(...)."],
+      [/\[[^\]]*\]\s*\([^)]*\)\s*(->\s*\w+\s*)?\{/, "Passe uma lambda para o sort, por exemplo [](const auto& a, const auto& b) { ... }."],
+      [/setprecision\s*\(\s*2\s*\)/, "Mostre os valores com duas casas: fixed << setprecision(2)."]
+    ],
+    saidaEsperada: "1. Beto: R$ 1800.50\n2. Ana: R$ 1650.00\n3. Caio: R$ 1100.00"
   }
 };
 
