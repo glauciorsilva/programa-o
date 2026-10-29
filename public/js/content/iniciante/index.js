@@ -6,5 +6,6 @@ export { default as react } from "./react.js";
 export { default as go } from "./go.js";
 export { default as csharp } from "./csharp.js";
 export { default as java } from "./java.js";
+export { default as cpp } from "./cpp.js";
 export { default as sql } from "./sql.js";
 export { default as mysql } from "./mysql.js";

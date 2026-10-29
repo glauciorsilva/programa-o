@@ -18,16 +18,30 @@ export const LANGS = {
   java: {
     nome: "Java", icone: "☕", tipo: "externo", modo: "text/x-java",
     playgrounds: [{ nome: "OneCompiler (Java)", url: "https://onecompiler.com/java" }, { nome: "JDoodle", url: "https://www.jdoodle.com/online-java-compiler" }]
+  },
+  cpp: {
+    nome: "C++", icone: "⚙️", tipo: "externo", modo: "text/x-c++src",
+    playgrounds: [{ nome: "OneCompiler (C++)", url: "https://onecompiler.com/cpp" }, { nome: "Compiler Explorer", url: "https://godbolt.org/" }]
   }
 };
 
 export const TRILHA_LANG = {
   html: "web", css: "web", python: "python", javascript: "js", react: "react",
-  go: "go", csharp: "csharp", java: "java", sql: "sql", mysql: "sql"
+  go: "go", csharp: "csharp", java: "java", cpp: "cpp", sql: "sql", mysql: "sql"
 };
 
 // Código inicial do sandbox livre.
 export const EXEMPLOS = {
+  cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string nome = "Ana";
+    int idade = 20;
+    cout << "Olá, " << nome << "! Você tem " << idade << " anos." << endl;
+    return 0;
+}`,
   web: {
     html: `<h1>Olá, sandbox! 👋</h1>
 <p>Edite o HTML, o CSS e o JS e clique em <b>Executar</b>.</p>

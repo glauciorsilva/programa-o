@@ -9,10 +9,11 @@ import react from "./react.js";
 import go from "./go.js";
 import csharp from "./csharp.js";
 import java from "./java.js";
+import cpp from "./cpp.js";
 import sql from "./sql.js";
 import mysql from "./mysql.js";
 
-const POR_TRILHA = { html, css, python, javascript, react, go, csharp, java, sql, mysql };
+const POR_TRILHA = { html, css, python, javascript, react, go, csharp, java, cpp, sql, mysql };
 
 // id do exercício: <topicoId>_<n>, ex.: python_b1_3
 export const EXERCICIOS_CODIGO = {};
