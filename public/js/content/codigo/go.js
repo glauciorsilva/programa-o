@@ -3165,4 +3165,752 @@ func main() {
       saidaEsperada: "Benchmark rodou: true\nPASS",
     },
   ],
+  /* ===================== p1 (Iniciante): O que é Go e como rodar ===================== */
+  p1: [
+    {
+      tipo: "completar",
+      titulo: "Boas-vindas da padaria",
+      enunciado: `A Padaria Pão Quente quer um programa que mostre uma mensagem de boas-vindas.
+        Clique em cada retângulo e escreva o que falta: o nome do pacote de todo programa que roda e a ferramenta do <code>fmt</code> que mostra uma linha na tela.
+        Depois, copie o código, cole no Go Playground (go.dev/play) e clique em <b>Run</b>.`,
+      dica: `Todo programa começa com <code>package main</code>. A ferramenta de mostrar linha tem P maiúsculo.`,
+      lang: "go",
+      inicial: c`package ____
+
+import "fmt"
+
+func main() {
+	fmt.____("Bem-vindo à Padaria Pão Quente!")
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Bem-vindo à Padaria Pão Quente!")
+}
+`,
+      padroes: [
+        [/package\s+main\b/, "A primeira linha deve ser package main."],
+        [/fmt\.Println\(\s*"Bem-vindo à Padaria Pão Quente!"\s*\)/, 'Use fmt.Println("Bem-vindo à Padaria Pão Quente!").'],
+      ],
+      saidaEsperada: "Bem-vindo à Padaria Pão Quente!",
+    },
+    {
+      tipo: "completar",
+      titulo: "Ponto de partida",
+      enunciado: `Este programa avisa que a loja abriu, mas faltam duas peças do “cabeçalho”.
+        Clique em cada retângulo e escreva o que falta: o nome da caixa de ferramentas importada (entre aspas) e o nome da função onde o programa começa.`,
+      dica: `A caixa de ferramentas de textos é <code>"fmt"</code>, com aspas. A função de partida se chama <code>main</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import ____
+
+func ____() {
+	fmt.Println("Loja aberta!")
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Loja aberta!")
+}
+`,
+      padroes: [
+        [/import\s+"fmt"/, 'Importe a caixa de ferramentas com import "fmt" (com aspas).'],
+        [/func\s+main\s*\(\s*\)\s*\{/, "A função de partida é func main() {."],
+      ],
+      saidaEsperada: "Loja aberta!",
+    },
+    {
+      tipo: "completar",
+      titulo: "Cardápio do dia",
+      enunciado: `O café da esquina quer mostrar o cardápio, um item por linha, nesta ordem:
+        <pre>Cardápio do dia
+Pão francês
+Café com leite</pre>
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Texto vai entre aspas duplas dentro dos parênteses. Cada linha usa <code>fmt.Println</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Cardápio do dia")
+	fmt.Println(____)
+	fmt.____("Café com leite")
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Cardápio do dia")
+	fmt.Println("Pão francês")
+	fmt.Println("Café com leite")
+}
+`,
+      padroes: [
+        [/fmt\.Println\(\s*"Pão francês"\s*\)/, 'Mostre "Pão francês" com fmt.Println.'],
+        [/fmt\.Println\(\s*"Café com leite"\s*\)/, 'Mostre "Café com leite" com fmt.Println.'],
+      ],
+      saidaEsperada: "Cardápio do dia\nPão francês\nCafé com leite",
+    },
+    {
+      tipo: "criar",
+      titulo: "Seu primeiro programa",
+      enunciado: `Escreva do zero um programa completo em Go (as 3 partes: <code>package main</code>, <code>import "fmt"</code> e <code>func main()</code>)
+        que mostre na tela exatamente:
+        <pre>Olá, Go!</pre>
+        Depois, rode no Go Playground: copie, cole em go.dev/play e clique em <b>Run</b>.`,
+      dica: `Copie o “cabeçalho” do exemplo do tópico e coloque um <code>fmt.Println</code> dentro das chaves da <code>main</code>.`,
+      lang: "go",
+      inicial: c`// Escreva aqui o programa completo:
+// 1. a linha do pacote principal
+// 2. a linha que importa a caixa de ferramentas de textos
+// 3. a função principal, mostrando a frase Olá, Go!
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Olá, Go!")
+}
+`,
+      padroes: [
+        [/package\s+main\b/, "Comece com package main."],
+        [/import\s+"fmt"/, 'Importe com import "fmt".'],
+        [/func\s+main\s*\(\s*\)\s*\{/, "Crie a função func main() {."],
+        [/fmt\.Println\(\s*"Olá, Go!"\s*\)/, 'Mostre a frase com fmt.Println("Olá, Go!").'],
+      ],
+      saidaEsperada: "Olá, Go!",
+    },
+    {
+      tipo: "criar",
+      titulo: "Lista de compras",
+      enunciado: `Faça um programa que mostre a lista de compras do mercado, uma linha por vez, exatamente assim:
+        <pre>Lista de compras:
+- Arroz
+- Feijão
+- Ovos</pre>`,
+      dica: `Use um <code>fmt.Println</code> para cada linha, dentro da <code>func main</code>, na ordem certa.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// Mostre o título e os 3 itens, um por linha
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Lista de compras:")
+	fmt.Println("- Arroz")
+	fmt.Println("- Feijão")
+	fmt.Println("- Ovos")
+}
+`,
+      padroes: [
+        [/fmt\.Println\(\s*"Lista de compras:"\s*\)/, 'Mostre o título "Lista de compras:".'],
+        [/fmt\.Println\(\s*"- Arroz"\s*\)/, 'Mostre "- Arroz".'],
+        [/fmt\.Println\(\s*"- Feijão"\s*\)/, 'Mostre "- Feijão".'],
+        [/fmt\.Println\(\s*"- Ovos"\s*\)/, 'Mostre "- Ovos".'],
+      ],
+      saidaEsperada: "Lista de compras:\n- Arroz\n- Feijão\n- Ovos",
+    },
+  ],
+
+  /* ===================== p2 (Iniciante): Contas e textos ===================== */
+  p2: [
+    {
+      tipo: "completar",
+      titulo: "Pães e troco",
+      enunciado: `Um cliente comprou 3 pães de R$ 0.75 e pagou com R$ 10. Complete as contas:
+        o total é 3 <b>vezes</b> 0.75 e o troco é 10 <b>menos</b> o total (2.25).
+        Clique em cada retângulo e escreva o sinal que falta.`,
+      dica: `Vezes é <code>*</code> e menos é <code>-</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Total:", 3 ____ 0.75)
+	fmt.Println("Troco:", 10 ____ 2.25)
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Total:", 3 * 0.75)
+	fmt.Println("Troco:", 10 - 2.25)
+}
+`,
+      padroes: [
+        [/3\s*\*\s*0\.75/, "O total é 3 * 0.75."],
+        [/10\s*-\s*2\.25/, "O troco é 10 - 2.25."],
+      ],
+      saidaEsperada: "Total: 2.25\nTroco: 7.75",
+    },
+    {
+      tipo: "completar",
+      titulo: "Dividindo a pizza",
+      enunciado: `Quatro amigos vão dividir a conta da pizzaria, de R$ 120.0. Complete a conta com o sinal de <b>dividir</b>.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Dividir é <code>/</code>. Como 120.0 tem parte decimal, o resultado também é decimal.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Conta da pizzaria:", 120.0)
+	fmt.Println("Cada um paga:", 120.0 ____ 4)
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Conta da pizzaria:", 120.0)
+	fmt.Println("Cada um paga:", 120.0 / 4)
+}
+`,
+      padroes: [
+        [/120\.0\s*\/\s*4/, "Divida 120.0 por 4 com o sinal /."],
+      ],
+      saidaEsperada: "Conta da pizzaria: 120\nCada um paga: 30",
+    },
+    {
+      tipo: "completar",
+      titulo: "Juntando nomes de produtos",
+      enunciado: `A vitrine da lanchonete monta os nomes juntando textos com <code>+</code>. O resultado deve ser:
+        <pre>Pão de queijo
+Café com leite</pre>
+        Clique em cada retângulo e escreva o que falta. Lembre do espaço dentro das aspas!`,
+      dica: `O primeiro retângulo é um texto entre aspas que começa com espaço. O segundo é o sinal que junta textos.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Pão" + ____)
+	fmt.Println("Café" ____ " com leite")
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Pão" + " de queijo")
+	fmt.Println("Café" + " com leite")
+}
+`,
+      padroes: [
+        [/"Pão"\s*\+\s*" de queijo"/, 'Junte "Pão" + " de queijo" (com o espaço antes de "de").'],
+        [/"Café"\s*\+\s*" com leite"/, 'Junte "Café" + " com leite" usando +.'],
+      ],
+      saidaEsperada: "Pão de queijo\nCafé com leite",
+    },
+    {
+      tipo: "criar",
+      titulo: "Preço de 4 cafés",
+      enunciado: `Cada café custa R$ 3.50. Escreva um programa que <b>faça a conta</b> 4 vezes 3.50 dentro do <code>fmt.Println</code>
+        e mostre o texto e o resultado separados por vírgula, assim:
+        <pre>4 cafés: 14</pre>`,
+      dica: `<code>fmt.Println("texto:", conta)</code> coloca um espaço entre as partes. Não escreva o 14 direto: deixe o Go calcular.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// Mostre o texto "4 cafés:" e o resultado da conta 4 vezes 3.50
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("4 cafés:", 4 * 3.50)
+}
+`,
+      padroes: [
+        [/fmt\.Println\(\s*"4 cafés:"\s*,/, 'Use fmt.Println("4 cafés:", ...) com vírgula.'],
+        [/4\s*\*\s*3\.50?|3\.50?\s*\*\s*4/, "Deixe o Go calcular: 4 * 3.50."],
+      ],
+      saidaEsperada: "4 cafés: 14",
+    },
+    {
+      tipo: "criar",
+      titulo: "Placa da loja",
+      enunciado: `Faça a placa da loja em duas linhas:
+        <ul>
+          <li>a 1ª juntando os textos <code>"Loja"</code> e <code>" da Esquina"</code> com <code>+</code>;</li>
+          <li>a 2ª usando vírgulas no <code>fmt.Println</code> para misturar texto e os números 8 e 18.</li>
+        </ul>
+        A saída deve ser exatamente:
+        <pre>Loja da Esquina
+Aberta das 8 às 18</pre>`,
+      dica: `Na 2ª linha: <code>fmt.Println("Aberta das", 8, "às", 18)</code>. Número fica sem aspas.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// Linha 1: junte os dois textos com o sinal de mais
+	// Linha 2: misture textos e números separando por vírgula
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Loja" + " da Esquina")
+	fmt.Println("Aberta das", 8, "às", 18)
+}
+`,
+      padroes: [
+        [/"Loja"\s*\+\s*" da Esquina"/, 'Junte "Loja" + " da Esquina" com +.'],
+        [/fmt\.Println\(\s*"Aberta das"\s*,\s*8\s*,\s*"às"\s*,\s*18\s*\)/, 'Use fmt.Println("Aberta das", 8, "às", 18), com os números sem aspas.'],
+      ],
+      saidaEsperada: "Loja da Esquina\nAberta das 8 às 18",
+    },
+  ],
+
+  /* ===================== p3 (Iniciante): Variáveis com := e var ===================== */
+  p3: [
+    {
+      tipo: "completar",
+      titulo: "Ficha do cliente",
+      enunciado: `A loja guarda os dados do cliente em variáveis. Crie <code>nome</code> com a forma curta e <code>idade</code> com <code>var</code> e o tipo de número inteiro.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `A forma curta usa <code>:=</code>. Número inteiro é <code>int</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	nome ____ "Carla"
+	var idade ____ = 29
+
+	fmt.Println("Cliente:", nome)
+	fmt.Println("Idade:", idade)
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	nome := "Carla"
+	var idade int = 29
+
+	fmt.Println("Cliente:", nome)
+	fmt.Println("Idade:", idade)
+}
+`,
+      padroes: [
+        [/nome\s*:=\s*"Carla"/, 'Crie nome com := "Carla".'],
+        [/var\s+idade\s+int\s*=\s*29\b/, "Declare var idade int = 29."],
+      ],
+      saidaEsperada: "Cliente: Carla\nIdade: 29",
+    },
+    {
+      tipo: "completar",
+      titulo: "Tipos da padaria",
+      enunciado: `Escolha o tipo certo de cada caixinha: <code>preco</code> guarda um número com parte decimal e <code>aberta</code> guarda verdadeiro ou falso.
+        Clique em cada retângulo e escreva o tipo que falta.`,
+      dica: `Decimal é <code>float64</code>; verdadeiro/falso é <code>bool</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	var preco ____ = 6.50
+	var aberta ____ = true
+
+	fmt.Println("Preço do bolo:", preco)
+	fmt.Println("Aberta?", aberta)
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	var preco float64 = 6.50
+	var aberta bool = true
+
+	fmt.Println("Preço do bolo:", preco)
+	fmt.Println("Aberta?", aberta)
+}
+`,
+      padroes: [
+        [/var\s+preco\s+float64\s*=\s*6\.50?/, "preco é decimal: var preco float64 = 6.50."],
+        [/var\s+aberta\s+bool\s*=\s*true/, "aberta é verdadeiro/falso: var aberta bool = true."],
+      ],
+      saidaEsperada: "Preço do bolo: 6.5\nAberta? true",
+    },
+    {
+      tipo: "completar",
+      titulo: "Atualizando o estoque",
+      enunciado: `O estoque começou com 20 pães e foram vendidos 6. Troque o valor da variável <code>estoque</code> para 14.
+        Como a variável <b>já existe</b>, use o sinal certo para trocar o valor.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `<code>:=</code> é só para criar. Para trocar o valor de uma caixinha que já existe, use só <code>=</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	estoque := 20
+	fmt.Println("Antes:", estoque)
+
+	estoque ____ 14
+	fmt.Println("Depois:", estoque)
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	estoque := 20
+	fmt.Println("Antes:", estoque)
+
+	estoque = 14
+	fmt.Println("Depois:", estoque)
+}
+`,
+      padroes: [
+        [/estoque\s*=\s*14\b/, "Troque o valor com estoque = 14 (só =, sem os dois-pontos)."],
+      ],
+      saidaEsperada: "Antes: 20\nDepois: 14",
+    },
+    {
+      tipo: "criar",
+      titulo: "Pedido em variáveis",
+      enunciado: `Guarde o pedido em variáveis criadas com <code>:=</code>:
+        <ul>
+          <li><code>produto</code> com o texto <code>"Coxinha"</code>;</li>
+          <li><code>preco</code> com o valor <code>5.50</code>.</li>
+        </ul>
+        Depois mostre o produto e o total de 4 coxinhas (use a variável <code>preco</code> na conta), exatamente assim:
+        <pre>Produto: Coxinha
+Total de 4: 22</pre>`,
+      dica: `A conta é <code>preco * 4</code>. Use vírgula no <code>fmt.Println</code> para juntar texto e valor.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// 1. Crie a variável produto com o texto Coxinha
+	// 2. Crie a variável preco com o valor 5.50
+	// 3. Mostre o produto e o total de 4 unidades
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	produto := "Coxinha"
+	preco := 5.50
+
+	fmt.Println("Produto:", produto)
+	fmt.Println("Total de 4:", preco * 4)
+}
+`,
+      padroes: [
+        [/produto\s*:=\s*"Coxinha"/, 'Crie produto := "Coxinha".'],
+        [/preco\s*:=\s*5\.50?\b/, "Crie preco := 5.50."],
+        [/preco\s*\*\s*4|4\s*\*\s*preco/, "Calcule o total usando a variável: preco * 4."],
+        [/fmt\.Println\(\s*"Produto:"\s*,\s*produto\s*\)/, 'Mostre o produto com fmt.Println("Produto:", produto).'],
+      ],
+      saidaEsperada: "Produto: Coxinha\nTotal de 4: 22",
+    },
+    {
+      tipo: "criar",
+      titulo: "Previsão do tempo com var",
+      enunciado: `Crie três variáveis usando <code>var</code> e escrevendo o tipo de cada uma:
+        <ul>
+          <li><code>cidade</code>, do tipo texto, com <code>"Recife"</code>;</li>
+          <li><code>temperatura</code>, do tipo decimal, com <code>31.5</code>;</li>
+          <li><code>chovendo</code>, do tipo verdadeiro/falso, com <code>false</code>.</li>
+        </ul>
+        Depois mostre exatamente:
+        <pre>Cidade: Recife
+Temperatura: 31.5
+Chovendo? false</pre>`,
+      dica: `O formato é <code>var nome tipo = valor</code>. Os tipos são <code>string</code>, <code>float64</code> e <code>bool</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// Crie cidade, temperatura e chovendo com a palavra var e o tipo de cada uma
+	// Depois mostre as três linhas
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	var cidade string = "Recife"
+	var temperatura float64 = 31.5
+	var chovendo bool = false
+
+	fmt.Println("Cidade:", cidade)
+	fmt.Println("Temperatura:", temperatura)
+	fmt.Println("Chovendo?", chovendo)
+}
+`,
+      padroes: [
+        [/var\s+cidade\s+string\s*=\s*"Recife"/, 'Declare var cidade string = "Recife".'],
+        [/var\s+temperatura\s+float64\s*=\s*31\.5\b/, "Declare var temperatura float64 = 31.5."],
+        [/var\s+chovendo\s+bool\s*=\s*false/, "Declare var chovendo bool = false."],
+        [/fmt\.Println\(\s*"Chovendo\?"\s*,\s*chovendo\s*\)/, 'Mostre fmt.Println("Chovendo?", chovendo).'],
+      ],
+      saidaEsperada: "Cidade: Recife\nTemperatura: 31.5\nChovendo? false",
+    },
+  ],
+
+  /* ===================== p4 (Iniciante): Decidindo com if ===================== */
+  p4: [
+    {
+      tipo: "completar",
+      titulo: "Frete grátis",
+      enunciado: `A loja online dá frete grátis para compras de R$ 100 <b>ou mais</b>. Senão, o frete é R$ 15.
+        Clique em cada retângulo e escreva o que falta: o sinal de “maior ou igual” e a palavra do caminho B.`,
+      dica: `“Maior ou igual” é <code>&gt;=</code>. O “senão” em Go é <code>else</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	total := 150.0
+
+	if total ____ 100 {
+		fmt.Println("Frete grátis!")
+	} ____ {
+		fmt.Println("Frete: R$ 15")
+	}
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	total := 150.0
+
+	if total >= 100 {
+		fmt.Println("Frete grátis!")
+	} else {
+		fmt.Println("Frete: R$ 15")
+	}
+}
+`,
+      padroes: [
+        [/if\s+total\s*>=\s*100\s*\{/, "Compare com if total >= 100 {."],
+        [/\}\s*else\s*\{/, "Use } else { para o caminho B."],
+      ],
+      saidaEsperada: "Frete grátis!",
+    },
+    {
+      tipo: "completar",
+      titulo: "Conferindo a senha",
+      enunciado: `O sistema só libera quem digitar a senha <code>"abc123"</code>. Complete a comparação de igualdade.
+        Clique em cada retângulo e escreva o que falta.`,
+      dica: `Para <b>comparar</b> se é igual, são dois sinais: <code>==</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	senha := "abc123"
+
+	if senha ____ "abc123" {
+		fmt.Println("Acesso liberado")
+	} else {
+		fmt.Println("Senha incorreta")
+	}
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	senha := "abc123"
+
+	if senha == "abc123" {
+		fmt.Println("Acesso liberado")
+	} else {
+		fmt.Println("Senha incorreta")
+	}
+}
+`,
+      padroes: [
+        [/if\s+senha\s*==\s*"abc123"\s*\{/, 'Compare com if senha == "abc123" {.'],
+      ],
+      saidaEsperada: "Acesso liberado",
+    },
+    {
+      tipo: "completar",
+      titulo: "Produto esgotado",
+      enunciado: `Quando o estoque é <b>igual a</b> zero, a loja mostra “Produto esgotado”. Senão, mostra “Temos em estoque”.
+        Clique em cada retângulo e escreva o que falta: a palavra que começa a decisão e o sinal de comparação.`,
+      dica: `A decisão começa com <code>if</code>. “Igual a” é <code>==</code>.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	estoque := 0
+
+	____ estoque ____ 0 {
+		fmt.Println("Produto esgotado")
+	} else {
+		fmt.Println("Temos em estoque")
+	}
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	estoque := 0
+
+	if estoque == 0 {
+		fmt.Println("Produto esgotado")
+	} else {
+		fmt.Println("Temos em estoque")
+	}
+}
+`,
+      padroes: [
+        [/if\s+estoque\s*==\s*0\s*\{/, "Escreva if estoque == 0 {."],
+      ],
+      saidaEsperada: "Produto esgotado",
+    },
+    {
+      tipo: "criar",
+      titulo: "Entrada no show",
+      enunciado: `No show, quem tem 18 anos ou mais pode entrar sozinho. Crie a variável <code>idade</code> com o valor <code>17</code> (use <code>:=</code>) e faça um <code>if</code>/<code>else</code>:
+        <ul>
+          <li>se <code>idade</code> for maior ou igual a 18, mostre <code>Pode entrar</code>;</li>
+          <li>senão, mostre <code>Entrada só com responsável</code>.</li>
+        </ul>
+        Com 17, a saída deve ser:
+        <pre>Entrada só com responsável</pre>`,
+      dica: `Formato: <code>if idade &gt;= 18 { ... } else { ... }</code>. A chave <code>{</code> fica na mesma linha do if.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// 1. Crie a variável idade com o valor 17
+	// 2. Se for 18 ou mais: Pode entrar
+	// 3. Senão: Entrada só com responsável
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	idade := 17
+
+	if idade >= 18 {
+		fmt.Println("Pode entrar")
+	} else {
+		fmt.Println("Entrada só com responsável")
+	}
+}
+`,
+      padroes: [
+        [/idade\s*:=\s*17\b/, "Crie idade := 17."],
+        [/if\s+idade\s*>=\s*18\s*\{/, "Compare com if idade >= 18 {."],
+        [/\}\s*else\s*\{/, "Use } else { para o outro caminho."],
+        [/fmt\.Println\(\s*"Entrada só com responsável"\s*\)/, 'Mostre "Entrada só com responsável" no else.'],
+      ],
+      saidaEsperada: "Entrada só com responsável",
+    },
+    {
+      tipo: "criar",
+      titulo: "Nota do aluno",
+      enunciado: `A escola aprova quem tira nota 6 ou mais. Crie <code>nota</code> com <code>7.5</code> e faça um <code>if</code>/<code>else</code>:
+        <ul>
+          <li>se a nota for maior ou igual a 6, mostre <code>Aprovado com nota</code> seguido da nota (use vírgula no <code>fmt.Println</code>);</li>
+          <li>senão, mostre <code>Recuperação</code>.</li>
+        </ul>
+        Com 7.5, a saída deve ser:
+        <pre>Aprovado com nota 7.5</pre>`,
+      dica: `<code>fmt.Println("Aprovado com nota", nota)</code> coloca o espaço sozinho.`,
+      lang: "go",
+      inicial: c`package main
+
+import "fmt"
+
+func main() {
+	// 1. Crie a variável nota com o valor 7.5
+	// 2. Se for 6 ou mais: Aprovado com nota (e a nota)
+	// 3. Senão: Recuperação
+}
+`,
+      solucao: c`package main
+
+import "fmt"
+
+func main() {
+	nota := 7.5
+
+	if nota >= 6 {
+		fmt.Println("Aprovado com nota", nota)
+	} else {
+		fmt.Println("Recuperação")
+	}
+}
+`,
+      padroes: [
+        [/nota\s*:=\s*7\.5\b/, "Crie nota := 7.5."],
+        [/if\s+nota\s*>=\s*6(\.0)?\s*\{/, "Compare com if nota >= 6 {."],
+        [/fmt\.Println\(\s*"Aprovado com nota"\s*,\s*nota\s*\)/, 'Mostre fmt.Println("Aprovado com nota", nota).'],
+        [/\}\s*else\s*\{[\s\S]*"Recuperação"/, 'No else, mostre "Recuperação".'],
+      ],
+      saidaEsperada: "Aprovado com nota 7.5",
+    },
+  ],
 };
