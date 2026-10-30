@@ -9,6 +9,7 @@ export const REGRAS = [
   { id: "completar", nome: "Exercício de código — completar", pts: 10, icone: "✏️" },
   { id: "criar", nome: "Exercício de código — do zero", pts: 15, icone: "🛠️" },
   { id: "pratico", nome: "Exercício prático do nível", pts: 25, icone: "🏋️" },
+  { id: "dados", nome: "Exercício de Ciência de Dados", pts: 25, icone: "🔬" },
   { id: "sqlp", nome: "Lição do SQL na Prática", pts: 10, icone: "🧩" }
 ];
 export const PTS = Object.fromEntries(REGRAS.map((r) => [r.id, r.pts]));
@@ -36,6 +37,7 @@ export function calcularPontos(progress = {}, fixacao = {}) {
       if (EXERCICIOS_CODIGO[id]?.tipo === "completar") qtd.completar++;
       else qtd.criar++;
     } else if (k.startsWith("ex_")) qtd.pratico++;
+    else if (k.startsWith("dsx_")) qtd.dados++;
     else if (k.startsWith("sqlp_")) qtd.sqlp++;
     else qtd.topico++;
   }
@@ -53,3 +55,4 @@ export function patente(total) {
 }
 
 export const fmtPts = (n) => Number(n || 0).toLocaleString("pt-BR");
+

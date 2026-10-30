@@ -1,3 +1,4 @@
+import { LABS, EXERCISES as DATA_EXERCISES, FILES as DATA_FILES, bilingual } from "./dados-pratica.js";
 import { renderDataScience } from "./ciencia-dados.js";
 import { auth, db, isAdminEmail, isAdminUser } from "./firebase.js";
 import {
@@ -221,6 +222,7 @@ function render() {
   if (!state.user) return;
   const [rota = "inicio", a, b] = location.hash.replace(/^#\/?/, "").split("/");
   $$("[data-nav]").forEach((l) => l.classList.toggle("active", l.dataset.nav === rota
+    || (rota === "dadoslab" && l.dataset.nav === "dados")
     || (rota === "trilha" && l.dataset.nav === trilhaCategoria(a))
     || (rota === "exercicio" && l.dataset.nav === "sandbox")));
   if (limparTela) {
@@ -248,6 +250,7 @@ function render() {
         }
       });
     },
+    dadoslab: () => viewDataLab(view, a, b),
     pesquisar: viewPesquisar,
     progresso: viewProgresso,
     sandbox: () => viewSandbox(view, a, b),
@@ -955,3 +958,48 @@ function viewAdmin(uid) {
   renderAdmin(view, uid);
 }
 
+
+
+// Data science labs reuse the isolated Python editor, persistence and verifier.
+function viewDataLab(view, kind, id) {
+  const exercise = kind === "ex" ? DATA_EXERCISES.find(x => x.id === id) : null;
+  const lab = kind === "lab" ? LABS.find(x => x.id === id) : null;
+  if (!exercise && !lab) {
+    view.innerHTML = `<h1>${bilingual("Practice not found", "Prática não encontrada")}</h1><a href="#/dados">${bilingual("Back to Data Science", "Voltar para Ciência de Dados")}</a>`;
+    return;
+  }
+  const uid = state.user.uid;
+  const profile = state.profile;
+  const index = exercise ? DATA_EXERCISES.indexOf(exercise) : -1;
+  const next = DATA_EXERCISES[index + 1];
+  const child = document.createElement("div");
+  // A dedicated child prevents async editor initialization from affecting a later route.
+  view.replaceChildren(child);
+  montar(child, renderSandbox(child, {
+    modo: exercise ? "exercicio" : "topico", lang: "python",
+    titulo: exercise ? exercise.title : lab.title,
+    subtitulo: exercise ? bilingual("Solve, check and explain what you learned.", "Resolva, verifique e explique o que aprendeu.") : lab.description,
+    inicial: exercise ? exercise.initial : lab.code,
+    arquivos: DATA_FILES, graficos: true,
+    voltar: { href: "#/dados", texto: "Data Science / Ciência de Dados" },
+    chave: "dados_" + kind + "_" + id, nuvem: true,
+    exId: exercise?.id,
+    resolvido: !!profile.progress?.["dsx_" + id],
+    exercicio: exercise ? {
+      lang: "python", enunciado: `<p>${bilingual(...exercise.prompt)}</p>`,
+      dica: bilingual(...exercise.hint), solucao: exercise.solution,
+      teste: exercise.test, saidaEsperada: exercise.expected,
+      padroes: exercise.id === "join" ? [[/validate\s*=\s*['"]many_to_one['"]/, 'Use validate="many_to_one" / Use a validação many_to_one']] : undefined
+    } : undefined,
+    proximo: exercise && next ? { href: "#/dadoslab/ex/" + next.id, texto: "Next / Próximo" } : undefined
+  }, {
+    uid,
+    onResolvido: async (exerciseId) => {
+      const key = "dsx_" + exerciseId;
+      if (profile.progress?.[key]) return;
+      await updateDoc(doc(db, "users", uid), { ["progress." + key]: serverTimestamp() });
+      (profile.progress ||= {})[key] = new Date();
+      if (state.profile === profile) atualizarPontos();
+    }
+  }), "Data Science / Ciência de Dados");
+}

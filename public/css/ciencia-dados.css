@@ -11,3 +11,6 @@
 .ds-page button { white-space: normal; }
 .ds-page a:focus-visible, .ds-page button:focus-visible, .ds-page summary:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .ds-page * { scroll-behavior: auto; } }
+
+.ds-line { display: block; }
+.ds-line[lang="pt-BR"] { margin-top: .2rem; opacity: .88; }

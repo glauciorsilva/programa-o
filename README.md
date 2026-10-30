@@ -174,7 +174,41 @@ Acesse **Data Science / Ciência de Dados** no menu (`#/dados`).
 - Projeto para baixar em Python: API de Localidades do IBGE → validação → Pandas/NumPy → CSV e gráfico Matplotlib.
 - Programas e instalação: Colab ou Python/VS Code/Jupyter; exemplos Windows usam o interpretador do venv sem exigir ativação.
 - Cada etapa pode ser marcada/desmarcada e salva no campo `progress.ds_<etapa>` da conta Firestore. Conta como tópico na pontuação existente; a seção possui seu próprio indicador de progresso.
-- Execute a coleta e os gráficos no Colab ou no Python local. O sandbox existente não foi ampliado para Requests ou gráficos.
-- Conteúdo e interface em `public/js/ciencia-dados.js`; estilos em `public/css/ciencia-dados.css`.
+- Pratique NumPy, Pandas e Matplotlib no navegador. O laboratório de API usa `pyodide.http.pyfetch`; o projeto para baixar usa Requests no Python local/Colab.
+- Conteúdo e interface em `public/js/ciencia-dados.js`; laboratórios e exercícios em `public/js/dados-pratica.js`; estilos em `public/css/ciencia-dados.css`.
 
 O PR deve ter **main** como destino, pois o workflow existente publica o canal `live` ao receber push em `main`. O workflow de PR publica uma prévia no Firebase. Ambos usam o secret já configurado `FIREBASE_SERVICE_ACCOUNT_PROGRTOTAL`. Não é necessário alterar regras do Firestore.
+
+
+### Caixas de areia de Ciência de Dados
+
+Em **Ciência de Dados → Caixas de areia e exercícios**, há quatro laboratórios independentes, com editor, executar, restaurar e código salvo por conta:
+
+| Laboratório | Prática | Rota |
+|---|---|---|
+| NumPy | Arrays, máscaras e média | `#/dadoslab/lab/numpy` |
+| Pandas | CSV, receita e agrupamento | `#/dadoslab/lab/pandas` |
+| Matplotlib | Gráfico de barras exibido no app e download PNG | `#/dadoslab/lab/charts` |
+| API IBGE | Coleta HTTP real usando `await pyfetch(...)` | `#/dadoslab/lab/api` |
+
+Os dez exercícios guiados possuem enunciado e dica em inglês/português, código inicial editável, solução, saída esperada, correção por testes Python e navegação para o próximo: arrays, máscaras, receita, filtro/ordenação, limpeza, agrupamento, junção, JSON aninhado, média/mediana e gráfico com título/eixos. Comece em `#/dadoslab/ex/array`.
+
+#### Dados, gráficos e persistência
+
+- `ds_sales.csv`, `ds_dirty.csv`, `ds_orders.csv`, `ds_clients.csv` e `ds_api.json` são **dados fictícios de treinamento**. O JSON simula a estrutura da API, sem representar a lista completa do Brasil. Os arquivos são restaurados a cada execução para permitir repetir os exercícios.
+- Os testes não dependem da API estar no ar. Somente o laboratório IBGE usa a API real e exige rede/CORS; falhas aparecem na saída, sem substituir os dados silenciosamente.
+- Pyodide baixa Python e bibliotecas na primeira utilização. Matplotlib usa o backend Agg; até cinco figuras abertas ao final da execução são enviadas como PNG para a saída, com limite de 5 MB por figura. Não use `plt.close()` antes do fim se quiser visualizar a figura.
+- Código fica em `users/{uid}/codigos/dados_lab_<id>` ou `dados_ex_<id>`, com cópia local por usuário. Tentativas e resolução seguem o modelo existente do sandbox.
+- Conclusão dos exercícios: `users/{uid}.progress.dsx_<id>`, 25 pontos por exercício, sem duplicar pontos ao verificar de novo. O indicador da seção mostra as dez práticas; o percentual geral das trilhas de linguagens continua separado.
+- A execução permanece em Web Worker dentro do iframe isolado. O limite de 20 segundos de execução Python permanece; download inicial das bibliotecas acontece antes desse cronômetro.
+- Nenhuma mudança nas regras Firestore é necessária.
+
+#### Verificação
+
+Com Node.js e Python com `numpy`, `pandas` e `matplotlib` instalados:
+
+```bash
+node tests/data-science.mjs
+```
+
+O teste executa todas as soluções e os verificadores no Python, rejeita respostas incorretas e confere os três laboratórios locais. A integração visual Pyodide e a coleta HTTP precisam de internet no navegador. O fluxo de publicação permanece: PR → prévia Firebase; merge em `main` → produção.
