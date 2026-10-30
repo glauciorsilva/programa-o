@@ -163,3 +163,18 @@ Inclua o e-mail em `ADMIN_EMAILS` (`public/js/firebase.js`) **e** na função `i
 
 - O `firebaseConfig` do app web é público por natureza. A proteção vem das regras em `firestore.rules`: cada aluno só lê e escreve os próprios dados, e só o admin verificado lê todos.
 - **Nunca** coloque o JSON de *service account* (chave privada do Admin SDK) no repositório nem no site. O `.gitignore` já bloqueia esses arquivos.
+
+## Ciência de Dados / Data Science
+
+Acesse **Data Science / Ciência de Dados** no menu (`#/dados`).
+
+- Explicações em pares: inglês na primeira linha, português logo abaixo.
+- Nove etapas: Python, NumPy, Pandas, APIs/SQL, gráficos, estatística, machine learning, entrega e portfólio.
+- Plano inicial de cinco dias com prática diária e critérios de avanço.
+- Projeto para baixar em Python: API de Localidades do IBGE → validação → Pandas/NumPy → CSV e gráfico Matplotlib.
+- Programas e instalação: Colab ou Python/VS Code/Jupyter; exemplos Windows usam o interpretador do venv sem exigir ativação.
+- Cada etapa pode ser marcada/desmarcada e salva no campo `progress.ds_<etapa>` da conta Firestore. Conta como tópico na pontuação existente; a seção possui seu próprio indicador de progresso.
+- Execute a coleta e os gráficos no Colab ou no Python local. O sandbox existente não foi ampliado para Requests ou gráficos.
+- Conteúdo e interface em `public/js/ciencia-dados.js`; estilos em `public/css/ciencia-dados.css`.
+
+O PR deve ter **main** como destino, pois o workflow existente publica o canal `live` ao receber push em `main`. O workflow de PR publica uma prévia no Firebase. Ambos usam o secret já configurado `FIREBASE_SERVICE_ACCOUNT_PROGRTOTAL`. Não é necessário alterar regras do Firestore.
