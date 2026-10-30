@@ -1,3 +1,4 @@
+import { practiceCards } from "./dados-pratica.js";
 // Each explanatory unit is English first, then Brazilian Portuguese.
 export const stages = [
   { id: 'python', title: ['1. Python foundations', '1. Fundamentos de Python'],
@@ -145,6 +146,7 @@ export function renderDataScience(view, {progress = {}, onToggle}) {
     <nav class="ds-links" aria-label="Seções de Ciência de Dados">
       <a class="btn" href="#ds-setup">${pair(['Programs', 'Programas'])}</a>
       <a class="btn" href="#ds-roadmap">${pair(['Learning steps', 'Etapas de estudo'])}</a>
+      <a class="btn" href="#ds-practice">${pair(["Sandboxes and exercises", "Caixas de areia e exercícios"])}</a>
       <a class="btn" href="#ds-week">${pair(['Five-day practice', 'Prática de cinco dias'])}</a>
       <a class="btn" href="#ds-project">${pair(['Real-data project', 'Projeto com dados reais'])}</a>
     </nav>
@@ -154,7 +156,7 @@ export function renderDataScience(view, {progress = {}, onToggle}) {
     ${code('py -m venv .venv\n.venv\\Scripts\\python.exe -m pip install numpy pandas requests matplotlib jupyterlab\n.venv\\Scripts\\python.exe -m jupyterlab')}
     ${explanation(['In Colab, create a notebook and run the following installation cell once, then run the Python examples in separate cells.', 'No Colab, crie um notebook e execute a célula de instalação abaixo uma vez; depois execute os exemplos Python em células separadas.'])}
     ${code('%pip install numpy pandas requests matplotlib')}
-    ${explanation(['Use Colab or local Python for HTTP requests and charts. The existing app sandbox is useful for basic Python practice; this lesson does not add a chart renderer or Requests support to it.', 'Use Colab ou Python local para requisições HTTP e gráficos. O sandbox do app serve para praticar Python básico; esta aula não adiciona renderização de gráficos nem suporte a Requests nele.'])}
+    ${explanation(['Practice NumPy, Pandas and Matplotlib in the sandboxes below. Use pyfetch for browser HTTP requests; use Requests in Colab or local Python.', 'Pratique NumPy, Pandas e Matplotlib nas caixas de areia abaixo. Use pyfetch para HTTP no navegador; use Requests no Colab ou Python local.'])}
     <a href="#/sandbox/python" class="btn">${pair(['Open Python sandbox', 'Abrir sandbox Python'])}</a>
     <a href="#/sqlpratica" class="btn">${pair(['Practice SQL', 'Praticar SQL'])}</a></section>
     <section class="box" id="ds-roadmap"><h2>${pair(['Roadmap and self-assessment', 'Roteiro e autoavaliação'])}</h2>
@@ -168,6 +170,7 @@ export function renderDataScience(view, {progress = {}, onToggle}) {
       <h3>${pair(['Ready to move on?', 'Pode avançar?'])}</h3>${explanation(s.ready)}
       <button type="button" class="btn" data-ds="${s.id}" aria-pressed="${!!progress['ds_' + s.id]}"></button>
       </details>`).join('')}</section>
+    ${practiceCards(progress)}
     <section class="box" id="ds-week"><h2>${pair(['Your first five days', 'Seus primeiros cinco dias'])}</h2>
     ${explanation(['Plan 45–60 minutes daily: 10 to read, 25–35 to code, 10 to explain and 5 to review vocabulary. Repeat a day if you need more practice.', 'Reserve 45–60 minutos por dia: 10 para ler, 25–35 para programar, 10 para explicar e 5 para revisar vocabulário. Repita um dia se precisar praticar mais.'])}
     ${days.map(([title, text, sample]) => `<article class="box"><h3>${pair(title)}</h3>${explanation(text)}${sample ? code(sample) : ''}</article>`).join('')}</section>
@@ -222,3 +225,4 @@ export function renderDataScience(view, {progress = {}, onToggle}) {
   }, {signal: abort.signal});
   return () => abort.abort();
 }
+

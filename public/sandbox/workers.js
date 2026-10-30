@@ -96,7 +96,7 @@ self.WORKERS.python = function () {
         postMessage({ tipo: "status", texto: "Carregando Python (só na primeira vez, ~10s)…" });
         importScripts(m.indexURL + "pyodide.js");
         py = await loadPyodide({ indexURL: m.indexURL });
-        for (const [nome, conteudo] of Object.entries(m.arquivos || {})) py.FS.writeFile(nome, conteudo);
+        if (m.graficos) for (const [nome, conteudo] of Object.entries(m.arquivos || {})) py.FS.writeFile(nome, conteudo);
         postMessage({ tipo: "pronto" });
       } catch (err) {
         postMessage({ tipo: "erro", texto: "Falha ao carregar o Python: " + err.message });
@@ -108,7 +108,7 @@ self.WORKERS.python = function () {
     let saida = "";
     try {
       postMessage({ tipo: "status", texto: "Preparando bibliotecas…" });
-      await py.loadPackagesFromImports(m.codigo + "\n" + (m.teste || ""));
+      await py.loadPackagesFromImports(m.codigo + "\n" + (m.teste || "") + (m.graficos ? "\nimport matplotlib" : ""));
     } catch (err) {
       postMessage({ tipo: "aviso", texto: "Não consegui carregar alguma biblioteca: " + err.message });
     }
@@ -141,6 +141,14 @@ self.WORKERS.python = function () {
     const ns = py.globals.get("dict")();
     postMessage({ tipo: "executando" });
     try {
+      // Reset practice files on every run, including runs in a cached worker.
+      if (m.graficos) for (const [nome, conteudo] of Object.entries(m.arquivos || {})) py.FS.writeFile(nome, conteudo);
+      if (m.graficos) await py.runPythonAsync(`
+import matplotlib
+matplotlib.use("Agg", force=True)
+import matplotlib.pyplot as plt
+plt.close("all")
+`, { globals: ns });
       await py.runPythonAsync(m.codigo, { globals: ns, filename: "main.py" });
     } catch (err) {
       if (buf) { linha(buf); buf = ""; }
@@ -158,6 +166,25 @@ self.WORKERS.python = function () {
       } catch (err) {
         const ult = String(err.message).trim().split("\n").pop();
         postMessage({ tipo: "teste", ok: false, msg: ult.replace(/^AssertionError:?\s*/, "") || "Resultado diferente do esperado." });
+      }
+    }
+    if (m.graficos) {
+      try {
+        const images = await py.runPythonAsync(`
+import matplotlib.pyplot as _ds_plt
+import io as _ds_io, base64 as _ds_base64, json as _ds_json
+_ds_images = []
+for _ds_number in _ds_plt.get_fignums()[:5]:
+    _ds_buffer = _ds_io.BytesIO()
+    _ds_plt.figure(_ds_number).savefig(_ds_buffer, format="png", dpi=100)
+    if _ds_buffer.tell() <= 5000000:
+        _ds_images.append(_ds_base64.b64encode(_ds_buffer.getvalue()).decode("ascii"))
+_ds_plt.close("all")
+_ds_json.dumps(_ds_images)
+`, { globals: ns });
+        for (const png of JSON.parse(images)) postMessage({ tipo: "imagem", png });
+      } catch (err) {
+        postMessage({ tipo: "aviso", texto: "Chart rendering failed / Falha ao exibir gráfico: " + err.message });
       }
     }
     if (buf) linha(buf);
@@ -359,3 +386,4 @@ self.WORKERS.sql = function () {
     postMessage({ tipo: "fim", ok: true });
   };
 };
+
