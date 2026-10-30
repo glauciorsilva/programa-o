@@ -1,0 +1,13 @@
+.ds-page .ds-pair { display: block; }
+.ds-page .ds-pair > span { display: block; overflow-wrap: anywhere; }
+.ds-page .ds-pair > [lang="pt-BR"] { margin-top: .15rem; opacity: .88; }
+.ds-page .ds-links { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.ds-page .box { margin-top: 1rem; }
+.ds-page details > summary { cursor: pointer; font-weight: 700; padding: .5rem 0; }
+.ds-page summary .ds-pair { display: inline-block; vertical-align: top; }
+.ds-page .ds-code { padding: 1rem; border-radius: 10px; background: var(--code-bg); color: var(--code-text); overflow-x: auto; max-width: 100%; font-size: .9rem; }
+.ds-page progress { width: 100%; accent-color: var(--primary); }
+.ds-page section[id] { scroll-margin-top: calc(var(--topbar-h) + 1rem); }
+.ds-page button { white-space: normal; }
+.ds-page a:focus-visible, .ds-page button:focus-visible, .ds-page summary:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .ds-page * { scroll-behavior: auto; } }

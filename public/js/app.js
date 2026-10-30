@@ -1,3 +1,4 @@
+import { renderDataScience } from "./ciencia-dados.js";
 import { auth, db, isAdminEmail, isAdminUser } from "./firebase.js";
 import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged,
@@ -232,6 +233,21 @@ function render() {
     linguagens: () => viewCategoria("linguagens"),
     bancos: () => viewCategoria("bancos"),
     trilha: () => viewTrilha(a, b),
+    dados: () => {
+      const profile = state.profile;
+      const uid = state.user.uid;
+      limparTela = renderDataScience(view, {
+        progress: profile.progress ||= {},
+        onToggle: async (key, completed) => {
+          await updateDoc(doc(db, "users", uid), {
+            ["progress." + key]: completed ? serverTimestamp() : deleteField()
+          });
+          if (completed) profile.progress[key] = new Date();
+          else delete profile.progress[key];
+          if (state.profile === profile) atualizarPontos();
+        }
+      });
+    },
     pesquisar: viewPesquisar,
     progresso: viewProgresso,
     sandbox: () => viewSandbox(view, a, b),
@@ -938,3 +954,4 @@ function viewAdmin(uid) {
   }
   renderAdmin(view, uid);
 }
+
