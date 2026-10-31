@@ -182,6 +182,56 @@ export function renderDataScience(view, {progress = {}, onToggle}) {
     <button type="button" class="btn primary" id="ds-download">${pair(['Download Python project', 'Baixar projeto Python'])}</button>
     ${explanation(['Challenge: filter the Southeast region, list its units and explain why the regional average does not describe population. Add the collection date and source to your README.', 'Desafio: filtre a região Sudeste, liste suas unidades e explique por que a média regional não descreve a população. Inclua data de coleta e fonte no README.'])}
     </section>
+    <section class="box" id="ds-reference"><h2><span lang="en">Data analyst desk reference</span><br><span lang="pt-BR">Guia de bolso do analista de dados</span></h2>
+    <p class="ds-pair"><span lang="en">Use this as a revision map: identify the question, choose the smallest reliable tool, validate the result and explain its limitation.</span><span lang="pt-BR">Use como mapa de revisão: identifique a pergunta, escolha a menor ferramenta confiável, valide o resultado e explique sua limitação.</span></p>
+
+    <details class="box"><summary><span lang="en">Python operators for analysis</span><br><span lang="pt-BR">Operadores Python para análise</span></summary>
+      <p class="ds-pair"><span lang="en">Arithmetic operators calculate measures; comparisons create Boolean filters; and/or/not combine conditions. Prefer clear parentheses in filters.</span><span lang="pt-BR">Operadores aritméticos calculam medidas; comparações criam filtros booleanos; and/or/not combinam condições. Prefira parênteses claros nos filtros.</span></p>
+      <pre class="ds-code"><code>growth = (current - previous) / previous
+high_sales = df[(df["sales"] &gt; 1000) &amp; (df["region"] == "Sudeste")]</code></pre>
+    </details>
+
+    <details class="box"><summary><span lang="en">Pandas: essential 80/20</span><br><span lang="pt-BR">Pandas: o 80/20 essencial</span></summary>
+      <p class="ds-pair"><span lang="en">Inspect first, then select, filter, sort, clean missing values, aggregate and join. Do not clean blindly: record what each row and each column mean.</span><span lang="pt-BR">Inspecione primeiro; depois selecione, filtre, ordene, trate ausências, agregue e una tabelas. Não limpe às cegas: registre o que cada linha e cada coluna representam.</span></p>
+      <pre class="ds-code"><code>df.head(); df.info(); df.isna().sum()
+df.loc[df["salary"] &gt; 4000, ["name", "salary"]]
+df.groupby("department")["salary"].agg(["mean", "min", "max"])
+pd.merge(left, right, on="id", how="left")</code></pre>
+    </details>
+
+    <details class="box"><summary><span lang="en">NumPy and numerical thinking</span><br><span lang="pt-BR">NumPy e raciocínio numérico</span></summary>
+      <p class="ds-pair"><span lang="en">Use arrays for numerical columns and vectorized calculations. Check shape, dtype and axis before interpreting a result.</span><span lang="pt-BR">Use arrays para colunas numéricas e cálculos vetorizados. Confira shape, dtype e eixo antes de interpretar um resultado.</span></p>
+      <pre class="ds-code"><code>values = np.array([30, 45, 20, 60])
+above_mean = values[values &gt; values.mean()]
+values * 1.10</code></pre>
+    </details>
+
+    <details class="box"><summary><span lang="en">EDA workflow</span><br><span lang="pt-BR">Fluxo de análise exploratória (EDA)</span></summary>
+      <p class="ds-pair"><span lang="en">1) import data; 2) inspect shape and types; 3) find missing and duplicates; 4) summarize; 5) examine distributions; 6) analyze relationships and outliers; 7) document insights and next checks.</span><span lang="pt-BR">1) importe os dados; 2) confira formato e tipos; 3) encontre ausências e duplicatas; 4) resuma; 5) analise distribuições; 6) avalie relações e valores extremos; 7) registre achados e próximas verificações.</span></p>
+    </details>
+
+    <details class="box"><summary><span lang="en">SQL and Pandas: same question, different syntax</span><br><span lang="pt-BR">SQL e Pandas: mesma pergunta, sintaxe diferente</span></summary>
+      <p class="ds-pair"><span lang="en">SELECT maps to column selection; WHERE to Boolean filters; ORDER BY to sort_values; GROUP BY to groupby; JOIN to merge; UNION ALL to concat. Learn both because many analyst roles use SQL daily.</span><span lang="pt-BR">SELECT corresponde à seleção de colunas; WHERE a filtros booleanos; ORDER BY a sort_values; GROUP BY a groupby; JOIN a merge; UNION ALL a concat. Aprenda os dois porque muitas vagas de análise usam SQL diariamente.</span></p>
+      <pre class="ds-code"><code>SELECT region, COUNT(*) FROM states GROUP BY region;
+df.groupby("region").size()</code></pre>
+    </details>
+
+    <details class="box"><summary><span lang="en">Choose the visual</span><br><span lang="pt-BR">Escolha o gráfico</span></summary>
+      <p class="ds-pair"><span lang="en">Use bars for category comparisons, lines for time, histograms for distributions, scatter plots for two numeric variables and box plots to compare spread and outliers. Matplotlib is the foundation; Seaborn adds statistical defaults; Plotly adds interactivity.</span><span lang="pt-BR">Use barras para comparar categorias, linhas para tempo, histogramas para distribuições, dispersão para duas variáveis numéricas e box plots para comparar dispersão e valores extremos. Matplotlib é a base; Seaborn facilita gráficos estatísticos; Plotly acrescenta interatividade.</span></p>
+    </details>
+
+    <details class="box"><summary><span lang="en">Statistics: test the assumption first</span><br><span lang="pt-BR">Estatística: teste o pressuposto primeiro</span></summary>
+      <p class="ds-pair"><span lang="en">Before choosing a parametric or non-parametric test, verify data type, independence, distribution, variance and sample design. Correlation does not establish causation.</span><span lang="pt-BR">Antes de escolher um teste paramétrico ou não paramétrico, verifique tipo de dado, independência, distribuição, variância e desenho da amostra. Correlação não estabelece causalidade.</span></p>
+    </details>
+
+    <details class="box"><summary><span lang="en">Machine learning: evaluate, do not memorize</span><br><span lang="pt-BR">Machine learning: avalie, não decore</span></summary>
+      <p class="ds-pair"><span lang="en">Start with a baseline, separate train/validation/test correctly, avoid leakage, tune only with training-validation data and select a metric that represents the real error cost. Use accuracy carefully when classes are imbalanced.</span><span lang="pt-BR">Comece com uma referência simples, separe treino/validação/teste corretamente, evite vazamento, ajuste somente com treino-validação e escolha uma métrica que represente o custo real do erro. Use acurácia com cuidado em classes desbalanceadas.</span></p>
+    </details>
+
+    <details class="box"><summary><span lang="en">Data pipeline, APIs and delivery</span><br><span lang="pt-BR">Pipeline de dados, APIs e entrega</span></summary>
+      <p class="ds-pair"><span lang="en">A practical pipeline collects, validates, cleans, stores, analyzes and communicates. Requests obtains API data; SQLAlchemy connects databases; Streamlit/Dash present apps; Git and a README make the work reproducible. Keep keys and passwords outside Git.</span><span lang="pt-BR">Um pipeline prático coleta, valida, limpa, armazena, analisa e comunica. Requests obtém dados de APIs; SQLAlchemy conecta bancos; Streamlit/Dash apresentam apps; Git e README tornam o trabalho reproduzível. Mantenha chaves e senhas fora do Git.</span></p>
+    </details>
+    </section>
     <section class="box"><h2>${pair(['Vocabulary and official references', 'Vocabulário e referências oficiais'])}</h2>
     ${explanation(['row · column · missing value · mean · feature · target · training · test · bias', 'linha · coluna · valor ausente · média · variável de entrada · alvo · treinamento · teste · viés'])}
     <ul>${resources.map(([en, pt, href]) => `<li><a href="${href}" target="_blank" rel="noopener noreferrer">${pair([en, pt])}</a></li>`).join('')}</ul>
