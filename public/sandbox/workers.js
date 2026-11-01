@@ -107,6 +107,9 @@ self.WORKERS.python = function () {
 
     let saida = "";
     try {
+      // Os CSVs importados pela pessoa usuária chegam a cada execução. Assim um
+      // arquivo recém-carregado também aparece quando o Python já estava aberto.
+      for (const [nome, conteudo] of Object.entries(m.arquivos || {})) py.FS.writeFile(nome, conteudo);
       postMessage({ tipo: "status", texto: "Preparando bibliotecas…" });
       await py.loadPackagesFromImports(m.codigo + "\n" + (m.teste || ""));
     } catch (err) {
