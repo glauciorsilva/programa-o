@@ -108,7 +108,7 @@ export async function executar(opts, onEvento, frameHost) {
     });
     frame.contentWindow.postMessage({
       acao: "executar", id, lang: cfg.runner, codigo, teste, entrada: opts.entrada,
-      arquivos: cfg.runner === "python" ? ARQUIVOS_PYTHON : undefined,
+      arquivos: cfg.runner === "python" ? { ...ARQUIVOS_PYTHON, ...(opts.arquivos || {}) } : undefined,
       seed: cfg.runner === "sql" ? SEED_SQL : undefined,
       db: opts.db, solucao: opts.solucao, verificacao: opts.verificacao, ordem: opts.ordem
     }, "*");
