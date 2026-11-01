@@ -135,7 +135,7 @@ users/{uid}
 users/{uid}/sessions/{id}
   start, lastPing, seconds, device, userAgent
 users/{uid}/codigos/{id}                     livre_<lang> ou ex_<trilha>_<nivel>
-  lang, codigo, ok, tentativas, atualizadoEm, resolvidoEm
+  lang, codigo, entrada?, arquivosCsv?: [{ nome, conteudo }], ok, tentativas, atualizadoEm, resolvidoEm
 ```
 
 ## Como publicar (passo a passo)
