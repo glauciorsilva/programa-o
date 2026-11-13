@@ -592,3 +592,12 @@ li.CodeMirror-hint-active { background: var(--primary); }
 .pr-q .fx-opcoes { display: flex; flex-wrap: wrap; gap: 6px; }
 .box.nocss { background: color-mix(in srgb, #2965f1 8%, var(--surface)); border-left: 4px solid #2965f1; }
 .passo-texto :not(pre) > code, .pr-q :not(pre) > code, .fx-feedback code, .box.nocss :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+
+/* Guias de A a Z (SQL, Python, AWS) */
+.sqlp-secao { margin: 22px 0 4px; font-size: 1.1rem; }
+.guia-teoria h3 { margin-top: 18px; }
+.guia-teoria .pratica-host { margin: 14px 0; }
+.guia-exemplo { margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border); }
+.guia-exemplo pre { max-width: 100%; overflow-x: auto; }
+.sqlp-teoria .sqlp-tabela-teoria { display: block; max-width: 100%; overflow-x: auto; }
+.guia-teoria li, .guia-teoria p { overflow-wrap: anywhere; }

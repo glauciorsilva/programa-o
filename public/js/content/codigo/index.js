@@ -12,6 +12,7 @@ import java from "./java.js";
 import cpp from "./cpp.js";
 import sql from "./sql.js";
 import mysql from "./mysql.js";
+import { CURSO_PYG } from "../pyguia/index.js";
 
 const POR_TRILHA = { html, css, python, javascript, react, go, csharp, java, cpp, sql, mysql };
 
@@ -30,6 +31,18 @@ for (const t of TRILHAS) {
         return id;
       });
     }
+  }
+}
+
+// Exercícios dos guias "de A a Z": id <curso>_<lição>_<n>, ex.: pyg_strings_2
+for (const curso of [CURSO_PYG]) {
+  for (const licao of curso.licoes) {
+    const topico = { id: `${curso.id}_${licao.id}`, titulo: licao.titulo };
+    CODIGO_POR_TOPICO[topico.id] = (licao.exercicios || []).map((ex, i) => {
+      const id = `${topico.id}_${i + 1}`;
+      EXERCICIOS_CODIGO[id] = { ...ex, id, n: i + 1, topico, guia: { curso, licao } };
+      return id;
+    });
   }
 }
 

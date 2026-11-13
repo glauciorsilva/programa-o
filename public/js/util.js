@@ -1,5 +1,8 @@
 import { TRILHAS, NIVEIS } from "./content/index.js";
 import { LICOES as LICOES_SQLP, chaveLicao } from "./content/sqlpratica.js";
+import { CURSO_SQLG } from "./content/sqlguia/index.js";
+import { CURSO_PYG } from "./content/pyguia/index.js";
+import { CURSO_AWSG } from "./content/awsguia/index.js";
 import { TOTAL_CODIGO } from "./content/codigo/index.js";
 import { EXERCICIOS } from "./content/exercicios.js";
 
@@ -99,8 +102,21 @@ export function progressoCodigo(progress = {}) {
 
 // Lições concluídas na trilha interativa "SQL na Prática"
 export function progressoSQLP(progress = {}) {
-  const feitos = LICOES_SQLP.filter((l) => progress[chaveLicao(l.id)]).length;
-  return { feitos, total: LICOES_SQLP.length, pct: Math.round((feitos / LICOES_SQLP.length) * 100) };
+  return progressoLicoes(progress, LICOES_SQLP, chaveLicao);
+}
+
+// Lições concluídas nos guias "de A a Z" (SQL, Python e AWS), somadas
+export const GUIAS = [CURSO_SQLG, CURSO_PYG, CURSO_AWSG];
+export function progressoGuias(progress = {}) {
+  const partes = GUIAS.map((cu) => progressoLicoes(progress, cu.licoes, cu.chave || ((id) => `${cu.id}_${id}`)));
+  const feitos = partes.reduce((s, p) => s + p.feitos, 0), total = partes.reduce((s, p) => s + p.total, 0);
+  return { feitos, total, pct: total ? Math.round((feitos / total) * 100) : 0, partes };
+}
+
+// Lições concluídas de qualquer curso/guia (lista de lições + função que dá a chave do progresso)
+export function progressoLicoes(progress = {}, licoes, chave) {
+  const feitos = licoes.filter((l) => progress?.[chave(l.id)]).length;
+  return { feitos, total: licoes.length, pct: licoes.length ? Math.round((feitos / licoes.length) * 100) : 0 };
 }
 
 export function progressoGeral(progress = {}) {

@@ -10,7 +10,8 @@ export const REGRAS = [
   { id: "criar", nome: "Exercício de código — do zero", pts: 15, icone: "🛠️" },
   { id: "pratico", nome: "Exercício prático do nível", pts: 25, icone: "🏋️" },
   { id: "dados", nome: "Exercício de Ciência de Dados", pts: 25, icone: "🔬" },
-  { id: "sqlp", nome: "Lição do SQL na Prática", pts: 10, icone: "🧩" }
+  { id: "sqlp", nome: "Lição do SQL na Prática", pts: 10, icone: "🧩" },
+  { id: "guia", nome: "Lição dos guias de A a Z (SQL, Python, AWS)", pts: 10, icone: "📘" }
 ];
 export const PTS = Object.fromEntries(REGRAS.map((r) => [r.id, r.pts]));
 
@@ -39,6 +40,7 @@ export function calcularPontos(progress = {}, fixacao = {}) {
     } else if (k.startsWith("ex_")) qtd.pratico++;
     else if (k.startsWith("dsx_")) qtd.dados++;
     else if (k.startsWith("sqlp_")) qtd.sqlp++;
+    else if (/^(sqlg|pyg|awsg)_/.test(k)) qtd.guia++;
     else qtd.topico++;
   }
   for (const f of Object.values(fixacao || {})) qtd.fixacao += f?.melhor || 0;
