@@ -39,7 +39,7 @@ O aluno programa **dentro do app**, sem instalar nada:
 
 - **▶ Testar no sandbox** em cada exemplo dos tópicos.
 - **🏋️ Exercício prático** no fim de cada nível (30 no total). HTML, CSS, JS/TS, React, Python, SQL e MySQL têm **correção automática**. Go, C# e Java mostram a saída esperada e a solução.
-- **Sandbox livre** no menu, para testar ideias. O código fica salvo na conta do aluno.
+- **Sandbox livre** no menu, para testar ideias. Ele prioriza um editor grande com a saída logo abaixo, salva automaticamente o código na conta do aluno e, no Python, permite carregar CSVs para usar com `pandas`. CSVs de até 350 KB também ficam associados ao sandbox; arquivos maiores ficam disponíveis durante a sessão.
 - **Segurança:** o código do aluno roda em um `iframe` isolado (origem opaca), sem acesso ao login. Loops infinitos são interrompidos depois de 10 a 20 segundos.
 - O **Admin/TI** vê, por aluno, quais exercícios foram resolvidos, quantas tentativas e o último código enviado.
 
@@ -145,7 +145,7 @@ users/{uid}
 users/{uid}/sessions/{id}
   start, lastPing, seconds, device, userAgent
 users/{uid}/codigos/{id}                     livre_<lang> ou ex_<trilha>_<nivel>
-  lang, codigo, ok, tentativas, atualizadoEm, resolvidoEm
+  lang, codigo, entrada?, arquivosCsv?: [{ nome, conteudo }], ok, tentativas, atualizadoEm, resolvidoEm
 ```
 
 ## Como publicar (passo a passo)

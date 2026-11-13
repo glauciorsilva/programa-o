@@ -28,6 +28,7 @@ const NOTAS = {
 };
 
 const chaveLocal = (uid, chave) => `progrtotal:sbx:${uid}:${chave}`;
+const LIMITE_CSV_SALVO = 350_000;
 
 function lerLocal(uid, chave) {
   try {
@@ -42,6 +43,11 @@ function gravarLocal(uid, chave, codigo) {
   try {
     localStorage.setItem(chaveLocal(uid, chave), JSON.stringify(codigo));
   } catch { /* sem armazenamento local: ignora */ }
+}
+
+function nomeSeguroArquivo(nome) {
+  const limpo = String(nome || "dados.csv").replace(/[\\/\\\\]/g, "_").trim();
+  return limpo || "dados.csv";
 }
 
 /**
@@ -84,7 +90,7 @@ export async function renderSandbox(view, opcoes, ctx) {
       <div class="sbx-dica" hidden><b>💡 Dica:</b> ${ex.dica}</div>
     </section>` : ""}
 
-    <div class="sbx">
+    <div class="sbx${opcoes.modo === "livre" ? " sbx-livre" : ""}">
       <section class="sbx-col">
         ${web ? `<div class="sbx-tabs" role="tablist">${ABAS_WEB.map((a, i) =>
           `<button role="tab" data-aba="${a.id}" class="${a.id === abaInicial ? "active" : ""}">${a.nome}</button>`).join("")}</div>` : ""}
@@ -93,6 +99,17 @@ export async function renderSandbox(view, opcoes, ctx) {
           <summary>⌨️ Entrada para <code>input()</code> (um valor por linha)</summary>
           <textarea id="sbx-entrada" rows="3" spellcheck="false">${esc(opcoes.entrada || "")}</textarea>
         </details>` : ""}
+        ${opcoes.modo === "livre" && opcoes.lang === "python" ? `<section class="sbx-arquivos" aria-label="Arquivos CSV para análise">
+          <div>
+            <strong>📊 Dados para praticar</strong>
+            <p class="muted small">Carregue um CSV e use <code>pd.read_csv("nome-do-arquivo.csv")</code> no código.</p>
+          </div>
+          <div class="sbx-arquivos-acoes">
+            <input id="sbx-csv" type="file" accept=".csv,text/csv" multiple hidden>
+            <button class="btn tiny ghost" id="sbx-csv-abrir" type="button">＋ Carregar CSV</button>
+          </div>
+          <div class="sbx-lista-arquivos muted small" id="sbx-lista-arquivos">Nenhum CSV carregado nesta prática.</div>
+        </section>` : ""}
         <div class="sbx-bar">
           ${externo ? `<button class="btn primary" id="sbx-copiar-abrir">📋 Copiar código</button>
             ${cfg.playgrounds.map((p) => `<a class="btn ghost" href="${p.url}" target="_blank" rel="noopener">${esc(p.nome)} ↗</a>`).join("")}`
@@ -101,6 +118,7 @@ export async function renderSandbox(view, opcoes, ctx) {
           ${ex && !verificavel ? `<button class="btn success" id="sbx-marcar">✅ Marcar como resolvido</button>` : ""}
           ${ex ? `<button class="btn ghost" id="sbx-dica">💡 Dica</button><button class="btn ghost" id="sbx-solucao">👀 Solução</button>` : ""}
           ${!externo ? `<button class="btn ghost" id="sbx-copiar">📋 Copiar</button>` : ""}
+          ${opcoes.modo === "livre" ? `<button class="btn ghost" id="sbx-salvar" type="button">💾 Salvar agora</button>` : ""}
           <button class="btn ghost" id="sbx-restaurar" title="Volta ao código inicial">↺ Restaurar</button>
           <span class="sbx-salvo muted small" id="sbx-salvo"></span>
         </div>
@@ -125,6 +143,8 @@ export async function renderSandbox(view, opcoes, ctx) {
   const chave = opcoes.chave;
   let codigo = opcoes.inicial;
   let salvoNuvem = null;
+  let arquivosCsv = {};
+  let entradaSalva = opcoes.entrada || "";
   if (chave) {
     const local = lerLocal(ctx.uid, chave);
     if (opcoes.nuvem) {
@@ -133,6 +153,12 @@ export async function renderSandbox(view, opcoes, ctx) {
         if (snap.exists()) {
           salvoNuvem = snap.data();
           codigo = salvoNuvem.codigo ?? codigo;
+          entradaSalva = salvoNuvem.entrada ?? entradaSalva;
+          if (opcoes.modo === "livre" && Array.isArray(salvoNuvem.arquivosCsv)) {
+            arquivosCsv = Object.fromEntries(salvoNuvem.arquivosCsv
+              .filter((arquivo) => arquivo && typeof arquivo.nome === "string" && typeof arquivo.conteudo === "string")
+              .map((arquivo) => [arquivo.nome, arquivo.conteudo]));
+          }
           if (salvoNuvem.ok) resolvido = true;
         } else if (local) codigo = local;
       } catch {
@@ -143,6 +169,8 @@ export async function renderSandbox(view, opcoes, ctx) {
   if (web && typeof codigo === "string") codigo = { html: codigo, css: "", js: "" };
 
   if (!view.isConnected) return () => {};
+  const entradaEl = $("#sbx-entrada", view);
+  if (entradaEl) entradaEl.value = entradaSalva;
   if (resolvido) marcarResolvidoUI();
 
   /* ---------- editores ---------- */
@@ -186,7 +214,9 @@ export async function renderSandbox(view, opcoes, ctx) {
     if (!opcoes.nuvem) return;
     try {
       await setDoc(doc(db, "users", ctx.uid, "codigos", chave), {
-        lang: opcoes.lang, titulo: opcoes.titulo, codigo: atual, atualizadoEm: serverTimestamp(), ...extra
+        lang: opcoes.lang, titulo: opcoes.titulo, codigo: atual,
+        ...(opcoes.lang === "python" ? { entrada: entradaEl?.value || "" } : {}),
+        atualizadoEm: serverTimestamp(), ...extra
       }, { merge: true });
       salvo.textContent = "✓ salvo";
     } catch {
@@ -201,6 +231,59 @@ export async function renderSandbox(view, opcoes, ctx) {
     timerSalvar = setTimeout(salvar, 1500);
   };
   Object.values(editores).forEach((e) => e.onChange(agendarSalvar));
+  entradaEl?.addEventListener("input", agendarSalvar);
+
+  /* ---------- CSV de prática (Python livre) ---------- */
+  const listaArquivos = $("#sbx-lista-arquivos", view);
+  const desenharArquivos = () => {
+    if (!listaArquivos) return;
+    const nomes = Object.keys(arquivosCsv);
+    if (!nomes.length) {
+      listaArquivos.textContent = "Nenhum CSV carregado nesta prática.";
+      return;
+    }
+    listaArquivos.replaceChildren(...nomes.map((nome) => {
+      const item = document.createElement("span");
+      item.className = "sbx-arquivo";
+      const tamanho = new Blob([arquivosCsv[nome]]).size;
+      item.innerHTML = `<code>${esc(nome)}</code> <small>${Math.ceil(tamanho / 1024)} KB</small>`;
+      const remover = document.createElement("button");
+      remover.type = "button";
+      remover.className = "link";
+      remover.textContent = "remover";
+      remover.addEventListener("click", () => {
+        delete arquivosCsv[nome];
+        desenharArquivos();
+        salvar({ arquivosCsv: Object.entries(arquivosCsv).map(([nomeArquivo, conteudo]) => ({ nome: nomeArquivo, conteudo })) });
+      });
+      item.appendChild(remover);
+      return item;
+    }));
+  };
+  desenharArquivos();
+
+  $("#sbx-csv-abrir", view)?.addEventListener("click", () => $("#sbx-csv", view)?.click());
+  $("#sbx-csv", view)?.addEventListener("change", async (evento) => {
+    const arquivos = [...(evento.target.files || [])];
+    if (!arquivos.length) return;
+    for (const arquivo of arquivos) {
+      if (arquivo.size > 2_000_000) {
+        estado.textContent = `${arquivo.name}: o limite para esta prática é 2 MB.`;
+        continue;
+      }
+      arquivosCsv[nomeSeguroArquivo(arquivo.name)] = (await arquivo.text()).replace(/^\uFEFF/, "");
+    }
+    evento.target.value = "";
+    desenharArquivos();
+    const dados = Object.entries(arquivosCsv).map(([nome, conteudo]) => ({ nome, conteudo }));
+    const tamanhoTotal = new Blob(dados.map((arquivo) => arquivo.conteudo)).size;
+    if (tamanhoTotal <= LIMITE_CSV_SALVO) {
+      await salvar({ arquivosCsv: dados });
+      estado.textContent = "CSV carregado e salvo com este sandbox.";
+    } else {
+      estado.textContent = "CSV carregado para esta sessão. Ele não foi salvo na nuvem porque ultrapassa 350 KB.";
+    }
+  });
 
   /* ---------- abas HTML/CSS/JS ---------- */
   $$(".sbx-tabs button", view).forEach((b) => b.addEventListener("click", () => {
@@ -258,6 +341,7 @@ export async function renderSandbox(view, opcoes, ctx) {
         lang: opcoes.lang,
         codigo: lerCodigo(),
         entrada: $("#sbx-entrada", view)?.value,
+        arquivos: opcoes.lang === "python" ? arquivosCsv : undefined,
         db: opcoes.db,
         arquivos: opcoes.arquivos, graficos: opcoes.graficos,
         ...opcoesTeste
@@ -381,6 +465,10 @@ export async function renderSandbox(view, opcoes, ctx) {
   };
   $("#sbx-copiar", view)?.addEventListener("click", copiar);
   $("#sbx-copiar-abrir", view)?.addEventListener("click", copiar);
+  $("#sbx-salvar", view)?.addEventListener("click", async () => {
+    await salvar();
+    salvo.textContent = "✓ salvo agora";
+  });
   $("#sbx-dica", view)?.addEventListener("click", () => {
     const d = $(".sbx-dica", view);
     d.hidden = !d.hidden;
