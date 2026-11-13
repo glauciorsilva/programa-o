@@ -22,9 +22,13 @@ import { renderPratica } from "./pratica.js";
 import { calcularPontos, patente, fmtPts, PTS, REGRAS, PATENTES, ptsCodigo } from "./pontos.js";
 import { renderSQLPratica } from "./sqlpratica/view.js";
 import { chaveLicao } from "./content/sqlpratica.js";
+import { CURSO_SQLG } from "./content/sqlguia/index.js";
+import { CURSO_PYG } from "./content/pyguia/index.js";
+import { CURSO_AWSG } from "./content/awsguia/index.js";
+import { renderGuia, chaveGuia } from "./guias.js";
 import {
   $, $$, esc, clock, human, stars, topicosDa, progressoPorTrilha, progressoGeral,
-  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, progressoSQLP, progressoCodigo, fmt
+  serieDiaria, barChart, progressBar, progressoExercicios, resumoFixacao, progressoSQLP, progressoCodigo, progressoLicoes, fmt
 } from "./util.js";
 
 const state = { user: null, profile: null, timer: null, isAdmin: false, pendingName: null };
@@ -256,6 +260,9 @@ function render() {
     sandbox: () => viewSandbox(view, a, b),
     exercicio: () => viewExercicio(view, a),
     sqlpratica: () => viewSQLPratica(view, a),
+    sqlguia: () => viewSQLGuia(view, a),
+    pyguia: () => viewGuia(view, CURSO_PYG, a),
+    awsguia: () => viewGuia(view, CURSO_AWSG, a),
     admin: () => viewAdmin(a)
   };
   (telas[rota] || viewInicio)(view);
@@ -329,6 +336,7 @@ function viewInicio(view) {
         <li>Ao final de cada nível, faça os <b>✍️ exercícios de fixação</b> (10 questões rápidas com explicação).</li>
         <li>Em caso de ainda haver dúvida, <b>pesquise o termo na internet</b>. Saber pesquisar faz parte do trabalho de quem programa.</li>
         <li>Para treinar SQL de verdade, faça a trilha interativa <a href="#/sqlpratica"><b>🧩 SQL na Prática</b></a>: 18 lições com banco de dados rodando no navegador.</li>
+        <li><b>Guias de A a Z</b>, com explicação e prática em cada tópico: <a href="#/sqlguia"><b>📘 SQL de A a Z</b></a>, <a href="#/pyguia"><b>🐍 Python de A a Z</b></a> e <a href="#/awsguia"><b>☁️ AWS de A a Z</b></a>.</li>
         <li>No fim de cada nível há um <b>🏋️ exercício prático</b> com correção automática. Use o <a href="#/sandbox">🧪 Sandbox</a> para testar suas próprias ideias.</li>
         <li>Marque <b>“Concluí”</b> para acompanhar sua evolução. O cronômetro no topo soma seu tempo de estudo.</li>
         <li>Sugestão de caminho: <b>HTML → CSS → JavaScript → React</b> (front-end) ou <b>Python → SQL → MySQL</b> (dados/back-end).</li>
@@ -362,7 +370,24 @@ function viewCategoria(cat) {
     <h1>${titulo}</h1>
     <p class="muted">${sub}</p>
     <div class="track-grid">${lista.map((t, i) => cardTrilha(t, i + 1)).join("")}</div>
-    ${cat === "bancos" ? cardSQLPratica() : ""}`;
+    ${cat === "bancos" ? cardSQLPratica() + cardGuia(CURSO_SQLG, "📘", "70 lições: SELECT, WHERE, AND/OR, JOINs, GROUP BY, funções, CREATE TABLE, restrições, índices, views e SQL Injection, com tarefas corrigidas num banco de verdade.")
+      : cardGuia(CURSO_PYG, "🐍", "Guia completo: sintaxe, strings, listas, dicionários, funções, classes, arquivos, gráficos com Matplotlib, Machine Learning e bancos de dados, com exercícios corrigidos no navegador.")
+        + cardGuia(CURSO_AWSG, "☁️", "Computação em nuvem com AWS para iniciantes (base da certificação Cloud Practitioner): EC2, S3, Lambda, VPC, RDS, IAM, preços e mais, com perguntas de fixação.")}`;
+}
+
+// Cartão de um guia "de A a Z" (SQL, Python, AWS)
+function cardGuia(curso, icone, texto) {
+  const p = progressoLicoes(state.profile.progress, curso.licoes, (id) => (curso.chave || ((x) => chaveGuia(curso, x)))(id));
+  return `<a class="sqlp-card" href="#/${curso.base}">
+    <span class="sqlp-card-ic" aria-hidden="true">${icone}</span>
+    <span class="grow">
+      <strong>${esc(curso.nomeCurto)}</strong>
+      <span class="muted small">${texto}</span>
+      ${progressBar(p.pct, true)}
+      <small class="muted">${p.feitos}/${p.total} lições · ${p.pct}%</small>
+    </span>
+    <span class="btn primary tiny">${p.feitos ? "Continuar" : "Começar"} →</span>
+  </a>`;
 }
 
 function cardSQLPratica() {
@@ -690,6 +715,10 @@ function viewProgresso(view) {
       <div class="stat"><small>Exercícios resolvidos</small><strong>${progressoExercicios(prog).feitos}/${progressoExercicios(prog).total}</strong></div>
       <div class="stat"><small>Exercícios de código</small><strong>${progressoCodigo(prog).feitos}/${progressoCodigo(prog).total}</strong></div>
       <div class="stat"><small>SQL na Prática</small><strong>${progressoSQLP(prog).feitos}/${progressoSQLP(prog).total}</strong></div>
+      ${[CURSO_SQLG, CURSO_PYG, CURSO_AWSG].map((cu) => {
+        const p = progressoLicoes(prog, cu.licoes, cu.chave || ((x) => chaveGuia(cu, x)));
+        return `<div class="stat"><small>${esc(cu.nomeCurto)}</small><strong>${p.feitos}/${p.total}</strong></div>`;
+      }).join("")}
       <div class="stat"><small>Fixação (acertos)</small><strong>${resumoFixacao(state.profile.fixacao).acertos}/${resumoFixacao(state.profile.fixacao).total}</strong></div>
       <div class="stat"><small>Sessões</small><strong>${(state.profile.sessionsCount || 0) + 1}</strong></div>
     </div>
@@ -818,6 +847,21 @@ function montar(view, promessa, titulo = "🧪 Sandbox") {
 }
 
 function viewSandbox(view, a, b) {
+  if (a === "guia") {
+    const [base, licaoId] = (b || "").split(":");
+    const curso = [CURSO_PYG, CURSO_AWSG].find((cu) => cu.base === base);
+    const licao = curso?.licoes.find((x) => x.id === licaoId);
+    if (licao?.exemplo) {
+      return montar(view, renderSandbox(view, {
+        modo: "topico", lang: curso.lang, inicial: licao.exemplo.trim(), ...(licao.exemploOpcoes || {}),
+        titulo: licao.titulo,
+        subtitulo: `Exemplo do guia <b>${esc(curso.nomeCurto)}</b>. Mude o código à vontade e execute para ver o que acontece.`,
+        voltar: { href: `#/${curso.base}/${licao.id}`, texto: `${curso.nomeCurto} — ${licao.titulo}` },
+        chave: `top_${curso.id}_${licao.id}`, nuvem: false
+      }, ctxSandbox()));
+    }
+    return viewSandbox(view);
+  }
   if (a === "topico") {
     const s = sandboxDoTopico(b || "");
     if (!s) return viewSandbox(view);
@@ -871,6 +915,7 @@ function viewExercicio(view, exId) {
 
 function viewExercicioCodigo(view, exId) {
   const ex = EXERCICIOS_CODIGO[exId];
+  if (ex.guia) return viewExercicioGuia(view, exId, ex);
   const { trilha: t, nivel, topico: tp } = ex;
   const total = CODIGO_POR_TOPICO[tp.id].length;
   const prox = proximoCodigo(exId);
@@ -889,6 +934,73 @@ function viewExercicioCodigo(view, exId) {
     resolvido: !!state.profile.progress?.[chaveCodigo(exId)],
     chave: chaveCodigo(exId), nuvem: true
   }, ctxSandbox()));
+}
+
+// Exercício de código de um guia "de A a Z"
+function viewExercicioGuia(view, exId, ex) {
+  const { curso, licao } = ex.guia;
+  const total = CODIGO_POR_TOPICO[ex.topico.id].length;
+  const prox = proximoCodigo(exId);
+  const tipo = ex.tipo === "completar" ? "✏️ Completar o código" : "🛠️ Criar do zero";
+  const voltar = { href: `#/${curso.base}/${licao.id}`, texto: `${curso.nomeCurto} — ${licao.titulo}` };
+  montar(view, renderSandbox(view, {
+    modo: "exercicio", lang: ex.lang, inicial: ex.inicial, exercicio: ex, exId,
+    db: ex.db, entrada: ex.entrada, graficos: ex.graficos,
+    titulo: ex.titulo,
+    subtitulo: `${tipo} · <b>${esc(curso.nomeCurto)}</b> — ${esc(licao.titulo)} · exercício ${ex.n} de ${total}`
+      + (ex.tipo === "completar" ? `<br><span class="small">👉 Clique em cada <span class="lacuna-exemplo">retângulo</span> do código e escreva o que falta (Enter vai para o próximo).</span>` : ""),
+    voltar,
+    proximo: prox ? { href: `#/exercicio/${prox}`, texto: "Próximo exercício" } : { href: voltar.href, texto: "Voltar à lição" },
+    resolvido: !!state.profile.progress?.[chaveCodigo(exId)],
+    chave: chaveCodigo(exId), nuvem: true
+  }, ctxSandbox()));
+}
+
+/* =================== Guias de A a Z =================== */
+
+function viewSQLGuia(view, licaoId) {
+  montar(view, renderSQLPratica(view, {
+    curso: CURSO_SQLG,
+    licaoId,
+    uid: state.user.uid,
+    progresso: state.profile.progress || {},
+    liberarTudo: true,
+    onConcluir: async (id) => {
+      await marcarProgresso(CURSO_SQLG.chave(id), true);
+    }
+  }), "📘 SQL de A a Z");
+}
+
+function viewGuia(view, curso, licaoId) {
+  const prog = (state.profile.progress ||= {});
+  renderGuia(view, {
+    curso, licaoId, progresso: prog,
+    idsCodigo: (l) => CODIGO_POR_TOPICO[`${curso.id}_${l.id}`] || [],
+    codigoFeito: (l, k) => !!prog[chaveCodigo(`${curso.id}_${l.id}_${k + 1}`)],
+    ptsCodigo,
+    ptsPergunta: PTS.pratica,
+    salvarPergunta: salvarPratica,
+    alternarLicao: async (k) => {
+      const agora = !prog[k];
+      await marcarProgresso(k, agora);
+      return !!prog[k];
+    }
+  });
+}
+
+// Marca (ou desmarca) uma chave de progresso, atualiza os pontos e salva na nuvem.
+async function marcarProgresso(k, feito) {
+  const prog = (state.profile.progress ||= {});
+  if (!!prog[k] === feito) return;
+  try {
+    await updateDoc(doc(db, "users", state.user.uid), { ["progress." + k]: feito ? serverTimestamp() : deleteField() });
+    if (feito) prog[k] = new Date();
+    else delete prog[k];
+    atualizarPontos();
+  } catch (e) {
+    console.error(e);
+    aviso("Não foi possível salvar agora. Verifique sua conexão.");
+  }
 }
 
 /* =================== SQL na Prática =================== */

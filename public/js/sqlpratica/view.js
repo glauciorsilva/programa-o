@@ -1,4 +1,5 @@
-// Tela da trilha "SQL na Prática": índice de lições e lição com exercício interativo.
+// Tela das trilhas interativas de SQL ("SQL na Prática" e "SQL de A a Z"):
+// índice de lições e lição com exercício interativo.
 import { LICOES, SEEDS, chaveLicao } from "../content/sqlpratica.js";
 import { criarEditor } from "../sandbox/editor.js";
 import { $, $$, esc, progressBar } from "../util.js";
@@ -62,21 +63,36 @@ function criarCliente() {
 
 /* ---------------- Progresso das tarefas (neste navegador) ---------------- */
 
-const chaveLocal = (uid) => `progrtotal:sqlp:${uid}`;
+// Curso padrão: "SQL na Prática". Outros cursos (ex.: "SQL de A a Z") passam o próprio objeto.
+export const CURSO_SQLP = {
+  id: "sqlp",
+  base: "sqlpratica",
+  titulo: "🧩 SQL na Prática",
+  nomeCurto: "SQL na Prática",
+  voltar: { href: "#/bancos", texto: "Bancos de Dados" },
+  intro: "Trilha interativa: cada lição traz uma explicação curta e um exercício com um banco de dados de verdade (SQLite) rodando no seu navegador. Escreva a consulta, veja o resultado na hora e avance quando todas as tarefas estiverem certas.",
+  licoes: LICOES,
+  seeds: SEEDS,
+  chave: chaveLicao
+};
 
-function lerTarefas(uid) {
+let C = CURSO_SQLP; // curso desenhado agora
+
+const chaveLocal = (cursoId, uid) => `progrtotal:${cursoId}:${uid}`;
+
+function lerTarefas(cursoId, uid) {
   try {
-    return JSON.parse(localStorage.getItem(chaveLocal(uid))) || {};
+    return JSON.parse(localStorage.getItem(chaveLocal(cursoId, uid))) || {};
   } catch {
     return {};
   }
 }
 
-function salvarTarefas(uid, licaoId, feitas) {
+function salvarTarefas(cursoId, uid, licaoId, feitas) {
   try {
-    const todas = lerTarefas(uid);
+    const todas = lerTarefas(cursoId, uid);
     todas[licaoId] = feitas;
-    localStorage.setItem(chaveLocal(uid), JSON.stringify(todas));
+    localStorage.setItem(chaveLocal(cursoId, uid), JSON.stringify(todas));
   } catch { /* sem armazenamento */ }
 }
 
@@ -100,39 +116,48 @@ function tabelasHTML(tabelas) {
     </figure>`).join("");
 }
 
-const indice = (id) => LICOES.findIndex((l) => l.id === id);
-const rotulo = (l) => (/^\d+$/.test(l.id) ? (l.id === "0" ? "Introdução" : `Lição ${l.id}`) : l.id === "fim" ? "Encerramento" : "Tópico extra");
+const indice = (id) => C.licoes.findIndex((l) => l.id === id);
+const rotulo = (l) => l.rotulo || (/^\d+$/.test(l.id) ? (l.id === "0" ? "Introdução" : `Lição ${l.id}`) : l.id === "fim" ? "Encerramento" : "Tópico extra");
 
+// Cursos "livres" (como o SQL de A a Z) deixam abrir qualquer lição, como um guia de consulta.
 function liberada(i, progresso, liberarTudo) {
-  return liberarTudo || i === 0 || !!progresso[chaveLicao(LICOES[i - 1].id)];
+  return C.livre || liberarTudo || i === 0 || !!progresso[C.chave(C.licoes[i - 1].id)];
 }
 
 /* ---------------- Índice ---------------- */
 
+function itemIndice(l, i, progresso, liberarTudo) {
+  const feito = !!progresso[C.chave(l.id)];
+  const aberta = liberada(i, progresso, liberarTudo);
+  const icone = feito ? "✅" : aberta ? "▶️" : "🔒";
+  const corpo = `<span class="sqlp-ic" aria-hidden="true">${icone}</span>
+    <span><small class="muted">${rotulo(l)}</small><strong>${esc(l.titulo)}</strong></span>
+    <span class="sr-only">${feito ? "(concluída)" : aberta ? "(liberada)" : "(bloqueada)"}</span>`;
+  return `<li class="${feito ? "feito" : aberta ? "" : "bloq"}">${aberta
+    ? `<a href="#/${C.base}/${l.id}">${corpo}</a>`
+    : `<div title="Conclua a lição anterior para liberar">${corpo}</div>`}</li>`;
+}
+
 function renderIndice(view, { progresso, liberarTudo }) {
-  const feitas = LICOES.filter((l) => progresso[chaveLicao(l.id)]).length;
-  const pct = Math.round((feitas / LICOES.length) * 100);
+  const L = C.licoes;
+  const feitas = L.filter((l) => progresso[C.chave(l.id)]).length;
+  const pct = Math.round((feitas / L.length) * 100);
+  // Lições com "secao" são agrupadas sob um título (na ordem em que aparecem).
+  const grupos = [];
+  L.forEach((l, i) => {
+    const s = l.secao || "";
+    if (!grupos.length || grupos[grupos.length - 1].nome !== s) grupos.push({ nome: s, itens: [] });
+    grupos[grupos.length - 1].itens.push(itemIndice(l, i, progresso, liberarTudo));
+  });
   view.innerHTML = `
-    <a class="back" href="#/bancos">← Bancos de Dados</a>
-    <h1>🧩 SQL na Prática</h1>
-    <p class="muted">Trilha interativa: cada lição traz uma explicação curta e um exercício com um banco de dados de verdade (SQLite) rodando no seu navegador. Escreva a consulta, veja o resultado na hora e avance quando todas as tarefas estiverem certas.</p>
+    <a class="back" href="${C.voltar.href}">← ${esc(C.voltar.texto)}</a>
+    <h1>${esc(C.titulo)}</h1>
+    <p class="muted">${C.intro}</p>
     <div class="stat-row">
-      <div class="stat"><small>Lições concluídas</small><strong>${feitas}/${LICOES.length}</strong>${progressBar(pct, true)}</div>
+      <div class="stat"><small>Lições concluídas</small><strong>${feitas}/${L.length}</strong>${progressBar(pct, true)}</div>
       <div class="stat"><small>Pontos</small><strong>⭐ ${feitas * 10}</strong><small>10 pts por lição concluída</small></div>
     </div>
-    <ol class="sqlp-indice">
-      ${LICOES.map((l, i) => {
-        const feito = !!progresso[chaveLicao(l.id)];
-        const aberta = liberada(i, progresso, liberarTudo);
-        const icone = feito ? "✅" : aberta ? "▶️" : "🔒";
-        const corpo = `<span class="sqlp-ic" aria-hidden="true">${icone}</span>
-          <span><small class="muted">${rotulo(l)}</small><strong>${esc(l.titulo)}</strong></span>
-          <span class="sr-only">${feito ? "(concluída)" : aberta ? "(liberada)" : "(bloqueada)"}</span>`;
-        return `<li class="${feito ? "feito" : aberta ? "" : "bloq"}">${aberta
-          ? `<a href="#/sqlpratica/${l.id}">${corpo}</a>`
-          : `<div title="Conclua a lição anterior para liberar">${corpo}</div>`}</li>`;
-      }).join("")}
-    </ol>`;
+    ${grupos.map((g) => `${g.nome ? `<h2 class="sqlp-secao">${esc(g.nome)}</h2>` : ""}<ol class="sqlp-indice">${g.itens.join("")}</ol>`).join("")}`;
   return () => {};
 }
 
@@ -144,26 +169,28 @@ function renderIndice(view, { progresso, liberarTudo }) {
  */
 export async function renderSQLPratica(view, opcoes) {
   const { licaoId, uid, progresso, liberarTudo, onConcluir } = opcoes;
+  C = opcoes.curso || CURSO_SQLP;
   const i = indice(licaoId);
   if (i < 0) return renderIndice(view, opcoes);
-  const licao = LICOES[i];
-  const anterior = LICOES[i - 1], proxima = LICOES[i + 1];
-  const cabecalho = `<a class="back" href="#/sqlpratica">← SQL na Prática</a>
-    <p class="muted small sqlp-onde">${rotulo(licao)} · ${i + 1} de ${LICOES.length}</p>
+  const licao = C.licoes[i];
+  const anterior = C.licoes[i - 1], proxima = C.licoes[i + 1];
+  const cabecalho = `<a class="back" href="#/${C.base}">← ${esc(C.nomeCurto)}</a>
+    <p class="muted small sqlp-onde">${rotulo(licao)} · ${i + 1} de ${C.licoes.length}</p>
     <h1>${esc(licao.titulo)}</h1>`;
 
   if (!liberada(i, progresso, liberarTudo)) {
     view.innerHTML = `${cabecalho}
       <div class="banner warn">🔒 Esta lição é liberada quando você concluir a anterior:
-        <a href="#/sqlpratica/${anterior.id}">${esc(anterior.titulo)}</a>.</div>`;
+        <a href="#/${C.base}/${anterior.id}">${esc(anterior.titulo)}</a>.</div>`;
     return () => {};
   }
 
   const tarefas = licao.tarefas;
-  const jaConcluida = !!progresso[chaveLicao(licao.id)];
-  const feitas = tarefas.map((_, k) => jaConcluida || (lerTarefas(uid)[licao.id] || []).includes(k));
+  const cursoId = C.id;
+  const jaConcluida = !!progresso[C.chave(licao.id)];
+  const feitas = tarefas.map((_, k) => jaConcluida || (lerTarefas(C.id, uid)[licao.id] || []).includes(k));
   const temExercicio = tarefas.length > 0;
-  const textoBotao = licao.id === "0" ? "Começar a Lição 1 →" : !proxima ? "Concluir a trilha 🎉" : temExercicio ? "Concluir e ir para a próxima →" : "Continuar →";
+  const textoBotao = licao.id === "0" && C === CURSO_SQLP ? "Começar a Lição 1 →" : !proxima ? "Concluir a trilha 🎉" : temExercicio ? "Concluir e ir para a próxima →" : "Continuar →";
 
   view.innerHTML = `${cabecalho}
     <section class="box sqlp-teoria">${licao.teoria}${NOTA_PESQUISA}</section>
@@ -207,15 +234,15 @@ export async function renderSQLPratica(view, opcoes) {
     </section>` : `
     <div class="sqlp-rodape-simples"><button class="btn primary" id="sqlp-concluir" type="button">${textoBotao}</button></div>`}
     <nav class="sqlp-nav" aria-label="Navegação entre lições">
-      ${anterior ? `<a class="btn ghost tiny" href="#/sqlpratica/${anterior.id}">← ${esc(anterior.titulo)}</a>` : "<span></span>"}
-      ${proxima && (jaConcluida || liberarTudo) ? `<a class="btn ghost tiny" href="#/sqlpratica/${proxima.id}">${esc(proxima.titulo)} →</a>` : ""}
+      ${anterior ? `<a class="btn ghost tiny" href="#/${C.base}/${anterior.id}">← ${esc(anterior.titulo)}</a>` : "<span></span>"}
+      ${proxima && (jaConcluida || liberarTudo || C.livre) ? `<a class="btn ghost tiny" href="#/${C.base}/${proxima.id}">${esc(proxima.titulo)} →</a>` : ""}
     </nav>`;
 
   const concluir = $("#sqlp-concluir", view);
   const irParaProxima = async () => {
     concluir.disabled = true;
     await onConcluir?.(licao.id);
-    location.hash = proxima ? `#/sqlpratica/${proxima.id}` : "#/sqlpratica";
+    location.hash = proxima ? `#/${C.base}/${proxima.id}` : `#/${C.base}`;
   };
   concluir.addEventListener("click", irParaProxima);
   if (!temExercicio) return () => {};
@@ -247,7 +274,7 @@ export async function renderSQLPratica(view, opcoes) {
     if (tudo && !els.feedback.textContent) els.feedback.innerHTML = `<span class="ok">🎉 Todas as tarefas concluídas!</span>`;
   }
 
-  const dadosAbrir = { seed: SEEDS[licao.banco], preload: licao.preload || "", nomesTabelas: licao.tabelas };
+  const dadosAbrir = { seed: C.seeds[licao.banco], preload: licao.preload || "", nomesTabelas: licao.tabelas };
   let banco = null; // promessa do banco aberto no worker
 
   function abrirBanco() {
@@ -295,7 +322,7 @@ export async function renderSQLPratica(view, opcoes) {
     if (k < 0 || !r.correcao) return;
     if (r.correcao.ok) {
       feitas[k] = true;
-      salvarTarefas(uid, licao.id, feitas.flatMap((f, x) => (f ? [x] : [])));
+      salvarTarefas(cursoId, uid, licao.id, feitas.flatMap((f, x) => (f ? [x] : [])));
       const prox = atualIdx();
       els.feedback.innerHTML = prox < 0
         ? `<span class="ok">🎉 Todas as tarefas concluídas! Clique no botão abaixo para continuar.</span>`

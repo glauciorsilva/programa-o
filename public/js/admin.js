@@ -4,7 +4,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   $, esc, human, fmtDate, toDate, progressoGeral, progressoPorTrilha, serieDiaria, barChart, progressBar,
-  progressoExercicios, resumoFixacao, progressoSQLP, progressoCodigo
+  progressoExercicios, resumoFixacao, progressoSQLP, progressoCodigo, progressoGuias, GUIAS
 } from "./util.js";
 import { EXERCICIOS } from "./content/exercicios.js";
 import { calcularPontos, patente, fmtPts } from "./pontos.js";
@@ -69,7 +69,7 @@ async function renderLista(view, force = false) {
     </div>
     <div class="table-wrap"><table class="table">
       <thead><tr>
-        <th>Aluno</th><th>Pontos</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Código</th><th>Fixação</th><th>SQL na Prática</th><th>Progresso</th><th></th>
+        <th>Aluno</th><th>Pontos</th><th>Cadastro</th><th>Último acesso</th><th>Tempo total</th><th>Sessões</th><th>Exercícios</th><th>Código</th><th>Fixação</th><th>SQL na Prática</th><th>Guias A a Z</th><th>Progresso</th><th></th>
       </tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>`;
@@ -101,10 +101,11 @@ async function renderLista(view, force = false) {
         <td data-label="Código">${progressoCodigo(a.progress).feitos}/${progressoCodigo(a.progress).total}</td>
         <td data-label="Fixação">${resumoFixacao(a.fixacao).pct}%</td>
         <td data-label="SQL na Prática">${progressoSQLP(a.progress).feitos}/${progressoSQLP(a.progress).total}</td>
+        <td data-label="Guias A a Z">${progressoGuias(a.progress).feitos}/${progressoGuias(a.progress).total}</td>
         <td data-label="Progresso"><div class="cell-progress">${progressBar(g.pct, true)}<small>${g.feitos}/${g.total} (${g.pct}%)</small></div></td>
         <td><a class="btn tiny primary" href="#/admin/${a.uid}">Ver evolução</a></td>
       </tr>`;
-    }).join("") || `<tr><td colspan="12" class="muted">Nenhum aluno encontrado.</td></tr>`;
+    }).join("") || `<tr><td colspan="13" class="muted">Nenhum aluno encontrado.</td></tr>`;
   };
   $("#filtro").addEventListener("input", desenhar);
   $("#ordem").addEventListener("change", desenhar);
@@ -139,6 +140,7 @@ async function renderAluno(view, uid) {
       <div class="stat"><small>Pontuação</small><strong>⭐ ${fmtPts(calcularPontos(a.progress, a.fixacao).total)}</strong><small>${patente(calcularPontos(a.progress, a.fixacao).total).atual.icone} ${patente(calcularPontos(a.progress, a.fixacao).total).atual.nome}</small></div>
       <div class="stat"><small>Exercícios de código</small><strong>${progressoCodigo(a.progress).feitos}/${progressoCodigo(a.progress).total}</strong></div>
       <div class="stat"><small>SQL na Prática</small><strong>${progressoSQLP(a.progress).feitos}/${progressoSQLP(a.progress).total} lições</strong></div>
+      ${progressoGuias(a.progress).partes.map((p, i) => `<div class="stat"><small>${GUIAS[i].nomeCurto}</small><strong>${p.feitos}/${p.total} lições</strong></div>`).join("")}
       <div class="stat"><small>Último acesso</small><strong class="smaller">${fmtDate(a.lastAccess)}</strong></div>
     </div>
     <section class="box">
@@ -209,14 +211,14 @@ function formatarCodigo(c) {
 
 function exportarCSV(alunos) {
   const trilhas = progressoPorTrilha({}).map((p) => p.trilha);
-  const cab = ["nome", "email", "pontos", "patente", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "fixacao_pct", "exercicios_codigo", "sql_pratica_licoes", "topicos_concluidos", "progresso_pct",
+  const cab = ["nome", "email", "pontos", "patente", "cadastro", "ultimo_acesso", "tempo_total_min", "sessoes", "exercicios_resolvidos", "fixacao_pct", "exercicios_codigo", "sql_pratica_licoes", "guias_licoes", "topicos_concluidos", "progresso_pct",
     ...trilhas.map((t) => t.id + "_concluidos")];
   const linhas = alunos.map((a) => {
     const g = progressoGeral(a.progress);
     const pt = progressoPorTrilha(a.progress);
     const pts = calcularPontos(a.progress, a.fixacao).total;
     return [a.name, a.email, pts, patente(pts).atual.nome, fmtDate(a.createdAt, false), fmtDate(a.lastAccess),
-      Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, progressoExercicios(a.progress).feitos, resumoFixacao(a.fixacao).pct, progressoCodigo(a.progress).feitos, progressoSQLP(a.progress).feitos, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
+      Math.round((a.totalSeconds || 0) / 60), a.sessionsCount || 0, progressoExercicios(a.progress).feitos, resumoFixacao(a.fixacao).pct, progressoCodigo(a.progress).feitos, progressoSQLP(a.progress).feitos, progressoGuias(a.progress).feitos, g.feitos, g.pct, ...pt.map((p) => p.feitos)];
   });
   const csv = [cab, ...linhas]
     .map((l) => l.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";"))

@@ -39,7 +39,7 @@ O aluno programa **dentro do app**, sem instalar nada:
 
 - **▶ Testar no sandbox** em cada exemplo dos tópicos.
 - **🏋️ Exercício prático** no fim de cada nível (30 no total). HTML, CSS, JS/TS, React, Python, SQL e MySQL têm **correção automática**. Go, C# e Java mostram a saída esperada e a solução.
-- **Sandbox livre** no menu, para testar ideias. O código fica salvo na conta do aluno.
+- **Sandbox livre** no menu, para testar ideias. Ele prioriza um editor grande com a saída logo abaixo, salva automaticamente o código na conta do aluno e, no Python, permite carregar CSVs para usar com `pandas`. CSVs de até 350 KB também ficam associados ao sandbox; arquivos maiores ficam disponíveis durante a sessão.
 - **Segurança:** o código do aluno roda em um `iframe` isolado (origem opaca), sem acesso ao login. Loops infinitos são interrompidos depois de 10 a 20 segundos.
 - O **Admin/TI** vê, por aluno, quais exercícios foram resolvidos, quantas tentativas e o último código enviado.
 
@@ -60,6 +60,7 @@ O aluno programa **dentro do app**, sem instalar nada:
   | Exercício de código "do zero" | 15 |
   | Exercício prático do nível | 25 |
   | Lição do SQL na Prática | 10 |
+  | Lição dos guias de A a Z (SQL, Python, AWS) | 10 |
 
   - Patentes: Semente, Broto, Aprendiz, Praticante, Desenvolvedor(a), Especialista e Mestre.
   - A pontuação aparece no topo, em Meu progresso, no Admin/TI e no CSV.
@@ -77,6 +78,15 @@ Eles abrem no sandbox, com Dica, Solução e **✅ Verificar**:
 - Go, C# e Java (e os comandos de MySQL que só rodam num servidor real): a verificação confere no código os trechos pedidos (`padroes`). A saída esperada aparece para comparar no playground.
 - O conteúdo fica em `js/content/codigo/<trilha>.js`; o registro, em `js/content/codigo/index.js`.
 - Os ids seguem o formato `<topico>_<n>` (ex.: `python_b1_3`). O progresso fica em `progress.cx_<id>`.
+
+## 📘 Guias de A a Z (SQL, Python e AWS)
+
+Guias completos que seguem a ordem clássica dos tutoriais (como os do W3Schools), com **explicações próprias em português**, exemplos e prática em cada lição. Os guias são livres: dá para abrir qualquer lição pelo índice.
+
+- **📘 SQL de A a Z** (`#/sqlguia`, aba Bancos de Dados): 70 lições e 179 tarefas, do SELECT a JOINs, funções, CREATE TABLE, restrições, índices, views e SQL Injection. Usa o mesmo motor do SQL na Prática, com um banco de exemplo de uma distribuidora (`js/content/sqlguia/`). Progresso: `progress.sqlg_<lição>`.
+- **🐍 Python de A a Z** (`#/pyguia`, aba Linguagens): 64 lições, 148 perguntas e 133 exercícios de código corrigidos no navegador (Pyodide), cobrindo fundamentos, coleções, funções, POO, arquivos, Matplotlib (com gráficos), Machine Learning, sqlite3/MongoDB e referência (`js/content/pyguia/`). Os exercícios entram em `EXERCICIOS_CODIGO` com ids `pyg_<lição>_<n>`.
+- **☁️ AWS de A a Z** (`#/awsguia`, aba Linguagens): 39 lições e 115 perguntas no conteúdo da certificação Cloud Practitioner (`js/content/awsguia/`).
+- Tela: `js/guias.js` (Python e AWS) e `js/sqlpratica/view.js` (SQL). Lição concluída: `progress.<pyg|awsg>_<lição>`; perguntas: `progress.ck_<curso>_<lição>_<n>`.
 
 ## 🧩 SQL na Prática
 
@@ -135,7 +145,7 @@ users/{uid}
 users/{uid}/sessions/{id}
   start, lastPing, seconds, device, userAgent
 users/{uid}/codigos/{id}                     livre_<lang> ou ex_<trilha>_<nivel>
-  lang, codigo, ok, tentativas, atualizadoEm, resolvidoEm
+  lang, codigo, entrada?, arquivosCsv?: [{ nome, conteudo }], ok, tentativas, atualizadoEm, resolvidoEm
 ```
 
 ## Como publicar (passo a passo)

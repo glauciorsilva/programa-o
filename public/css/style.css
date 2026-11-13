@@ -337,6 +337,12 @@ pre { tab-size: 4; margin: 0; background: var(--code-bg); color: var(--code-text
 .sbx-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .sbx-bar .btn { padding: .5em .9em; font-size: .9rem; }
 .sbx-salvo { margin-left: auto; }
+.sbx-arquivos { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 10px; }
+.sbx-arquivos p { margin: 2px 0 0; }
+.sbx-arquivos-acoes { display: flex; gap: 6px; }
+.sbx-lista-arquivos { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+.sbx-arquivo { display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border-radius: 7px; background: var(--surface-2); }
+.sbx-arquivo .link { padding: 0 0 0 3px; font-size: .82rem; }
 
 .sbx-out-head { display: flex; align-items: center; gap: 10px; }
 .sbx-out-head .btn { margin-left: auto; }
@@ -363,6 +369,13 @@ pre { tab-size: 4; margin: 0; background: var(--code-bg); color: var(--code-text
 .sbx-teste.erro { background: #fde8e8; color: #9b1c1c; }
 .sbx-nota { margin-top: 10px; }
 
+/* Sandbox livre: editor dominante (cerca de 2/3 da tela) e saída logo abaixo. */
+.sbx.sbx-livre { grid-template-columns: minmax(0, 1fr); }
+.sbx-livre .sbx-editor .CodeMirror,
+.sbx-livre .sbx-editor .CodeMirror-scroll { min-height: clamp(380px, 60vh, 680px); max-height: none; }
+.sbx-livre .sbx-textarea { min-height: clamp(380px, 60vh, 680px); }
+.sbx-livre .sbx-console { min-height: clamp(180px, 28vh, 340px); max-height: 38vh; }
+
 .admin-ex { display: grid; gap: 6px; }
 .admin-ex-item { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; }
 .admin-ex-item.ok { border-left: 4px solid var(--success); }
@@ -374,6 +387,8 @@ pre { tab-size: 4; margin: 0; background: var(--code-bg); color: var(--code-text
   .sbx-editor .CodeMirror, .sbx-editor .CodeMirror-scroll { min-height: 220px; font-size: 13px; }
   .sbx-preview { height: 300px; }
   .sbx-salvo { width: 100%; margin-left: 0; }
+  .sbx-arquivos { grid-template-columns: 1fr; }
+  .sbx-arquivos-acoes { justify-content: flex-start; }
   .sbx-tabela { font-size: .78rem; }
   .sbx .table td { display: table-cell; text-align: left; }
   .sbx .table td::before { content: none; }
@@ -592,3 +607,12 @@ li.CodeMirror-hint-active { background: var(--primary); }
 .pr-q .fx-opcoes { display: flex; flex-wrap: wrap; gap: 6px; }
 .box.nocss { background: color-mix(in srgb, #2965f1 8%, var(--surface)); border-left: 4px solid #2965f1; }
 .passo-texto :not(pre) > code, .pr-q :not(pre) > code, .fx-feedback code, .box.nocss :not(pre) > code { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+
+/* Guias de A a Z (SQL, Python, AWS) */
+.sqlp-secao { margin: 22px 0 4px; font-size: 1.1rem; }
+.guia-teoria h3 { margin-top: 18px; }
+.guia-teoria .pratica-host { margin: 14px 0; }
+.guia-exemplo { margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border); }
+.guia-exemplo pre { max-width: 100%; overflow-x: auto; }
+.sqlp-teoria .sqlp-tabela-teoria { display: block; max-width: 100%; overflow-x: auto; }
+.guia-teoria li, .guia-teoria p { overflow-wrap: anywhere; }
