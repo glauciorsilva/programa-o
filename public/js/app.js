@@ -225,10 +225,13 @@ let limparTela = null;
 function render() {
   if (!state.user) return;
   const [rota = "inicio", a, b] = location.hash.replace(/^#\/?/, "").split("/");
-  $$("[data-nav]").forEach((l) => l.classList.toggle("active", l.dataset.nav === rota
-    || (rota === "dadoslab" && l.dataset.nav === "dados")
-    || (rota === "trilha" && l.dataset.nav === trilhaCategoria(a))
-    || (rota === "exercicio" && l.dataset.nav === "sandbox")));
+  // Aba do menu que fica destacada (exercícios e exemplos dos guias destacam a aba do guia)
+  const aba = rota === "dadoslab" ? "dados"
+    : rota === "trilha" ? trilhaCategoria(a)
+    : rota === "exercicio" ? EXERCICIOS_CODIGO[a]?.guia?.curso.base || "sandbox"
+    : rota === "sandbox" && a === "guia" ? (b || "").split(":")[0]
+    : rota;
+  $$("[data-nav]").forEach((l) => l.classList.toggle("active", l.dataset.nav === aba));
   if (limparTela) {
     limparTela();
     limparTela = null;
